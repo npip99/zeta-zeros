@@ -13,7 +13,7 @@ class ConstantTests(unittest.TestCase):
         self.assertAlmostEqual(three_point_bound(epsilon), 0.6725197671136778, places=14)
 
     def test_seven_point_bound(self):
-        self.assertAlmostEqual(seven_point_bound(), 0.6730085279277798, places=15)
+        self.assertAlmostEqual(seven_point_bound(), 0.6730254674531403, places=15)
 
 
 if __name__ == "__main__":

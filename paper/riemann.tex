@@ -22,7 +22,7 @@
 \newcommand{\cP}{\mathcal P}
 \newcommand{\cD}{\mathcal D}
 
-\title{More than 67.3\% of the zeros of the Riemann zeta function are simple and lie on the critical line}
+\title{More than 67.302\% of the zeros of the Riemann zeta function are simple and lie on the critical line}
 \date{}
 
 \begin{document}
@@ -36,7 +36,7 @@ the critical line in that interval.  We refine the rank--trace argument of
 Claude~\cite{Claude26} and prove
 \[
  \liminf_{T\to\infty}\frac{N_0^s(T,2T)}{N(T,2T)}
- \ge 0.673008527927\ldots .
+ \ge 0.673025467453\ldots .
 \]
 The proof uses the analytic estimates of Theorem~D in~\cite{Claude26} and a
 rigorously verified seven-point inequality for the simple-zero vectors.
@@ -108,8 +108,8 @@ One has
  \liminf_{T\to\infty}
  \frac{N_0^s(T,2T)}{N(T,2T)}
  \ge
- \frac{1{,}345{,}000H_{\mathrm{MT}}-2{,}680}{1{,}340{,}003}
- =0.6730085279277797613\ldots .
+ \frac{267\cdot10^{9}H_{\mathrm{MT}}-5.32\cdot10^{8}}{266{,}001{,}357{,}363}
+ =0.6730254674531403414\ldots .
 \]
 \end{theorem}
 
@@ -294,14 +294,14 @@ points.
 \begin{proposition}[Certified local inequality]\label{prop:F6}
 For every $g_1,\ldots,g_6\ge0$,
 \begin{equation}\label{eq:F6bound}
- \mathcal F_6(g_1,\ldots,g_6)\ge\frac{19}{5000}.
+ \mathcal F_6(g_1,\ldots,g_6)\ge\beta_0:=\frac{3{,}826{,}217}{10^{9}}.
 \end{equation}
 \end{proposition}
 
 \begin{proof}[Verification]
 The verifier at
 \begin{center}
- \url{https://github.com/ainta/zeta-simple-zeros}
+ \url{https://github.com/npip99/zeta-zeros}
 \end{center}
 uses Arb interval arithmetic through \texttt{python-flint}.  It evaluates
 the entire-sinc expression
@@ -312,7 +312,8 @@ the entire-sinc expression
  \right)
 \]
 at 128-bit precision and constructs rigorous lower bounds for $w$ on a grid
-of mesh $1/4000$.  If $\sum g_i\ge11.4$, the linear term proves the claim.
+of mesh $1/8000$.  If $\sum g_i\ge3000\beta_0=11.478651$, the linear term
+proves the claim.
 On the remaining compact region, the one-variable term
 \[
  U(g):=\frac g{3000}+\frac13w(g)
@@ -322,8 +323,10 @@ resulting $3^6$ boxes are proved by interval lower bounds, a certified convex
 tangent bound when applicable, or bisection of the widest coordinate.  The
 program fails if a terminal box remains unresolved.
 
-The committed certificate records \texttt{verified=true}, grid $4000$,
-precision $128$ bits, $707{,}901$ visited nodes, and maximum depth $37$.
+The committed certificate records \texttt{verified=true}, grid $8000$,
+precision $128$ bits, $963{,}245$ visited nodes, and maximum depth $69$.
+The adjacent target $3{,}826{,}218/10^{9}$ fails at a terminal cell, so the
+certified target is maximal on the $10^{-9}$ lattice at this grid.
 It also records the hashes of the interval tables used in the search.
 \end{proof}
 
@@ -335,7 +338,7 @@ Let $y_1<\cdots<y_m$ with $m\ge7$, and put
 Then
 \begin{equation}\label{eq:block-energy}
  E_m+\frac1{500}(y_m-y_1)
- \ge\frac{19}{5000}(m-6).
+ \ge\beta_0(m-6).
 \end{equation}
 \end{lemma}
 
@@ -370,11 +373,11 @@ If some eigenvalue $\lambda>2$, then $\Psi(\lambda)=2\lambda-3>1$.
 
 Take
 \begin{equation}\label{eq:mA}
- m:=269,
+ m:=267,
  \qquad
- A_0:=\frac{19}{5000}(m-6)=\frac{4997}{5000}<1.
+ A_0:=\beta_0(m-6)=\frac{998{,}642{,}637}{10^{9}}<1.
 \end{equation}
-Let $B$ be a block of $269$ consecutive retained simple zeros.  Write $G_B$
+Let $B$ be a block of $267$ consecutive retained simple zeros.  Write $G_B$
 for its Gram matrix.  If $\operatorname{span}(B)/500\ge A_0$, then
 \eqref{eq:269block} below is immediate.  Otherwise
 $\operatorname{span}(B)<500$, so Lemma~\ref{lem:kernel-limit} applies
@@ -399,7 +402,7 @@ be the normalised ordinates of the retained central simple zeros.  Then
 \begin{equation}\label{eq:Scentral}
  S^\circ=N_0^s(T,2T)-o(N(T,2T)).
 \end{equation}
-For each of the $m=269$ offsets, partition the ordered points into full
+For each of the $m=267$ offsets, partition the ordered points into full
 consecutive blocks of size $m$, leaving at most $2(m-1)$ endpoint points.
 Pinching $M^\circ$ to the full principal blocks and the remaining block gives
 \begin{equation}\label{eq:pinching}
@@ -426,34 +429,34 @@ by the Riemann--von Mangoldt formula.  The blockwise $o(1)$ term in
  \ge \frac{A_0}{m}N_0^s(T,2T)
  -\frac{m-1}{500m}N(T,2T)-o(N(T,2T)).
 \end{equation}
-With $m=269$ and $A_0=4997/5000$,
+With $m=267$ and $A_0=998{,}642{,}637/10^{9}$,
 \begin{equation}\label{eq:defect-numbers}
  \cD(M^\circ)
  \ge
- \frac{4997}{1{,}345{,}000}N_0^s(T,2T)
- -\frac{268}{134{,}500}N(T,2T)-o(N(T,2T)).
+ \frac{332{,}880{,}879}{89\cdot10^{9}}N_0^s(T,2T)
+ -\frac{133}{66{,}750}N(T,2T)-o(N(T,2T)).
 \end{equation}
 
 Substitute \eqref{eq:defect-numbers} into \eqref{eq:global-defect}.  This gives
 \begin{align*}
  N_0^s(T,2T)
  &\ge H_{\mathrm{MT}}N(T,2T)
- +\frac{4997}{1{,}345{,}000}N_0^s(T,2T)\\
- &\qquad-\frac{268}{134{,}500}N(T,2T)-o(N(T,2T)).
+ +\frac{332{,}880{,}879}{89\cdot10^{9}}N_0^s(T,2T)\\
+ &\qquad-\frac{133}{66{,}750}N(T,2T)-o(N(T,2T)).
 \end{align*}
 Hence
 \[
- \left(1-\frac{4997}{1{,}345{,}000}\right)N_0^s(T,2T)
+ \left(1-\frac{332{,}880{,}879}{89\cdot10^{9}}\right)N_0^s(T,2T)
  \ge
- \left(H_{\mathrm{MT}}-\frac{268}{134{,}500}\right)N(T,2T)
+ \left(H_{\mathrm{MT}}-\frac{133}{66{,}750}\right)N(T,2T)
  -o(N(T,2T)).
 \]
 Divide by $N(T,2T)$ and let $T\to\infty$ to obtain
 \[
  \liminf_{T\to\infty}\frac{N_0^s(T,2T)}{N(T,2T)}
  \ge
- \frac{1{,}345{,}000H_{\mathrm{MT}}-2{,}680}{1{,}340{,}003}
- =0.6730085279277797613\ldots .
+ \frac{267\cdot10^{9}H_{\mathrm{MT}}-5.32\cdot10^{8}}{266{,}001{,}357{,}363}
+ =0.6730254674531403414\ldots .
 \]
 This proves Theorem~\ref{thm:main}.
 
@@ -462,7 +465,7 @@ This proves Theorem~\ref{thm:main}.
 Proposition~\ref{prop:F6} is the only computer-assisted input.  Its source,
 tests, trust-base description, and certificate are available at
 \begin{center}
-\url{https://github.com/ainta/zeta-simple-zeros}.
+\url{https://github.com/npip99/zeta-zeros}.
 \end{center}
 The verifier reconstructs every transcendental interval enclosure from the
 stated formulas.
@@ -475,6 +478,14 @@ Claude,
 preprint, August 10, 2026,
 \href{https://www-cdn.anthropic.com/564f962e60643842f5fcb4a17c9dbc8f608f1c37.pdf}
 {available online}.
+
+\bibitem{Ainta26}
+ainta,
+\emph{zeta-simple-zeros: a 67.30085\% lower bound for simple zeros of the Riemann zeta function},
+research artifact, August 10, 2026,
+\href{https://github.com/ainta/zeta-simple-zeros}{available online}.
+The argument and verifier of the present note originate there; only the
+certified target in Proposition~4.1 and the propagated constants differ.
 
 \bibitem{Johansson17}
 F.~Johansson,

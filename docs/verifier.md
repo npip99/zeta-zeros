@@ -46,12 +46,12 @@ points with $u+v>4$, which can only weaken a lower bound.
 
 ## 7-point search
 
-- Grid: $G=4000$.
-- Target: $19/5000$.
-- Pressure cutoff: if $\sum g_i\ge11.4$, the linear pressure alone proves
-  the target.
+- Grid: $G=8000$.
+- Target: $3826217/10^9$.
+- Pressure cutoff: if $\sum g_i\ge3000(3826217/10^9)=11.478651$, the linear
+  pressure alone proves the target.
 - One-body pruning: each gap contributes
-  $U(g)=g/3000+w(g)/3$. Cells on which $U\ge19/5000$ are removed before
+  $U(g)=g/3000+w(g)/3$. Cells on which $U\ge3826217/10^9$ are removed before
   the six-dimensional product is formed.
 - Remaining boxes: every consecutive partial sum in (4.1) receives its
   range-minimum lower bound, and the widest coordinate range is bisected.

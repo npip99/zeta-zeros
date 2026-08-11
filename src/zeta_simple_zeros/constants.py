@@ -8,6 +8,9 @@ import math
 H0 = 1.5 - (1.0 / math.sqrt(2.0)) / math.tan(1.0 / math.sqrt(2.0))
 """Anthropic's Montgomery-Taylor constant (Theorem D)."""
 
+SEVEN_POINT_BETA = 3_826_217 / 1_000_000_000
+SEVEN_POINT_BLOCK_SIZE = 267
+
 
 def three_point_bound(epsilon: float) -> float:
     """Return (H0 - epsilon/4) / (1 - epsilon/2)."""
@@ -18,6 +21,9 @@ def three_point_bound(epsilon: float) -> float:
 
 
 def seven_point_bound() -> float:
-    """Return the bound produced by the certified F6 >= 19/5000 inequality."""
+    """Return the bound produced by the certified 7-point inequality."""
 
-    return (1_345_000.0 * H0 - 2_680.0) / 1_340_003.0
+    m = SEVEN_POINT_BLOCK_SIZE
+    numerator = H0 - (1.0 / 500.0) * (m - 1) / m
+    denominator = 1.0 - SEVEN_POINT_BETA * (m - 6) / m
+    return numerator / denominator

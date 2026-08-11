@@ -190,9 +190,12 @@ $$
 There are 21 pair distances in (4.1). The verifier proves
 
 $$
-F_6(g_1,\ldots,g_6)\ge\frac{19}{5000}
+F_6(g_1,\ldots,g_6)\ge\beta:=\frac{3{,}826{,}217}{10^9}
 \quad\text{for every }g_i\ge0. \qquad (4.2)
 $$
+
+(The true minimum of $F_6$ is $\approx0.0038262312$; the certified
+$\beta=0.003826217$ is maximal on the $10^{-9}$ lattice at grid $1/8000$.)
 
 For $m$ ordered points $y_1\lt\cdots\lt y_m$, let
 
@@ -206,7 +209,7 @@ Each gap occurs in at most six windows. Consequently
 
 $$
 E_m+\frac1{500}(y_m-y_1)
-\ge\frac{19}{5000}(m-6). \qquad (4.3)
+\ge\beta(m-6). \qquad (4.3)
 $$
 
 For every corresponding principal block $G$, convex pinching and the definition of $\Psi$
@@ -217,27 +220,27 @@ $$
 2\sum_{i\lt j}|G_{ij}|^2\right). \qquad (4.4)
 $$
 
-Choose $m=269$. Then
+Choose $m=267$. Then
 
 $$
-A=\frac{19}{5000}(269-6)=\frac{4997}{5000}\lt1.
+A=\beta(267-6)=\frac{998{,}642{,}637}{10^9}\lt1.
 $$
 
-Equations (4.3)-(4.4) imply for every consecutive 269-point block $B$,
+Equations (4.3)-(4.4) imply for every consecutive 267-point block $B$,
 
 $$
 \Delta(G_B)+\frac1{500}\mathrm{span}(B)
-\ge\frac{4997}{5000}-o(1). \qquad (4.5)
+\ge\frac{998{,}642{,}637}{10^9}-o(1). \qquad (4.5)
 $$
 
-Average (4.5) over all 269 offsets of consecutive block partitions. Each
-interior gap is charged by at most 268 offsets and the total normalized length
+Average (4.5) over all 267 offsets of consecutive block partitions. Each
+interior gap is charged by at most 266 offsets and the total normalized length
 is $N+o(N)$. Therefore
 
 $$
 \Delta(M)\ge
-\frac{4997}{1{,}345{,}000}S
--\frac{268}{134{,}500}N-o(N). \qquad (4.6)
+\frac{332{,}880{,}879}{89\cdot10^9}S
+-\frac{133}{66{,}750}N-o(N). \qquad (4.6)
 $$
 
 Substituting (4.6) into (2.2) and rearranging gives
@@ -245,8 +248,8 @@ Substituting (4.6) into (2.2) and rearranging gives
 $$
 \liminf_{T\to\infty}\frac{N_0^s(T,2T)}{N(T,2T)}
 \ge
-\frac{1{,}345{,}000H_0-2{,}680}{1{,}340{,}003}
-=0.673008527927\ldots. \qquad (4.7)
+\frac{267\cdot10^9H_0-5.32\cdot10^8}{266{,}001{,}357{,}363}
+=0.673025467453\ldots. \qquad (4.7)
 $$
 
 ## 5. Proof dependencies

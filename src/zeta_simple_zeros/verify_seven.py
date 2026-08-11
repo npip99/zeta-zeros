@@ -21,12 +21,16 @@ from .report import VerificationReport
 from .rounding import down_add, down_mul, down_ratio, up_ratio
 
 
-GRID = 4_000
+GRID = 8_000
 PRECISION_BITS = 128
-TARGET_NUMERATOR = 19
-TARGET_DENOMINATOR = 5_000
+TARGET_NUMERATOR = 3_826_217
+TARGET_DENOMINATOR = 1_000_000_000
 PRESSURE_DENOMINATOR = 3_000
-PRESSURE_CUTOFF_CELLS = 45_600
+# The linear pressure proves the target once sum(g_i) / 3000 >= beta.
+PRESSURE_CUTOFF_CELLS = (
+    TARGET_NUMERATOR * GRID * PRESSURE_DENOMINATOR + TARGET_DENOMINATOR - 1
+) // TARGET_DENOMINATOR
+SECOND_DERIVATIVE_START_CELL = 19 * GRID // 20
 
 # c_s = 2/(7-s), where s is the number of gaps crossed by a pair.
 COEFFICIENTS = {
@@ -69,9 +73,9 @@ def _components(indices: Iterable[int]) -> List[CellRange]:
 
 
 def verify_seven(progress_every: int = 0) -> VerificationReport:
-    r"""Prove F6(g1,...,g6) >= 19/5000 for all nonnegative gaps.
+    r"""Prove the configured lower bound for F6 on all nonnegative gaps.
 
-    Arb first encloses k(x)^2 on a fixed 1/4000 grid. The second phase uses
+    Arb first encloses k(x)^2 on a fixed 1/GRID grid. The second phase uses
     only lower bounds, outward-rounded binary64 arithmetic, range minima, and
     exhaustive subdivision of the remaining six-dimensional cell boxes.
     """
@@ -81,7 +85,10 @@ def verify_seven(progress_every: int = 0) -> VerificationReport:
     table = build_kernel_table(GRID, cell_count, PRECISION_BITS)
     ranges = RangeMinimum(table)
     second_table = build_second_derivative_lower_table(
-        GRID, cell_count, start_index=3_800, precision=PRECISION_BITS
+        GRID,
+        cell_count,
+        start_index=SECOND_DERIVATIVE_START_CELL,
+        precision=PRECISION_BITS,
     )
     second_ranges = RangeMinimum(second_table)
     constants = kernel_constants()
@@ -318,7 +325,7 @@ def verify_seven(progress_every: int = 0) -> VerificationReport:
     return VerificationReport(
         certificate="seven-point",
         verified=True,
-        target="F6 >= 19/5000",
+        target=f"F6 >= {TARGET_NUMERATOR}/{TARGET_DENOMINATOR}",
         grid=GRID,
         precision_bits=PRECISION_BITS,
         kernel_table_sha256=table_sha256(table),

@@ -1,67 +1,55 @@
-# A 67.30085% lower bound for simple zeros of the Riemann zeta function
+# A 67.30255% lower bound for simple zeros of the Riemann zeta function
 
-This repository gives a proof and reproducible finite verification for
-an extension of Theorem D in Claude's paper
-[*More Than Two Thirds of the Zeros of the Riemann Zeta Function Lie on the Critical Line*](https://www-cdn.anthropic.com/564f962e60643842f5fcb4a17c9dbc8f608f1c37.pdf).
+This repository proves and reproducibly verifies
+
+$$
+\liminf_{T\to\infty}\frac{N_0^s(T,2T)}{N(T,2T)}
+\ge \frac{267\cdot10^{9}\,H_{\mathrm{MT}}-5.32\cdot10^{8}}{266{,}001{,}357{,}363}
+= 0.673025467453\ldots,
+$$
+
+where $N(T,2T)$ counts zeros of the Riemann zeta function with multiplicity,
+$N_0^s(T,2T)$ counts simple zeros on the critical line, and
+$H_{\mathrm{MT}} = \tfrac32-\tfrac1{\sqrt2}\cot\tfrac1{\sqrt2} = 0.6725007\ldots$
+is the Montgomery–Taylor constant of Anthropic's Theorem D.
+
+Credit: this work builds directly on
+[ainta/zeta-simple-zeros](https://github.com/ainta/zeta-simple-zeros)
+(the stability-defect argument and verifier) and on Anthropic's
+[paper](https://www-cdn.anthropic.com/564f962e60643842f5fcb4a17c9dbc8f608f1c37.pdf)
+and [Lean 4 artifact](https://github.com/anthropics/zeta-23-lean) (Theorem D and
+its analytic inputs).
 
 **[Proof (PDF)](paper/riemann.pdf)** · [LaTeX source](paper/riemann.tex) · [Verifier](docs/verifier.md)
 
-Let $N(T,2T)$ count zeros with multiplicity and let
-$N_0^s(T,2T)$ count simple zeros on the critical line. The main result is
-
-$$
-\liminf_{T\to\infty}\frac{N_0^s(T,2T)}{N(T,2T)}
-\ge 0.673008527927\ldots.
-$$
-
-## Results
-
-Anthropic's Theorem D proves
-
-$$
-\liminf_{T\to\infty}\frac{N_0^s(T,2T)}{N(T,2T)}
-\ge
-\frac32-\frac1{\sqrt2}\cot\frac1{\sqrt2}
-=0.672500703679\ldots.
-$$
-
-The additional argument in this repository gives two explicit improvements:
-
-| Argument | Certified inequality | Lower bound |
-| --- | ---: | ---: |
-| 3 consecutive zeros | $\epsilon_4\ge 221/10^6$ | **67.2519767%** |
-| 7 consecutive zeros | six-variable bound $\ge 19/5000$ | **67.3008528%** |
-
-Both use the analytic estimates and the optimized test family from the
-Anthropic paper.
-
 ## Argument
 
-The rank–trace step in the paper uses the rank, inertia, and two traces of a
-Hermitian matrix. Its equality case permits the vectors associated with simple
-zeros to be mutually orthogonal. For the vectors produced by the optimized
-test family, however, each inner product is determined by the difference
-between two zero ordinates.
+The rank–trace step in the Anthropic paper uses the rank, inertia, and two
+traces of a Hermitian matrix. Its equality case permits the vectors associated
+with simple zeros to be mutually orthogonal. For the vectors produced by the
+optimized test family, however, each inner product is determined by the
+Montgomery–Taylor kernel at the difference of two zero ordinates — and seven
+consecutive zeros have 21 pairwise differences determined by only six gaps. The
+kernel's positive zero set is sum-free, so the differences cannot all sit at
+kernel zeros. A stability refinement of the rank–trace inequality keeps the
+resulting Gram-matrix defect, and a certified 7-point inequality
 
-The proof keeps this extra information through a stability refinement of the
-rank–trace inequality.
+$$
+F_6(g_1,\ldots,g_6)\ \ge\ \frac{3{,}826{,}217}{10^9}
+$$
 
-### 3 consecutive zeros
+makes it quantitative (grid $1/8000$, exhaustive subdivision, Arb interval
+arithmetic; the target is maximal on the $10^{-9}$ lattice at this grid — the
+true minimum of $F_6$ is $\approx 0.0038262312$, attained near the alternating
+gap pattern $(1.045, 1.977, 1.042, 1.986, 1.989, 1.046)$). Aggregating over
+blocks of $m = 267$ consecutive zeros yields the bound.
 
-If the consecutive gaps are $u$ and $v$, the three pairwise differences
-are $u$, $v$, and $u+v$. The Montgomery–Taylor kernel cannot vanish at
-all three values. The verifier makes this quantitative on $u+v\le4$, and the
-resulting local estimate yields the 67.2519767% bound.
+See [`docs/proof.md`](docs/proof.md) for the deduction with exact constants and
+[`paper/riemann.pdf`](paper/riemann.pdf) for the full proof.
 
-### 7 consecutive zeros
-
-Seven consecutive zeros have 21 pairwise differences determined by six gaps.
-The verifier proves a weighted lower bound for all six nonnegative gaps using
-Arb interval arithmetic and exhaustive subdivision. Averaging this estimate
-over consecutive blocks yields the 67.3008528% bound.
-
-The full proof is in [`paper/riemann.pdf`](paper/riemann.pdf).
-[`docs/proof.md`](docs/proof.md) is a shorter web outline.
+A Lean 4 formalization of the extension, building on
+[zeta-23-lean](https://github.com/anthropics/zeta-23-lean), is in progress and
+will be added under `lean/`.
 
 ## Proof and verification
 
@@ -75,43 +63,41 @@ The full proof is in [`paper/riemann.pdf`](paper/riemann.pdf).
 | [`certificates/three-point.txt`](certificates/three-point.txt) | Recorded 3-point verification |
 | [`certificates/seven-point.txt`](certificates/seven-point.txt) | Recorded 7-point verification |
 
-The verifier checks the two finite inequalities used by the new argument. It
-reconstructs every transcendental enclosure from the formulas on each run.
+The verifier checks the two finite inequalities used by the argument. It
+reconstructs every transcendental enclosure from the formulas on each run; the
+committed certificates are reproducibility records, not trusted inputs.
 
 ## Run the verifier
 
-Python 3.9 or later is required.
+Python 3.9 or later is required. With [uv](https://docs.astral.sh/uv/):
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
-python3 -m pip install --upgrade pip
-python3 -m pip install -e .
+uv venv .venv
+uv pip install -e . --python .venv/bin/python
 
 # Fast 3-point verification
-zeta-zero-verify three
+.venv/bin/zeta-zero-verify three
 
-# Exhaustive 7-point verification; allow a few minutes
-zeta-zero-verify seven --progress-every 1000000
+# Exhaustive 7-point verification; a couple of minutes
+.venv/bin/zeta-zero-verify seven --progress-every 1000000
 ```
 
 Run the tests with:
 
 ```bash
-python3 -m unittest discover -s tests -v
+.venv/bin/python -m unittest discover -s tests -v
 ```
 
 ## Status
 
-Research draft generated by GPT-5.6 Sol. Independent verification and peer
-review are welcome.
+Research artifact. Independent verification and peer review are welcome.
 
 ## References
 
 - [Anthropic research article](https://www.anthropic.com/research/riemann-zeta)
-- [Full paper](https://www-cdn.anthropic.com/564f962e60643842f5fcb4a17c9dbc8f608f1c37.pdf)
-- [Lean 4 artifact](https://github.com/anthropics/zeta-23-lean)
-- [Research conversation](https://chatgpt.com/share/6a7a7ff8-1c88-83e8-88d1-021a1bbdc8fe)
+- [Anthropic full paper](https://www-cdn.anthropic.com/564f962e60643842f5fcb4a17c9dbc8f608f1c37.pdf)
+- [Lean 4 artifact (zeta-23-lean)](https://github.com/anthropics/zeta-23-lean)
+- [Original artifact (ainta/zeta-simple-zeros)](https://github.com/ainta/zeta-simple-zeros)
 
 ## License
 
