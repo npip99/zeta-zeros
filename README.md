@@ -18,7 +18,6 @@ counts simple zeros on the critical line.
 | --- | ---: |
 | Anthropic Theorem D ([paper](https://www-cdn.anthropic.com/564f962e60643842f5fcb4a17c9dbc8f608f1c37.pdf), [Lean artifact](https://github.com/anthropics/zeta-23-lean)) | 0.672500703679… |
 | [ainta/zeta-simple-zeros](https://github.com/ainta/zeta-simple-zeros) (stability refinement, 7-point certificate) | 0.673008527927… |
-| this repository, morning revision (tightened certificate, grid 8000) | 0.673025467453… |
 | [trmdy/zeta-simple-zeros-673137](https://github.com/trmdy/zeta-simple-zeros-673137) (re-optimized window, weighted 7-point, sharp square-root tail profile) | 0.673137630699… |
 | **this repository** | **0.673188803503…** |
 
