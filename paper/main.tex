@@ -153,9 +153,11 @@ is subadditive, so for the eigenvalues $\lambda_i$ of $G$,
  =g\bigl(\|G-I\|_{\F}^2\bigr)\;\ge\;g(E),
 \]
 using that $\|G-I\|_{\F}^2=\sum_i(\lambda_i-1)^2$ and that the off-diagonal
-part alone contributes $E$.  Sharpness: take $G=I$ except for one eigenvalue
-$1+\sqrt E$ (with a rank-one off-diagonal realization), giving
-$\tr\Psi(G)=2\sqrt E-1$ for $E\ge1$ and $E$ for $E\le1$.
+part alone contributes $E$.  For sharpness, let $u_n=n^{-1/2}(1,\ldots,1)$
+and set $G_n=I+t_nu_nu_n^*$, where
+$t_n=\sqrt{E/(1-1/n)}$.  Then the off-diagonal energy of $G_n$ is exactly
+$E$, while $\tr\Psi(G_n)=\Psi(1+t_n)$ tends to $2\sqrt E-1$ for $E\ge1$
+and to $E$ for $0\le E\le1$.  Thus no larger lower profile is possible.
 \end{proof}
 
 \begin{corollary}[Chord bound]\label{cor:chord}
@@ -236,10 +238,10 @@ $E_B=2\sum_{i<j}|(G_B)_{ij}|^2$.  Summing \eqref{eq:Fbound} over the $m-q$
 consecutive seven-point windows of $B$: a pair spanning $r$ gaps lies in at
 most $7-r$ windows and its weight totals at most the span capacity $2$; each
 gap lies in at most $6$ windows, contributing at most
-$6p\sum g_i=B_p\,\mathrm{span}(B)$.  By the Gram-entry asymptotics of
-Input~\ref{inp:stability}, $2\sum_{i<j}w(y_j-y_i)\le E_B+o(1)$.  Hence
+$6p\sum g_i=B_p\,\mathrm{span}(B)$.  By the nonnegativity of the weights,
+this gives the purely kernel-level bound
 \begin{equation}\label{eq:blockenergy}
- E_B+B_p\,\mathrm{span}(B)\;\ge\;A-o(1).
+ 2\sum_{i<j}w(y_j-y_i)+B_p\,\mathrm{span}(B)\;\ge\;A.
 \end{equation}
 
 \subsection{Blocks to defect}
@@ -248,6 +250,17 @@ We claim
 \begin{equation}\label{eq:blockdefect}
  \tr\Psi(G_B)+\eta\,B_p\,\mathrm{span}(B)\;\ge\;R-o(1).
 \end{equation}
+Put $L=A/B_p=47603/100$.  If $\mathrm{span}(B)\ge L$, this is immediate:
+$\tr\Psi(G_B)\ge0$ and
+$\eta B_p\,\mathrm{span}(B)\ge\eta A=R$.  We may therefore suppose that
+$\mathrm{span}(B)<L$.  Every pair separation in $B$ then belongs to the
+fixed compact interval $[0,L]$, so the compact-uniform Gram-entry asymptotic
+of Input~\ref{inp:stability} applies uniformly over these blocks.  It gives
+$2\sum_{i<j}w(y_j-y_i)\le E_B+o(1)$; together with
+\eqref{eq:blockenergy},
+\[
+ E_B+B_p\,\mathrm{span}(B)\;\ge\;A-o(1).
+\]
 If $E_B\ge A$, then Lemma~\ref{lem:profile} and monotonicity give
 $\tr\Psi(G_B)\ge h(E_B)\ge h(A)=R$.  If $E_B<A$, the chord bound
 (Corollary~\ref{cor:chord}) gives
@@ -306,8 +319,9 @@ rational inputs.  Source, recorded certificates, and instructions are at
 \end{center}
 (the verifier is that of~\cite{Trmdy26}, vendored under MIT with only the
 design constants changed).  Proposition~\ref{prop:F} was certified in two
-independent runs of the identical decision procedure: the headline target $509/100000$ recorded in this repository (grid
-$1/4000$, $1{,}739{,}356$ nodes, depth 57), the intermediate target
+independent runs of the identical decision procedure: the headline target
+$509/100000$ at grid $1/4000$ ($1{,}739{,}356$ nodes, depth 57) and again at
+grid $1/8000$ ($1{,}736{,}620$ nodes, depth 57), the intermediate target
 $127/25000$ certified twice (a run recorded here, $1{,}544{,}746$-node
 independent run during the design exchange), and the original $1/200$
 certificate of~\cite{Trmdy26} reproduced end-to-end.

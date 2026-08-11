@@ -1,0 +1,17 @@
+verified=True
+target=F >= 509/100000
+grid=8000
+nodes=1736620
+pruned=868472
+splits=868148
+maximum_depth=57
+initial_boxes=324
+elapsed_seconds=616.747
+cutoff_cells=93658
+interval_pruned=456007
+pressure_pruned=6726
+tangent_pruned=405739
+w_second_table_sha256=4e02b34fac48bb99d5bc8d1f2c48161dbb1d2ba0477856b53189ad942e06359a
+w_table_sha256=c55277cb7d908d12b77eb06928aa8d735b2b23de7526dc384fd0f02006ee0a90
+workers=6
+wall_seconds=616.8
