@@ -21,14 +21,13 @@ counts simple zeros on the critical line.
 | [trmdy/zeta-simple-zeros-673137](https://github.com/trmdy/zeta-simple-zeros-673137) (re-optimized window, weighted 7-point, sharp square-root tail profile) | 0.673137630699… |
 | **this repository** | **0.673188803503…** |
 
-The improvement over trmdy is a single change: their weighted seven-point
-inequality is certified at the stronger target $F \ge 127/25000 = 0.00508$
-(previously $1/200 = 0.005$; the observed minimum of $F$ is
-$\approx 0.005091$), and the block length is re-optimized to $m = 251$.
-Everything else — the 7-term window, the pair weights, the pressure
-$1/2300$, the sharp block profile, and the deduction — is theirs, used
-unchanged. Two independent runs of the identical interval decision procedure
-certified the raised target.
+This work certifies a stronger constant in the weighted seven-point
+inequality of trmdy/zeta-simple-zeros-673137: $F \ge 127/25000 = 0.00508$,
+where $1/200 = 0.005$ was certified previously (the observed minimum of $F$
+is $\approx 0.005091$), and re-optimizes the block length to $m = 251$. The
+window, pair weights, pressure, block profile, and deduction follow that
+repository. Two independent runs of the identical interval decision
+procedure certified the raised target.
 
 ## Verify it yourself
 
