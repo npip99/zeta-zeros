@@ -8,3 +8,7 @@ import Zeta23Ext.Current
 import Zeta23Ext.CertificateBridge
 import Zeta23Ext.CurrentAssembly
 import Zeta23Ext.CurrentZetaAssembly
+import Zeta23Ext.CurrentSpan
+import Zeta23Ext.CurrentAnalyticBridge
+import Zeta23Ext.VerifiedCertificate
+import Zeta23Ext.TranscendentalBounds

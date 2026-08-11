@@ -88,4 +88,15 @@ theorem zeta_target
       Current.target * (Ncount T (2 * T) : ℝ) ≤ N0simple T (2 * T) :=
   Current.zeta_conditional_target (toCurrentZetaAnalyticInputs h hr hN)
 
+/-- Cumulative exact-target epsilon form, using the upstream unconditional
+Riemann--von Mangoldt theorem rather than requiring it from the caller. -/
+theorem zeta_target_cumulative
+    (h : CurrentAssembly.AsymptoticInputs (atTop : Filter ℝ))
+    (hr : ∀ T, h.r T = N0simple T (2 * T))
+    (hN : ∀ T, h.N T = (Ncount T (2 * T) : ℝ)) :
+    ∀ eps > 0, ∃ T₀ : ℝ, ∀ T ≥ T₀,
+      (Current.target - eps) * (Ncount 0 T : ℝ) ≤ N0simple 0 T :=
+  Current.zeta_conditional_target_cumulative_unconditional_rvm
+    (toCurrentZetaAnalyticInputs h hr hN)
+
 end Zeta23Ext.CurrentZetaAssembly

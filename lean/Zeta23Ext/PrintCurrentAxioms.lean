@@ -1,6 +1,10 @@
 import Zeta23Ext.Current
 import Zeta23Ext.CertificateBridge
 import Zeta23Ext.CurrentZetaAssembly
+import Zeta23Ext.CurrentSpan
+import Zeta23Ext.CurrentAnalyticBridge
+import Zeta23Ext.VerifiedCertificate
+import Zeta23Ext.TranscendentalBounds
 
 /-
 Run with `lake env lean Zeta23Ext/PrintCurrentAxioms.lean` to audit the
@@ -16,6 +20,7 @@ in theorem arguments, not declared axioms.
 #print axioms Zeta23Ext.Current.target_lt_headline
 #print axioms Zeta23Ext.Current.zeta_conditional_target
 #print axioms Zeta23Ext.Current.zeta_conditional_target_cumulative
+#print axioms Zeta23Ext.Current.zeta_conditional_target_cumulative_unconditional_rvm
 #print axioms Zeta23Ext.CertificateBridge.mainReportAccepted
 #print axioms Zeta23Ext.CertificateBridge.fastReportAccepted
 #print axioms Zeta23Ext.CertificateBridge.finiteWindowInputs_of_externalSoundness
@@ -23,3 +28,16 @@ in theorem arguments, not declared axioms.
 #print axioms Zeta23Ext.CurrentAssembly.AsymptoticInputs.target
 #print axioms Zeta23Ext.CurrentZetaAssembly.toCurrentZetaAnalyticInputs
 #print axioms Zeta23Ext.CurrentZetaAssembly.zeta_target
+#print axioms Zeta23Ext.CurrentZetaAssembly.zeta_target_cumulative
+#print axioms Zeta23Ext.CurrentSpan.zeta_spanError_isLittleO_count
+#print axioms Zeta23Ext.CurrentSpan.zeta_spanControl_of_normalized_endpoint_bounds
+#print axioms Zeta23Ext.CurrentSpan.zeta_pressureSpanError_isLittleO_count
+#print axioms Zeta23Ext.CurrentAnalyticBridge.currentWindowZeroSide
+#print axioms Zeta23Ext.CurrentAnalyticBridge.PairwiseGramData.guardedBlockApprox
+#print axioms Zeta23Ext.CurrentAnalyticBridge.MomentData.stabilitySeam
+#print axioms Zeta23Ext.CurrentAnalyticBridge.AsymptoticAnalyticInputs.target
+#print axioms Zeta23Ext.VerifiedCertificate.Tree.check_sound
+#print axioms Zeta23Ext.VerifiedCertificate.currentLocalCertificate_of_checked_tree
+#print axioms Zeta23Ext.TranscendentalBounds.abs_sin_sub_sinTaylorWithin_le
+#print axioms Zeta23Ext.TranscendentalBounds.sin_mem_taylor7_center_interval
+#print axioms Zeta23Ext.TranscendentalBounds.sin_one_half_bounds

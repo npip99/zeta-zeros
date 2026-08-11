@@ -8,6 +8,8 @@ pinching, endpoint deletion, and span bookkeeping.
 -/
 import Zeta23Ext.CurrentCapstone
 import Zeta23.Main
+import Zeta23.GammaFacts.Complete
+import Zeta23.RvM.Statement
 
 noncomputable section
 
@@ -85,5 +87,14 @@ theorem zeta_conditional_target_cumulative
   exact cumulative_of_dyadic zetaSeam hRvM
     (fun _ _ _ => N0simple_add' zetaSeam)
     (zeta_conditional_target_epsilon h)
+
+/-- The same cumulative theorem with Riemann--von Mangoldt discharged by the
+unconditional zeta development in the pinned upstream package. -/
+theorem zeta_conditional_target_cumulative_unconditional_rvm
+    (h : CurrentZetaAnalyticInputs) :
+    ∀ eps > 0, ∃ T₀ : ℝ, ∀ T ≥ T₀,
+      (target - eps) * (Ncount 0 T : ℝ) ≤ N0simple 0 T := by
+  exact zeta_conditional_target_cumulative h
+    (Zeta23.RvM.riemannVonMangoldt Zeta23.gammaFacts)
 
 end Zeta23Ext.Current

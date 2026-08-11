@@ -76,13 +76,18 @@ lake build Zeta23Ext
 lake env lean Zeta23Ext/PrintCurrentAxioms.lean
 ```
 
-The capstone is deliberately conditional. The Arb certificates, the imported
-arbitrary-window stability and Gram asymptotics, and the retained-set/error
-packaging remain explicit hypotheses in
-[`CurrentZetaAnalyticInputs`](lean/Zeta23Ext/CurrentZeta.lean); the repository
-does not claim that those external analytic inputs have been replayed in the
-Lean kernel. The Lean project pins the upstream base at an immutable commit
-and retains Apache-2.0 licensing and attribution in
+The capstone remains conditional, but the normalized-span error and its
+pressure contribution are now discharged from the upstream unconditional
+Riemann--von Mangoldt theorem. The remaining explicit hypotheses are the
+full numeric window certificate and kernel-table/search soundness (including
+the real-domain bridge and production-tree decoding), current-window
+admissibility and squared-energy Gram asymptotics, and retained Gram/moment
+construction with the remaining `o(N)` errors; see
+[`CurrentAnalyticBridge`](lean/Zeta23Ext/CurrentAnalyticBridge.lean) and
+[`VerifiedCertificate`](lean/Zeta23Ext/VerifiedCertificate.lean). The
+repository does not claim these remaining external inputs have been replayed
+in the Lean kernel. The Lean project pins the upstream base at an immutable
+commit and retains Apache-2.0 licensing and attribution in
 [`lean/LICENSE`](lean/LICENSE) and [`lean/NOTICE`](lean/NOTICE); the rest of
 this repository remains MIT-licensed.
 
