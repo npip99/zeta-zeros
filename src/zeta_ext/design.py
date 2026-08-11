@@ -2,7 +2,7 @@
 
 Vendored from github.com/trmdy/zeta-simple-zeros-673137 (MIT, Tormod Haugland
 and contributors); this copy raises the certified target from 1/200 to
-127/25000 and re-optimizes the block length, which is the only change.
+509/100000 and re-optimizes the block length, which is the only change.
 
 Every constant here is an exact rational. The design was found by numerical
 optimization (see docs/provenance.md) but plays no role in the proof: the
@@ -62,13 +62,13 @@ WEIGHT_NUMERATORS = {
 }
 
 PRESSURE = fmpq(1, 2300)
-TARGET = fmpq(127, 25000)
+TARGET = fmpq(509, 100000)
 
 # Deduction constants.
-BLOCK_LENGTH = 251                     # m
+BLOCK_LENGTH = 250                     # m
 H_CERT = fmpq(672_457, 1_000_000)      # certified lower bound for H(v)
 WINDOW_MIN = fmpq(3, 4)                # certified lower bound for v
-FINAL_BOUND_RATIONAL = fmpq(673_188, 1_000_000)  # certified <= final bound
+FINAL_BOUND_RATIONAL = fmpq(673_195, 1_000_000)  # certified <= final bound
 
 # Prior records.
 TRMDY_BOUND = "0.673137630699..."
@@ -77,7 +77,7 @@ ANTHROPIC_H0 = "0.672500703679..."
 
 
 def certificate_spec(grid: int = 4000) -> CertificateSpec:
-    """The main finite inequality F >= 127/25000 as a CertificateSpec."""
+    """The main finite inequality F >= 509/100000 as a CertificateSpec."""
 
     weights = {
         key: fmpq(value, WEIGHT_DENOMINATOR)

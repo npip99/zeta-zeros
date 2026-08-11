@@ -1,10 +1,10 @@
-# A 67.3188% lower bound for simple zeros of the Riemann zeta function
+# A 67.3195% lower bound for simple zeros of the Riemann zeta function
 
 This repository proves and reproducibly verifies
 
 $$
 \liminf_{T\to\infty}\frac{N_0^s(T,2T)}{N(T,2T)}
-\;\ge\; 0.673188803503\ldots \;>\; \frac{673188}{10^6},
+\;\ge\; 0.673195198901\ldots \;>\; \frac{673195}{10^6},
 $$
 
 where $N(T,2T)$ counts nontrivial zeros with multiplicity and $N_0^s(T,2T)$
@@ -19,15 +19,16 @@ counts simple zeros on the critical line.
 | Anthropic Theorem D ([paper](https://www-cdn.anthropic.com/564f962e60643842f5fcb4a17c9dbc8f608f1c37.pdf), [Lean artifact](https://github.com/anthropics/zeta-23-lean)) | 0.672500703679… |
 | [ainta/zeta-simple-zeros](https://github.com/ainta/zeta-simple-zeros) (stability refinement, 7-point certificate) | 0.673008527927… |
 | [trmdy/zeta-simple-zeros-673137](https://github.com/trmdy/zeta-simple-zeros-673137) (re-optimized window, weighted 7-point, sharp square-root tail profile) | 0.673137630699… |
-| **this repository** | **0.673188803503…** |
+| **this repository** | **0.673195198901…** |
 
 This work certifies a stronger constant in the weighted seven-point
-inequality of trmdy/zeta-simple-zeros-673137: $F \ge 127/25000 = 0.00508$,
+inequality of trmdy/zeta-simple-zeros-673137: $F \ge 509/100000 = 0.00509$,
 where $1/200 = 0.005$ was certified previously (the observed minimum of $F$
-is $\approx 0.005091$), and re-optimizes the block length to $m = 251$. The
+is $\approx 0.0050910$), and re-optimizes the block length to $m = 250$. The
 window, pair weights, pressure, block profile, and deduction follow that
-repository. Two independent runs of the identical interval decision
-procedure certified the raised target.
+repository. The headline target is certified at grid $1/4000$ (1,739,356
+nodes, depth 57, recorded in `certificates/`); the intermediate target
+$127/25000$ was certified in two independent runs.
 
 ## Verify it yourself
 
@@ -41,7 +42,7 @@ uv pip install -e . --python .venv/bin/python
 # window bounds, H(v), final arithmetic (~1 min, Arb-certified)
 .venv/bin/zeta-ext-verify fast
 
-# the main certificate F >= 127/25000 (~8 min on 6-8 cores)
+# the main certificate F >= 509/100000 (~10 min on 6-8 cores)
 .venv/bin/zeta-ext-verify main --workers 8
 
 # the previous-generation verifier (this repo's morning result, 67.30255%)

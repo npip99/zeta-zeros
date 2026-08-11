@@ -21,7 +21,7 @@
 \newcommand{\F}{\mathrm F}
 \newcommand{\R}{\mathbb R}
 
-\title{More than $67.3188\%$ of the zeros of the Riemann zeta function
+\title{More than $67.3195\%$ of the zeros of the Riemann zeta function
 are simple and lie on the critical line}
 \date{August 11, 2026}
 
@@ -35,7 +35,7 @@ $(T,2T]$, with multiplicity, and let $N_0^s(T,2T)$ count the simple zeros on
 the critical line in that interval.  We prove
 \[
  \liminf_{T\to\infty}\frac{N_0^s(T,2T)}{N(T,2T)}
- \ge 0.673188803503\ldots \;>\; \frac{673188}{10^6}.
+ \ge 0.673195198901\ldots \;>\; \frac{673195}{10^6}.
 \]
 The proof combines the analytic framework of Claude~\cite{Claude26} (Theorem~D
 and its Lean artifact), the stability refinement of the rank--trace argument
@@ -43,7 +43,7 @@ introduced in~\cite{Ainta26}, and the re-optimized window, position-weighted
 seven-point inequality, and sharp block profile of~\cite{Trmdy26}.  The single
 new mathematical ingredient is a strengthened certified constant for the
 weighted seven-point inequality of~\cite{Trmdy26}: we certify
-$F\ge 127/25000$ where $1/200$ was certified before, and re-optimize the
+$F\ge 509/100000$ where $1/200$ was certified before, and re-optimize the
 block length.  All finite claims are certified by Arb interval arithmetic in
 two independent runs; the deduction is reproduced in full.
 \end{abstract}
@@ -58,11 +58,11 @@ in that range.
 \[
  \liminf_{T\to\infty}\frac{N_0^s(T,2T)}{N(T,2T)}
  \;\ge\;
- \frac{251\,H_{\mathrm{cert}}-\eta\,\frac{3}{1150}\cdot 250}{251-R}
- \;=\;0.6731888035035022\ldots\;>\;\frac{673188}{10^{6}},
+ \frac{250\,H_{\mathrm{cert}}-\eta\,\frac{3}{1150}\cdot 249}{250-R}
+ \;=\;0.6731951989015205\ldots\;>\;\frac{673195}{10^{6}},
 \]
 where $H_{\mathrm{cert}}=672457/10^6$,
-$A=6223/5000$, $R=2\sqrt A-1$, and $\eta=R/A$.
+$A=31049/25000$, $R=2\sqrt A-1$, and $\eta=R/A$.
 \end{theorem}
 
 The proof template is that of~\cite{Trmdy26}, which in turn builds
@@ -198,34 +198,35 @@ $5$ & & & & & & 239252\\
 \begin{proposition}[Certified local inequality]\label{prop:F}
 For all $g_1,\dots,g_6\ge0$,
 \begin{equation}\label{eq:Fbound}
- F(g_1,\dots,g_6)\;\ge\;\varepsilon_0:=\frac{127}{25000}=0.00508 .
+ F(g_1,\dots,g_6)\;\ge\;\varepsilon_0:=\frac{509}{100000}=0.00509 .
 \end{equation}
 \end{proposition}
 
 \begin{proof}[Verification]
 Exhaustive interval subdivision with Arb enclosures of $w$ on a grid of mesh
 $1/4000$, exactly the decision procedure of~\cite{Trmdy26} with the target
-raised from $1/200$ to $127/25000$: one-body pruning, per-box range-minimum
+raised from $1/200$ to $509/100000$: one-body pruning, per-box range-minimum
 lower bounds over all $21$ pair separations, a certified convex tangent
 bound, and bisection of the widest coordinate; the run fails loudly at any
-unresolved terminal cell.  Two independent runs certified
-\eqref{eq:Fbound}; see Section~\ref{sec:repro} for statistics and recorded
+unresolved terminal cell.  The recorded run has $1{,}739{,}356$ nodes and maximum depth $57$; the
+weaker targets $127/25000$ and $1/200$ were additionally certified in
+independent runs.  See Section~\ref{sec:repro} for the recorded
 certificates.  (The observed minimum of $F$ is $\approx0.005091029$, at a
-lattice-like configuration; the certified target retains a safety margin.)
+lattice-like configuration.)
 \end{proof}
 
 \section{Deduction of the main theorem}\label{sec:deduction}
 
 Set
 \[
- q=6,\qquad m=251,\qquad p=\frac1{2300},\qquad B_p=6p=\frac{3}{1150},
+ q=6,\qquad m=250,\qquad p=\frac1{2300},\qquad B_p=6p=\frac{3}{1150},
 \]
 \[
- A=\varepsilon_0\,(m-q)=\frac{127}{25000}\cdot245=\frac{6223}{5000}
- =1.2446,\qquad
+ A=\varepsilon_0\,(m-q)=\frac{509}{100000}\cdot244=\frac{31049}{25000}
+ =1.24196,\qquad
  R=h(A)=2\sqrt A-1,\qquad \eta=\frac RA .
 \]
-Numerically $R=1.23123284307129\ldots$, $\eta=0.98925987712621\ldots$.
+Numerically $R=1.22886518210501\ldots$, $\eta=0.98945632879079\ldots$.
 
 \subsection{Windows to blocks}
 
@@ -278,11 +279,11 @@ hence
  \liminf_{T\to\infty}\frac SN
  \;\ge\;
  \frac{m\,H_{\mathrm{cert}}-\eta\,B_p\,(m-1)}{m-R}
- =\frac{251\cdot\frac{672457}{10^6}-\eta\cdot\frac{3}{1150}\cdot250}{251-R}
- =0.6731888035035022379\ldots
+ =\frac{250\cdot\frac{672457}{10^6}-\eta\cdot\frac{3}{1150}\cdot249}{250-R}
+ =0.6731951989015205755\ldots
 \]
 The final arithmetic (including the enclosure of $R$ and $\eta$ and the
-comparison with $673188/10^6$) is itself certified in Arb by the verifier's
+comparison with $673195/10^6$) is itself certified in Arb by the verifier's
 \texttt{fast} module.  This proves Theorem~\ref{thm:main}. \qed
 
 \subsection{Sanity gates}
@@ -305,10 +306,11 @@ rational inputs.  Source, recorded certificates, and instructions are at
 \end{center}
 (the verifier is that of~\cite{Trmdy26}, vendored under MIT with only the
 design constants changed).  Proposition~\ref{prop:F} was certified in two
-independent runs of the identical decision procedure: one recorded in this
-repository (grid $1/4000$; statistics in
-\texttt{certificates/}), and one performed independently during the design
-exchange (1{,}544{,}746 nodes, maximum depth 46, eight workers, 419 s).
+independent runs of the identical decision procedure: the headline target $509/100000$ recorded in this repository (grid
+$1/4000$, $1{,}739{,}356$ nodes, depth 57), the intermediate target
+$127/25000$ certified twice (a run recorded here, $1{,}544{,}746$-node
+independent run during the design exchange), and the original $1/200$
+certificate of~\cite{Trmdy26} reproduced end-to-end.
 The Lean~4 formalization of the framework
 (\cite{Zeta23Lean,ZetaExt26}) covers Input~\ref{inp:stability}'s
 stability layer, the aggregation scheme, and the kernel-limit asymptotics;
