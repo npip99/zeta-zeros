@@ -16,7 +16,7 @@ counts simple zeros on the critical line.
 
 | Result | Bound |
 | --- | ---: |
-| Anthropic Theorem D ([paper](https://www-cdn.anthropic.com/564f962e60643842f5fcb4a17c9dbc8f608f1c37.pdf), [Lean artifact](https://github.com/anthropics/zeta-23-lean)) | 0.672500703679… |
+| Anthropic Theorem D ([paper](https://www-cdn.anthropic.com/564f962e60643842f5fcb4a17c9dbc8f608f1c37.pdf)) | 0.672500703679… |
 | [ainta/zeta-simple-zeros](https://github.com/ainta/zeta-simple-zeros) (stability refinement, 7-point certificate) | 0.673008527927… |
 | [trmdy/zeta-simple-zeros-673137](https://github.com/trmdy/zeta-simple-zeros-673137) (re-optimized window, weighted 7-point, sharp square-root tail profile) | 0.673137630699… |
 | **this repository** | **0.673195198901…** |
@@ -27,8 +27,9 @@ where $1/200 = 0.005$ was certified previously (the observed minimum of $F$
 is $\approx 0.0050910$), and re-optimizes the block length to $m = 250$. The
 window, pair weights, pressure, block profile, and deduction follow that
 repository. The headline target is certified at grid $1/4000$ (1,739,356
-nodes, depth 57, recorded in `certificates/`); the intermediate target
-$127/25000$ was certified in two independent runs.
+nodes, depth 57, recorded in `certificates/`) and repeated at grid $1/8000$.
+These are separate runs of the same implementation, not independent formal
+proofs.
 
 ## Verify it yourself
 
@@ -39,7 +40,7 @@ Python ≥ 3.10; the only dependency is `python-flint` (ships Arb). With
 uv venv .venv
 uv pip install -e . --python .venv/bin/python
 
-# window bounds, H(v), final arithmetic (~1 min, Arb-certified)
+# window bounds, monotonicity, H(v), final arithmetic (Arb-certified)
 .venv/bin/zeta-ext-verify fast
 
 # the main certificate F >= 509/100000 (~10 min on 6-8 cores)
@@ -52,36 +53,29 @@ uv pip install -e . --python .venv/bin/python
 Recorded runs are in [`certificates/`](certificates/). The verifier under
 `src/zeta_ext/` is vendored (MIT) from
 [trmdy/zeta-simple-zeros-673137](https://github.com/trmdy/zeta-simple-zeros-673137)
-with only the design constants changed; `src/zeta_simple_zeros/` is the
+with the strengthened target, optimized block length, and an explicit window
+monotonicity check; `src/zeta_simple_zeros/` is the
 previous-generation verifier from
 [ainta/zeta-simple-zeros](https://github.com/ainta/zeta-simple-zeros) with
 this repository's tightened constants.
 
-## Lean 4 formalization
-
-A Lean 4 formalization of the stability-defect framework, built on
-[zeta-23-lean](https://github.com/anthropics/zeta-23-lean), is nearing
-completion and will be added under `lean/`: the stability rank–trace lemma,
-the aggregation/pinching layer, the kernel-limit asymptotics with explicit
-errors, and a β-parametric capstone theorem — plus a kernel-checked 3-point
-certificate and a coarse 7-point certificate in final verification. The
-capstone takes the certified seven-point constant as its only hypothesis, so
-the constants of this repository drop in mechanically.
-
 ## Trust base
 
-All new finite claims are certified by Arb interval arithmetic over exact
-rational inputs; the committed certificates are reproducibility records, not
-trusted inputs. The imported analytic inputs (explicit formula, Gabor trace
-asymptotics, tail bounds, Gram-entry asymptotics, and the stability
-rank–trace layer) are those of the Anthropic paper/Lean artifact and of
-ainta's artifact, independently audited in the trmdy campaign.
+All new finite claims are certified by rigorous interval computation. Arb
+encloses transcendental evaluations. The range-minimum path uses
+outward-rounded binary64 lower bounds and directed-rounded nonnegative
+arithmetic; the convex-tangent path uses Arb enclosures for signed
+derivatives, gradients, and its LDL test. The committed certificates are
+reproducibility records, not trusted inputs. The imported analytic inputs (explicit formula, arbitrary-
+window trace asymptotics, tail bounds, Gram-entry asymptotics, and the
+stability rank–trace layer) are identified precisely in §1 of the paper. The
+paper also verifies that this particular ramped profile satisfies the cited
+arbitrary-window hypotheses.
 
 ## References
 
 - [Anthropic research article](https://www.anthropic.com/research/riemann-zeta)
 - [Anthropic full paper](https://www-cdn.anthropic.com/564f962e60643842f5fcb4a17c9dbc8f608f1c37.pdf)
-- [Lean 4 artifact (zeta-23-lean)](https://github.com/anthropics/zeta-23-lean)
 - [ainta/zeta-simple-zeros](https://github.com/ainta/zeta-simple-zeros)
 - [trmdy/zeta-simple-zeros-673137](https://github.com/trmdy/zeta-simple-zeros-673137)
 

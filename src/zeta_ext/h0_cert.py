@@ -89,6 +89,53 @@ def window_min_enclosure(spec: KernelSpec, subdivisions: int = 4096) -> arb:
     return arb(best)
 
 
+def window_monotonicity_enclosures(
+    spec: KernelSpec,
+    subdivisions: int = 8192,
+    origin_cells: int = 4,
+) -> Tuple[arb, arb]:
+    """Certify that ``v`` is nonincreasing on ``[0, 1/2]``.
+
+    Near the origin, direct interval evaluation of ``v'`` straddles zero
+    because ``v'(0) = 0``.  We instead certify ``v'' <= 0`` on the union of
+    the first few cells, and use the fundamental theorem of calculus there.
+    On the remaining cells we certify ``v' <= 0`` directly.  The returned
+    values are, respectively, an upper bound for ``v''`` near zero and the
+    largest upper bound for ``v'`` away from zero.
+    """
+
+    if not 1 <= origin_cells < subdivisions:
+        raise ValueError("origin_cells must lie in [1, subdivisions)")
+
+    omegas = _omegas(spec)
+    coeffs = [arb(c) for c in spec.coeffs]
+
+    origin = arb(
+        fmpq(origin_cells, 4 * subdivisions),
+        fmpq(origin_cells, 4 * subdivisions),
+    )
+    second = arb(0)
+    for coefficient, omega in zip(coeffs, omegas):
+        second -= coefficient * omega * omega * (omega * origin).cos()
+    second_upper = arb(second.upper())
+
+    derivative_upper = None
+    for index in range(origin_cells, subdivisions):
+        cell = arb(
+            fmpq(2 * index + 1, 4 * subdivisions),
+            fmpq(1, 4 * subdivisions),
+        )
+        derivative = arb(0)
+        for coefficient, omega in zip(coeffs, omegas):
+            derivative -= coefficient * omega * (omega * cell).sin()
+        upper = derivative.upper()
+        if derivative_upper is None or upper > derivative_upper:
+            derivative_upper = upper
+
+    assert derivative_upper is not None
+    return second_upper, arb(derivative_upper)
+
+
 if __name__ == "__main__":
     from .kernel import MT_SPEC
 

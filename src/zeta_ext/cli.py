@@ -1,10 +1,9 @@
 """Command-line entry points for the certificates.
 
-  zeta-673137-verify gate   -- reproduce the ainta 7-point certificate
-                               (correctness gate for this verifier)
-  zeta-673137-verify fast   -- window bounds, H(v), and the exact deduction
-  zeta-673137-verify main   -- the main inequality F >= 1/200 (parallel)
-  zeta-673137-verify all    -- fast + main
+  zeta-ext-verify gate   -- reproduce the ainta 7-point certificate
+  zeta-ext-verify fast   -- window bounds, monotonicity, H(v), and deduction
+  zeta-ext-verify main   -- the main inequality F >= 509/100000 (parallel)
+  zeta-ext-verify all    -- fast + main
 """
 
 from __future__ import annotations
@@ -16,7 +15,11 @@ import time
 from flint import arb, ctx, fmpq
 
 from . import design
-from .h0_cert import window_functional, window_min_enclosure
+from .h0_cert import (
+    window_functional,
+    window_min_enclosure,
+    window_monotonicity_enclosures,
+)
 from .kernel import MT_SPEC
 from .parallel import verify_parallel
 from .verify_general import CertificateSpec, uniform_weights, verify_general
@@ -68,6 +71,17 @@ def run_fast(_: argparse.Namespace) -> int:
     ok &= good
     print(f"max v <= {arb(hi).str(15)}  [<= 1: {good}]")
 
+    second_near_zero, derivative_away = window_monotonicity_enclosures(
+        design.KERNEL, subdivisions=8192
+    )
+    good = bool(second_near_zero <= arb(0) and derivative_away <= arb(0))
+    ok &= good
+    print(
+        "monotone on [0,1/2]: "
+        f"v'' near 0 <= {second_near_zero.str(12)}, "
+        f"v' away <= {derivative_away.str(12)}  [certified: {good}]"
+    )
+
     c_val, h_val = window_functional(design.KERNEL)
     good = bool(h_val >= arb(design.H_CERT))
     ok &= good
@@ -106,7 +120,7 @@ def run_main(args: argparse.Namespace) -> int:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(prog="zeta-673137-verify")
+    parser = argparse.ArgumentParser(prog="zeta-ext-verify")
     parser.add_argument("command", choices=["gate", "fast", "main", "all"])
     parser.add_argument("--grid", type=int, default=4000)
     parser.add_argument("--workers", type=int, default=8)

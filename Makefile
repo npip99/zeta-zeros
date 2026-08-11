@@ -1,4 +1,4 @@
-.PHONY: install test verify verify-three verify-seven paper
+.PHONY: install test verify verify-fast verify-main verify-legacy paper
 
 install:
 	python3 -m pip install --upgrade pip
@@ -7,13 +7,16 @@ install:
 test:
 	python3 -m unittest discover -s tests -v
 
-verify: verify-three verify-seven
+verify: verify-fast verify-main
 
-verify-three:
-	python3 -m zeta_simple_zeros three
+verify-fast:
+	python3 -m zeta_ext.cli fast
 
-verify-seven:
+verify-main:
+	python3 -m zeta_ext.cli main --workers 8
+
+verify-legacy:
 	python3 -m zeta_simple_zeros seven
 
 paper:
-	tectonic --outdir paper paper/riemann.tex
+	tectonic --outdir paper paper/main.tex

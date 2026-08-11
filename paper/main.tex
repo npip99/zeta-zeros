@@ -23,7 +23,15 @@
 
 \title{More than $67.3195\%$ of the zeros of the Riemann zeta function
 are simple and lie on the critical line}
+\author{Nicholas Pipitone\\
+\href{mailto:npip99@gmail.com}{\texttt{npip99@gmail.com}}\\
+\url{https://github.com/npip99}}
 \date{August 11, 2026}
+\hypersetup{
+  pdfauthor={Nicholas Pipitone},
+  pdftitle={More than 67.3195 percent of the zeros of the Riemann zeta function
+  are simple and lie on the critical line}
+}
 
 \begin{document}
 
@@ -37,15 +45,16 @@ the critical line in that interval.  We prove
  \liminf_{T\to\infty}\frac{N_0^s(T,2T)}{N(T,2T)}
  \ge 0.673195198901\ldots \;>\; \frac{673195}{10^6}.
 \]
-The proof combines the analytic framework of Claude~\cite{Claude26} (Theorem~D
-and its Lean artifact), the stability refinement of the rank--trace argument
+The proof combines the analytic framework of Claude~\cite{Claude26}, the
+stability refinement of the rank--trace argument
 introduced in~\cite{Ainta26}, and the re-optimized window, position-weighted
 seven-point inequality, and sharp block profile of~\cite{Trmdy26}.  The single
 new mathematical ingredient is a strengthened certified constant for the
 weighted seven-point inequality of~\cite{Trmdy26}: we certify
 $F\ge 509/100000$ where $1/200$ was certified before, and re-optimize the
-block length.  All finite claims are certified by Arb interval arithmetic in
-two independent runs; the deduction is reproduced in full.
+block length.  The finite claims are certified by rigorous interval
+computations, with the principal certificate repeated at two grid
+resolutions; the deduction is reproduced in full.
 \end{abstract}
 
 \section{Statement and imported inputs}\label{sec:setup}
@@ -66,9 +75,11 @@ $A=31049/25000$, $R=2\sqrt A-1$, and $\eta=R/A$.
 \end{theorem}
 
 The proof template is that of~\cite{Trmdy26}, which in turn builds
-on~\cite{Ainta26} and~\cite{Claude26}.  We import the following two
-statements exactly as they are established (and used) there; everything else
-in this paper is self-contained.
+on~\cite{Ainta26} and~\cite{Claude26}.  We isolate below the two external
+analytic consequences used in the finite deduction.  The first is elementary
+from the Riemann--von Mangoldt formula; the second combines the arbitrary-
+window trace asymptotics of~\cite[\S7.1]{Claude26} with the stability
+rank--trace refinement of~\cite{Ainta26}.
 
 \begin{impinput}[Normalized ordinates and total span]\label{inp:span}
 Put $\ell_T=\log(T/(2\pi))$ and, for a zero of ordinate $\gamma$, put
@@ -81,13 +92,26 @@ $S^\circ=S-o(N)$ and
 \begin{equation}\label{eq:totalspan}
  x_{S^\circ}-x_1\le\frac{T\ell_T}{2\pi}=N+o(N).
 \end{equation}
-The final equality is the Riemann--von Mangoldt formula.
+Here the second relation is asymptotic.  In the present notation the
+Riemann--von Mangoldt formula gives
+\[
+ N(T,2T)=\frac{T}{2\pi}\bigl(\ell_T+2\log2-1\bigr)+O(\log T)
+ =\frac{T\ell_T}{2\pi}+O(T)
+ =\frac{T\ell_T}{2\pi}+o(N).
+\]
 \end{impinput}
 
 \begin{impinput}[Stability counting inequality]\label{inp:stability}
-Let $v:[-\tfrac12,\tfrac12]\to[\tfrac34,1]$ be an even trigonometric
-polynomial (an \emph{admissible window profile}), used in the test family of
-\cite[\S2]{Claude26} with the standard boundary ramp.  Write
+Let $v:[-\tfrac12,\tfrac12]\to[\tfrac34,1]$ be an even $C^2$ function that
+is nonincreasing on $[0,\tfrac12]$.  At the endpoint $\lambda=1$, put
+$\mathcal L=\ell_T$, fix a ramp width $w_0\ge1$ independently of $T$, and use
+$\sqrt{v(u/\mathcal L)}$ in the test family of~\cite[\S2]{Claude26},
+multiplied by its standard even boundary ramp of support
+$[-\mathcal L/2,\mathcal L/2]$.  The required condition
+$8w_0\le\mathcal L$ then holds for all sufficiently large $T$.  This is an
+admissible window provided the variation and derivative conditions recorded
+in~\cite[\S7.1]{Claude26} hold; the endpoint $\lambda=1$ is explicitly
+allowed by~\cite[Remark~6.1]{Claude26}.  Write
 \[
  K_v(x)=\int_{-1/2}^{1/2}v(t)\cos(2\pi xt)\,dt,\qquad
  k_v=\frac{K_v}{K_v(0)},\qquad
@@ -100,20 +124,31 @@ Then
 \end{equation}
 where $M$ is the Gram matrix of the retained simple-zero atoms,
 $\Psi(t)=(t-1)^2$ for $0\le t\le2$ and $2t-3$ for $t\ge2$, and the entries of
-$M$ satisfy $M_{ij}=k_v(x_i-x_j)+o(1)$ uniformly for normalized ordinate
-differences in compact sets, the exceptional $o(N)$ zeros being deleted.
+$M$ satisfy $M_{ij}=k_v(x_i-x_j)+o(1)$ uniformly over all retained pairs in
+the dyadic interval whose normalized ordinate differences lie in any fixed
+compact set, the exceptional $o(N)$ zeros being deleted.
 \end{impinput}
 
 We use one retained set for both imported inputs, enlarging the exceptional
 set to the union of the two $o(N)$ sets if necessary; it still has size
-$o(N)$.
+$o(N)$.  This further deletion replaces the original Gram matrix by a
+principal compression.  Pinching into retained and discarded principal
+blocks, followed by $\Psi\ge0$, gives
+\[
+ \tr\Psi(M_{\rm original})
+ \ge\tr\Psi(M_{\rm retained})+\tr\Psi(M_{\rm discarded})
+ \ge\tr\Psi(M_{\rm retained}),
+\]
+so the stability inequality remains valid with the smaller retained matrix.
+Further deletion preserves the order of the ordinates and can only decrease
+their outer span; thus Input~\ref{inp:span} also remains valid for this common
+retained set, whose consecutive gaps are used below.
 
 Input~\ref{inp:stability} is the stability form of the rank--trace argument:
 the analytic content (explicit formula, Gabor trace asymptotics for
-admissible windows, tail estimates, Gram-entry asymptotics) is from
-\cite{Claude26} and its Lean artifact~\cite{Zeta23Lean}; the retention of the
-defect $\tr\Psi(M)$ is the contribution of~\cite{Ainta26}, audited
-independently in~\cite{Trmdy26} and formalized in Lean in~\cite{ZetaExt26}.
+admissible windows, tail estimates, and Gram-entry asymptotics) is from
+\cite{Claude26}; retention of the defect $\tr\Psi(M)$ is the contribution
+of~\cite{Ainta26}, with the combined interface also used in~\cite{Trmdy26}.
 The deduction below uses \eqref{eq:stability} only through the block/pinching
 mechanism of Section~\ref{sec:deduction}.
 
@@ -130,18 +165,66 @@ We use the window of~\cite{Trmdy26} unchanged:
 
 \begin{proposition}[Certified window bounds]\label{prop:window}
 On $[-\tfrac12,\tfrac12]$ one has $\tfrac34\le v\le1$
-(certified enclosures: $\min v=0.750213\ldots$, $\max v=0.995632\ldots$), and
+(certified global bounds: $v\ge0.750213\ldots$ and
+$v\le0.995632\ldots$), and
+on $[0,\tfrac12]$ one has $v'\le0$.  Moreover,
 \[
  H(v)=0.67245704141454\ldots\;\ge\;H_{\mathrm{cert}}:=\frac{672457}{10^6}.
 \]
 \end{proposition}
 
 \begin{proof}[Verification]
-Arb interval arithmetic over exact rational data; the enclosures above are
-reproduced on every run of the \texttt{fast} module of the verifier (see
-Section~\ref{sec:repro}).  This reproduces the corresponding certificate
-of~\cite{Trmdy26}.
+Arb interval arithmetic over the exact defining data.  The range enclosure
+uses $8192$ cells.  For monotonicity, the verifier proves $v''<0$ on the
+contiguous union of the four cells adjacent to zero; since the cosine sum is
+even, $v'(0)=0$, so $v'<0$ away from the origin on that union.  It proves
+$v'<0$ directly on every remaining cell.  The enclosures are reproduced by
+the \texttt{fast} module of the verifier (see Section~\ref{sec:repro}).
+The bounds for $v$ and $H(v)$ reproduce the corresponding certificate
+of~\cite{Trmdy26}; the derivative check makes explicit the admissibility
+condition used here.
 \end{proof}
+
+We now verify the applicability clause in Input~\ref{inp:stability}.  Let
+\(\rho\in C^3(\mathbb R)\) be the fixed nondecreasing function of
+\cite[\S2.2]{Claude26}, equal to zero on $(-\infty,0]$ and to one on
+$[1,\infty)$.  Define the smooth even boundary ramp by
+\[
+ \rho_{\mathcal L,w_0}(u)
+ =\rho\!\left(\frac{\mathcal L/2-|u|}{w_0}\right)
+\]
+and put
+\[
+ \varphi_{\mathcal L,w_0}(u)=
+ \begin{cases}
+  \sqrt{v(u/\mathcal L)}\,\rho_{\mathcal L,w_0}(u),
+    & |u|\le\mathcal L/2,\\
+  0,&|u|>\mathcal L/2.
+ \end{cases}
+\]
+Since $v\ge3/4$, its square root is smooth.  Proposition~\ref{prop:window}
+and the defining properties of the ramp show that both
+$\varphi_{\mathcal L,w_0}$ and $\varphi_{\mathcal L,w_0}^2$ are even,
+nonnegative, compactly supported, $C^2$, bounded
+by one, and nonincreasing for $u\ge0$.  Their total variations are therefore
+$2\varphi_{\mathcal L,w_0}(0)\le2$ and
+$2\varphi_{\mathcal L,w_0}(0)^2\le2$.  On the fixed-width
+boundary strips, the product rule and the ramp estimates give
+$\|\varphi_{\mathcal L,w_0}''\|_1+
+\| (\varphi_{\mathcal L,w_0}^2)''\|_1=O(1/w_0)$; in the interior,
+scaling the fixed smooth functions $\sqrt v$ and $v$ contributes only
+$O(1/\mathcal L)$.  Thus, for fixed $w_0$ and all sufficiently large
+$\mathcal L$, this family
+satisfies the support, variation, and second-derivative hypotheses
+of~\cite[\S7.1]{Claude26}.  This closes the arbitrary-window applicability
+step rather than treating it as an additional numerical assumption.  Finally,
+the boundary strips have total length $O(w_0)$, while the full support has
+length $\mathcal L$.  Their contribution to the normalized moments in~(7.1)
+of~\cite{Claude26} is therefore $O(w_0/\mathcal L)=o(1)$; likewise the
+normalized autocorrelation
+kernel converges, uniformly for bounded normalized shifts, to $k_v$ by the
+$L^1$ bound on the ramp discrepancy.  Thus the limiting constant and kernel
+in Input~\ref{inp:stability} are precisely $H(v)$ and $k_v$ displayed above.
 
 \section{The sharp block profile}\label{sec:profile}
 
@@ -187,8 +270,14 @@ Thus no larger lower profile is possible even among correlation matrices.
 
 \begin{corollary}[Chord bound]\label{cor:chord}
 For $0\le E\le A$ one has $h(E)\ge\frac{h(A)}{A}\,E$; and $h$ is
-nondecreasing.  \qed
+nondecreasing.
 \end{corollary}
+
+\begin{proof}
+The first assertion is the chord inequality for the concave function $h$
+between $(0,0)$ and $(A,h(A))$; monotonicity is immediate from its displayed
+formula.
+\end{proof}
 
 \section{The certified weighted seven-point inequality}\label{sec:seven}
 
@@ -230,14 +319,17 @@ For all $g_1,\dots,g_6\ge0$,
 \end{proposition}
 
 \begin{proof}[Verification]
-Exhaustive interval subdivision with Arb enclosures of $w$ on a grid of mesh
+The pressure term first reduces the unbounded orthant to a compact simplex:
+if $\sum_i g_i\ge\varepsilon_0/p=11707/1000$, then the pressure alone proves
+\eqref{eq:Fbound}.  On the complementary simplex, use exhaustive interval
+subdivision with Arb enclosures of $w$ on a grid of mesh
 $1/4000$, exactly the decision procedure of~\cite{Trmdy26} with the target
 raised from $1/200$ to $509/100000$: one-body pruning, per-box range-minimum
 lower bounds over all $21$ pair separations, a certified convex tangent
 bound, and bisection of the widest coordinate; the run fails loudly at any
 unresolved terminal cell.  The recorded run has $1{,}739{,}356$ nodes and maximum depth $57$; the
-weaker targets $127/25000$ and $1/200$ were additionally certified in
-independent runs.  See Section~\ref{sec:repro} for the recorded
+weaker target $127/25000$ was additionally certified in separate regression
+runs.  See Section~\ref{sec:repro} for the recorded
 certificates.  (The observed minimum of $F$ is $\approx0.005091029$, at a
 lattice-like configuration.)
 \end{proof}
@@ -277,16 +369,20 @@ We claim
 \end{equation}
 Put
 \[
- L:=A/B_p=714127/1500.
+ D:=A/B_p=714127/1500.
 \]
-If $\mathrm{span}(B)\ge L$, \eqref{eq:blockdefect} is immediate:
+If $\mathrm{span}(B)\ge D$, \eqref{eq:blockdefect} is immediate:
 $\tr\Psi(G_B)\ge0$ and
 $\eta B_p\,\mathrm{span}(B)\ge\eta A=R$.  We may therefore suppose that
-$\mathrm{span}(B)<L$.  Every pair separation in $B$ then lies in the fixed
-compact interval $[0,L]$.  The Gram-entry asymptotic of
-Input~\ref{inp:stability} is uniform there, and hence
+$\mathrm{span}(B)<D$.  Every pair separation in $B$ then lies in the fixed
+compact interval $[0,D]$.  The Gram-entry asymptotic of
+Input~\ref{inp:stability} is uniform there.  More explicitly, its error is
+bounded by some $\delta_T(D)\to0$ for every pair in every such block.  Since
+$m$ is fixed, $|k_v|\le1$ because $v\ge0$, and the same asymptotic gives
+$|(G_B)_{ij}|\le2$ for all sufficiently large $T$.  Consequently
 \[
- 2\sum_{i<j}w(y_j-y_i)\le E_B+o(1).
+ 2\sum_{i<j}w(y_j-y_i)
+ \le E_B+O(m^2\delta_T(D))=E_B+o(1).
 \]
 Together with \eqref{eq:kernelblock}, this gives
 \begin{equation}\label{eq:blockenergy}
@@ -297,21 +393,28 @@ $\tr\Psi(G_B)\ge h(E_B)\ge h(A)=R$.  If $E_B<A$, the chord bound
 (Corollary~\ref{cor:chord}) gives
 $\tr\Psi(G_B)\ge\eta E_B$, and \eqref{eq:blockenergy} yields
 $\eta E_B+\eta B_p\,\mathrm{span}(B)\ge\eta A-o(1)=R-o(1)$.
-Because $m$ and $L$ are fixed, the $o(1)$ here is uniform over the
+Because $m$ and $D$ are fixed, the $o(1)$ here is uniform over the
 small-span blocks; the large-span case has no asymptotic error.
 
 \subsection{Pinching and averaging}
 
 Exactly as in \cite[\S5]{Ainta26} (and \cite[\S4]{Trmdy26}): for each of the
-$m$ offsets, partition the retained simple zeros into consecutive blocks of
-size $m$.  Pinching does not increase $\tr\Psi$ because
-$X\mapsto\tr\Psi(X)$ is convex and unitarily invariant; hence
-$\tr\Psi(M)$ dominates the sum of the block defects.  Since there are
-$O(N)$ blocks, the uniform per-block $o(1)$ above sums to $o(N)$.  Summing
-\eqref{eq:blockdefect} over the full blocks of one offset and averaging over
-the $m$ offsets therefore gives, with the retained ordinates of
-Input~\ref{inp:span}, each interior gap
-lying in a block span for at most $m-1$ of the $m$ offsets,
+$m$ offsets, partition the retained simple zeros into consecutive full
+blocks of size $m$, leaving at most $2(m-1)$ endpoint points.  If
+$\mathcal P_rM$ denotes the resulting block-diagonal pinching (including the
+remaining endpoint block), then pinching is an average of unitary
+conjugations.  Convexity, unitary invariance, and $\Psi\ge0$ therefore give
+the precise inequality
+\[
+ \tr\Psi(M)\ge\tr\Psi(\mathcal P_rM)
+ \ge\sum_{B\text{ full at offset }r}\tr\Psi(G_B).
+\]
+The average number of full blocks over the offsets is
+$S^\circ/m+O(1)=S/m+o(N)$.  There are $O(N)$ blocks because $S\le N$, so the
+uniform per-block $o(1)$ above sums to $o(N)$.  Each interior gap lies in a
+block span for at most $m-1$ offsets, and Input~\ref{inp:span} bounds their
+total length by $N+o(N)$.  Summing \eqref{eq:blockdefect} over full blocks
+and averaging over the offsets therefore gives
 \begin{equation}\label{eq:defect}
  \tr\Psi(M)\;\ge\;\frac Rm\,S-\eta\,B_p\,\frac{m-1}{m}\,N-o(N).
 \end{equation}
@@ -335,48 +438,69 @@ The final arithmetic (including the enclosure of $R$ and $\eta$ and the
 comparison with $673195/10^6$) is itself certified in Arb by the verifier's
 \texttt{fast} module.  This proves Theorem~\ref{thm:main}. \qed
 
+If $\mathcal N(X)$ counts zeros up to height $X$ with multiplicity and
+$\mathcal S(X)$ counts the simple critical-line zeros up to height $X$, the
+same constant also satisfies
+\[
+ \liminf_{X\to\infty}\frac{\mathcal S(X)}{\mathcal N(X)}
+ \ge0.6731951989015205\ldots .
+\]
+Indeed, decompose $(0,X]$ into dyadic intervals
+$(X/2^{j+1},X/2^j]$.  For any fixed error tolerance, Theorem~\ref{thm:main}
+applies to every interval whose lower endpoint is sufficiently large; summing
+their inequalities shows that the omitted fixed bottom interval is negligible
+as $X\to\infty$, and then the error tolerance may tend to zero.  This is the
+standard dyadic-summation passage from the
+displayed theorem to the density formulation in the title.
+
 \subsection{Sanity gates}
 
 With $(\varepsilon_0,p,m)=(1/200,\,1/2300,\,257)$ the same formula gives
 $0.673137630699\ldots$, the bound of~\cite{Trmdy26}; with the unit-cap
 profile ($\eta=1$, $R=A\le1$) and the parameters of~\cite{Ainta26}
 ($\varepsilon_0=19/5000$, $p=1/3000$, $m=269$, Montgomery--Taylor window) it
-gives $0.673008527927\ldots$, and with $\varepsilon_0\to0$ it degenerates to
-Theorem~D of~\cite{Claude26} ($0.672500703679\ldots$).  The verifier
-additionally reproduces the certificates of both predecessors end-to-end.
+gives $0.673008527927\ldots$.  These are regression checks on the deduction;
+they are not additional inputs to the present bound.
 
 \section{Reproducibility}\label{sec:repro}
 
 All finite claims (Propositions~\ref{prop:window} and~\ref{prop:F} and the
-final arithmetic) are certified by Arb interval arithmetic over exact
-rational inputs.  Source, recorded certificates, and instructions are at
+final arithmetic) are certified by rigorous interval computation.  Arb
+\cite{Johansson17} encloses the transcendental evaluations.  The range-
+minimum path stores outward-rounded binary64 lower bounds derived from Arb
+intervals and combines nonnegative terms with directed rounding; the tangent
+path separately uses Arb enclosures for signed derivatives, gradients, and
+the LDL convexity test.  Source,
+recorded certificates, and instructions are at
 \begin{center}
  \url{https://github.com/npip99/zeta-zeros}
 \end{center}
-(the verifier is that of~\cite{Trmdy26}, vendored under MIT with only the
-design constants changed).  Proposition~\ref{prop:F} was certified in two
-independent runs of the identical decision procedure: the headline target
+These computations do not certify the external analytic statements isolated
+as Inputs~\ref{inp:span} and~\ref{inp:stability}; those remain dependencies on
+the cited sources, as is explicit in Section~\ref{sec:setup}.
+The verifier is that of~\cite{Trmdy26}, vendored under MIT with the design
+constants and an additional monotonicity check changed.  As a resolution
+cross-check, the same decision procedure certified Proposition~\ref{prop:F}
+twice: the headline target
 $509/100000$ at grid $1/4000$ ($1{,}739{,}356$ nodes, depth 57) and again at
 grid $1/8000$ ($1{,}736{,}620$ nodes, depth 57), the intermediate target
-$127/25000$ certified twice (a run recorded here, $1{,}544{,}746$-node
-independent run during the design exchange), and the original $1/200$
-certificate of~\cite{Trmdy26} reproduced end-to-end.
-The Lean~4 formalization of the framework
-(\cite{Zeta23Lean,ZetaExt26}) covers Input~\ref{inp:stability}'s
-stability layer, the aggregation scheme, and the kernel-limit asymptotics;
-certifying the present constants in Lean is mechanical given the
-$\beta$-parametric capstone theorem of~\cite{ZetaExt26} and is left to a
-future artifact revision.
+$127/25000$ also certified in two separate runs (including a
+$1{,}544{,}746$-node run during the design exchange).
+These repeated runs share an implementation and are not claimed to be
+independent formal proofs.  The grid parameter controls the one-dimensional
+kernel enclosure tables, not the initial six-dimensional box cover, so a
+similar subdivision-tree size at the two resolutions is expected.
 
 \subsection*{Credit}
 
 This note is a minimal increment on~\cite{Trmdy26} (whose window, weights,
-profile, and verifier are used unchanged), which in turn extends
+profile, and base verifier are reused), which in turn extends
 \cite{Ainta26} over the framework of~\cite{Claude26}.  The improvement was
 found and cross-verified in a Claude--GPT-5.6 collaboration on August 11,
 2026.
 
 \begin{thebibliography}{99}
+\small
 
 \bibitem{Claude26}
 Claude,
@@ -384,11 +508,6 @@ Claude,
 the critical line},
 preprint, August 10, 2026,
 \href{https://www-cdn.anthropic.com/564f962e60643842f5fcb4a17c9dbc8f608f1c37.pdf}{available online}.
-
-\bibitem{Zeta23Lean}
-Claude,
-\emph{zeta-23-lean: a Lean 4 formalization},
-\url{https://github.com/anthropics/zeta-23-lean}, 2026.
 
 \bibitem{Ainta26}
 ainta,
@@ -404,22 +523,11 @@ zeros of the Riemann zeta function},
 research artifact, August 11, 2026,
 \url{https://github.com/trmdy/zeta-simple-zeros-673137}.
 
-\bibitem{ZetaExt26}
-npip99 et al.,
-\emph{Zeta23Ext: a Lean 4 formalization of the stability-defect extension},
-in: \url{https://github.com/npip99/zeta-zeros}, 2026.
-
 \bibitem{Johansson17}
 F.~Johansson,
 \emph{Arb: efficient arbitrary-precision midpoint-radius interval
 arithmetic},
 IEEE Trans.\ Comput.\ \textbf{66} (2017), no.~8, 1281--1292.
-
-\bibitem{Mon73}
-H.~L.~Montgomery,
-\emph{The pair correlation of zeros of the zeta function},
-in: Analytic Number Theory (St.\ Louis, 1972),
-Proc.\ Sympos.\ Pure Math.\ \textbf{24}, Amer.\ Math.\ Soc., 1973, 181--193.
 
 \end{thebibliography}
 

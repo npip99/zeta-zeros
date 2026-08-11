@@ -3,7 +3,10 @@ message: "If you use this research artifact, please cite this repository."
 title: "A 67.3195% lower bound for simple zeros of the Riemann zeta function"
 type: software
 authors:
-  - name: npip99
+  - given-names: Nicholas
+    family-names: Pipitone
+    email: npip99@gmail.com
+    website: "https://github.com/npip99"
 version: 0.3.0
 date-released: 2026-08-11
 license: MIT
