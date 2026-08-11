@@ -1,103 +1,90 @@
-# A 67.30255% lower bound for simple zeros of the Riemann zeta function
+# A 67.3188% lower bound for simple zeros of the Riemann zeta function
 
 This repository proves and reproducibly verifies
 
 $$
 \liminf_{T\to\infty}\frac{N_0^s(T,2T)}{N(T,2T)}
-\ge \frac{267\cdot10^{9}\,H_{\mathrm{MT}}-5.32\cdot10^{8}}{266{,}001{,}357{,}363}
-= 0.673025467453\ldots,
+\;\ge\; 0.673188803503\ldots \;>\; \frac{673188}{10^6},
 $$
 
-where $N(T,2T)$ counts zeros of the Riemann zeta function with multiplicity,
-$N_0^s(T,2T)$ counts simple zeros on the critical line, and
-$H_{\mathrm{MT}} = \tfrac32-\tfrac1{\sqrt2}\cot\tfrac1{\sqrt2} = 0.6725007\ldots$
-is the Montgomery–Taylor constant of Anthropic's Theorem D.
+where $N(T,2T)$ counts nontrivial zeros with multiplicity and $N_0^s(T,2T)$
+counts simple zeros on the critical line.
 
-Credit: this work builds directly on
-[ainta/zeta-simple-zeros](https://github.com/ainta/zeta-simple-zeros)
-(the stability-defect argument and verifier) and on Anthropic's
-[paper](https://www-cdn.anthropic.com/564f962e60643842f5fcb4a17c9dbc8f608f1c37.pdf)
-and [Lean 4 artifact](https://github.com/anthropics/zeta-23-lean) (Theorem D and
-its analytic inputs).
+**[Paper (PDF)](paper/main.pdf)** · [LaTeX source](paper/main.tex) · [Certificates](certificates/)
 
-**[Proof (PDF)](paper/riemann.pdf)** · [LaTeX source](paper/riemann.tex) · [Verifier](docs/verifier.md)
+## Lineage
 
-## Argument
+| Result | Bound |
+| --- | ---: |
+| Anthropic Theorem D ([paper](https://www-cdn.anthropic.com/564f962e60643842f5fcb4a17c9dbc8f608f1c37.pdf), [Lean artifact](https://github.com/anthropics/zeta-23-lean)) | 0.672500703679… |
+| [ainta/zeta-simple-zeros](https://github.com/ainta/zeta-simple-zeros) (stability refinement, 7-point certificate) | 0.673008527927… |
+| this repository, morning revision (tightened certificate, grid 8000) | 0.673025467453… |
+| [trmdy/zeta-simple-zeros-673137](https://github.com/trmdy/zeta-simple-zeros-673137) (re-optimized window, weighted 7-point, sharp $\sqrt{\phantom{E}}$-tail profile) | 0.673137630699… |
+| **this repository** | **0.673188803503…** |
 
-The rank–trace step in the Anthropic paper uses the rank, inertia, and two
-traces of a Hermitian matrix. Its equality case permits the vectors associated
-with simple zeros to be mutually orthogonal. For the vectors produced by the
-optimized test family, however, each inner product is determined by the
-Montgomery–Taylor kernel at the difference of two zero ordinates — and seven
-consecutive zeros have 21 pairwise differences determined by only six gaps. The
-kernel's positive zero set is sum-free, so the differences cannot all sit at
-kernel zeros. A stability refinement of the rank–trace inequality keeps the
-resulting Gram-matrix defect, and a certified 7-point inequality
+The improvement over trmdy is a single change: their weighted seven-point
+inequality is certified at the stronger target $F \ge 127/25000 = 0.00508$
+(previously $1/200 = 0.005$; the observed minimum of $F$ is
+$\approx 0.005091$), and the block length is re-optimized to $m = 251$.
+Everything else — the 7-term window, the pair weights, the pressure
+$1/2300$, the sharp block profile, and the deduction — is theirs, used
+unchanged. Two independent runs of the identical interval decision procedure
+certified the raised target.
 
-$$
-F_6(g_1,\ldots,g_6)\ \ge\ \frac{3{,}826{,}217}{10^9}
-$$
+## Verify it yourself
 
-makes it quantitative (grid $1/8000$, exhaustive subdivision, Arb interval
-arithmetic; the target is maximal on the $10^{-9}$ lattice at this grid — the
-true minimum of $F_6$ is $\approx 0.0038262312$, attained near the alternating
-gap pattern $(1.045, 1.977, 1.042, 1.986, 1.989, 1.046)$). Aggregating over
-blocks of $m = 267$ consecutive zeros yields the bound.
-
-See [`docs/proof.md`](docs/proof.md) for the deduction with exact constants and
-[`paper/riemann.pdf`](paper/riemann.pdf) for the full proof.
-
-A Lean 4 formalization of the extension, building on
-[zeta-23-lean](https://github.com/anthropics/zeta-23-lean), is in progress and
-will be added under `lean/`.
-
-## Proof and verification
-
-| Component | Contents |
-| --- | --- |
-| [`paper/riemann.pdf`](paper/riemann.pdf) ([source](paper/riemann.tex)) | Full proof and exact constants |
-| Anthropic paper and [Lean artifact](https://github.com/anthropics/zeta-23-lean) | Theorem D, the optimized test family, the zero-side decomposition, and the prime-side trace estimates |
-| [`docs/proof.md`](docs/proof.md) | Short web outline of the argument |
-| [`docs/verifier.md`](docs/verifier.md) | Interval enclosures, subdivision algorithms, and trust base |
-| [`src/`](src/) | Verifier source |
-| [`certificates/three-point.txt`](certificates/three-point.txt) | Recorded 3-point verification |
-| [`certificates/seven-point.txt`](certificates/seven-point.txt) | Recorded 7-point verification |
-
-The verifier checks the two finite inequalities used by the argument. It
-reconstructs every transcendental enclosure from the formulas on each run; the
-committed certificates are reproducibility records, not trusted inputs.
-
-## Run the verifier
-
-Python 3.9 or later is required. With [uv](https://docs.astral.sh/uv/):
+Python ≥ 3.10; the only dependency is `python-flint` (ships Arb). With
+[uv](https://docs.astral.sh/uv/):
 
 ```bash
 uv venv .venv
 uv pip install -e . --python .venv/bin/python
 
-# Fast 3-point verification
-.venv/bin/zeta-zero-verify three
+# window bounds, H(v), final arithmetic (~1 min, Arb-certified)
+.venv/bin/zeta-ext-verify fast
 
-# Exhaustive 7-point verification; a couple of minutes
-.venv/bin/zeta-zero-verify seven --progress-every 1000000
+# the main certificate F >= 127/25000 (~8 min on 6-8 cores)
+.venv/bin/zeta-ext-verify main --workers 8
+
+# the previous-generation verifier (this repo's morning result, 67.30255%)
+.venv/bin/zeta-zero-verify seven
 ```
 
-Run the tests with:
+Recorded runs are in [`certificates/`](certificates/). The verifier under
+`src/zeta_ext/` is vendored (MIT) from
+[trmdy/zeta-simple-zeros-673137](https://github.com/trmdy/zeta-simple-zeros-673137)
+with only the design constants changed; `src/zeta_simple_zeros/` is the
+previous-generation verifier from
+[ainta/zeta-simple-zeros](https://github.com/ainta/zeta-simple-zeros) with
+this repository's tightened constants.
 
-```bash
-.venv/bin/python -m unittest discover -s tests -v
-```
+## Lean 4 formalization
 
-## Status
+A Lean 4 formalization of the stability-defect framework, built on
+[zeta-23-lean](https://github.com/anthropics/zeta-23-lean), is nearing
+completion and will be added under `lean/`: the stability rank–trace lemma,
+the aggregation/pinching layer, the kernel-limit asymptotics with explicit
+errors, and a β-parametric capstone theorem — plus a kernel-checked 3-point
+certificate and a coarse 7-point certificate in final verification. The
+capstone takes the certified seven-point constant as its only hypothesis, so
+the constants of this repository drop in mechanically.
 
-Research artifact. Independent verification and peer review are welcome.
+## Trust base
+
+All new finite claims are certified by Arb interval arithmetic over exact
+rational inputs; the committed certificates are reproducibility records, not
+trusted inputs. The imported analytic inputs (explicit formula, Gabor trace
+asymptotics, tail bounds, Gram-entry asymptotics, and the stability
+rank–trace layer) are those of the Anthropic paper/Lean artifact and of
+ainta's artifact, independently audited in the trmdy campaign.
 
 ## References
 
 - [Anthropic research article](https://www.anthropic.com/research/riemann-zeta)
 - [Anthropic full paper](https://www-cdn.anthropic.com/564f962e60643842f5fcb4a17c9dbc8f608f1c37.pdf)
 - [Lean 4 artifact (zeta-23-lean)](https://github.com/anthropics/zeta-23-lean)
-- [Original artifact (ainta/zeta-simple-zeros)](https://github.com/ainta/zeta-simple-zeros)
+- [ainta/zeta-simple-zeros](https://github.com/ainta/zeta-simple-zeros)
+- [trmdy/zeta-simple-zeros-673137](https://github.com/trmdy/zeta-simple-zeros-673137)
 
 ## License
 

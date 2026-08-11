@@ -1,10 +1,10 @@
 cff-version: 1.2.0
 message: "If you use this research artifact, please cite this repository."
-title: "A 67.30255% lower bound for simple zeros of the Riemann zeta function"
+title: "A 67.3188% lower bound for simple zeros of the Riemann zeta function"
 type: software
 authors:
   - name: npip99
-version: 0.2.0
+version: 0.3.0
 date-released: 2026-08-11
 license: MIT
 references:
@@ -13,6 +13,11 @@ references:
     authors:
       - name: ainta
     url: "https://github.com/ainta/zeta-simple-zeros"
+  - type: software
+    title: "zeta-simple-zeros-673137"
+    authors:
+      - name: Tormod Haugland
+    url: "https://github.com/trmdy/zeta-simple-zeros-673137"
   - type: software
     title: "zeta-23-lean"
     authors:
