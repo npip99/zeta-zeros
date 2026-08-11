@@ -59,6 +59,33 @@ previous-generation verifier from
 [ainta/zeta-simple-zeros](https://github.com/ainta/zeta-simple-zeros) with
 this repository's tightened constants.
 
+## Lean formalization
+
+The pinned Lean 4 project under [`lean/`](lean/) checks the finite and
+algebraic core of the `0.673195` deduction: the exact window constants and
+21-weight table, the sharp square-root profile and realizing correlation
+matrices, the large-span/small-span block split, pinching and offset
+averaging, error bookkeeping, the final strict numerical comparison, and the
+conditional dyadic-to-cumulative passage.
+
+```bash
+cd lean
+lake update
+lake exe cache get
+lake build Zeta23Ext
+lake env lean Zeta23Ext/PrintCurrentAxioms.lean
+```
+
+The capstone is deliberately conditional. The Arb certificates, the imported
+arbitrary-window stability and Gram asymptotics, and the retained-set/error
+packaging remain explicit hypotheses in
+[`CurrentZetaAnalyticInputs`](lean/Zeta23Ext/CurrentZeta.lean); the repository
+does not claim that those external analytic inputs have been replayed in the
+Lean kernel. The Lean project pins the upstream base at an immutable commit
+and retains Apache-2.0 licensing and attribution in
+[`lean/LICENSE`](lean/LICENSE) and [`lean/NOTICE`](lean/NOTICE); the rest of
+this repository remains MIT-licensed.
+
 ## Trust base
 
 All new finite claims are certified by rigorous interval computation. Arb
@@ -81,4 +108,5 @@ arbitrary-window hypotheses.
 
 ## License
 
-MIT
+MIT, except for the Lean project under `lean/`, which retains its
+Apache-2.0 license and notices.

@@ -1,4 +1,4 @@
-.PHONY: install test verify verify-fast verify-main verify-legacy paper
+.PHONY: install test verify verify-fast verify-main verify-legacy paper lean-check
 
 install:
 	python3 -m pip install --upgrade pip
@@ -20,3 +20,7 @@ verify-legacy:
 
 paper:
 	tectonic --outdir paper paper/main.tex
+
+lean-check:
+	cd lean && lake build Zeta23Ext
+	cd lean && lake env lean Zeta23Ext/PrintCurrentAxioms.lean

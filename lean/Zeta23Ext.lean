@@ -1,0 +1,10 @@
+/-
+The Lean-checked finite and algebraic core of the `0.673195` simple-zero
+deduction. The analytic inputs remain explicit hypotheses; see
+`Zeta23Ext.CurrentZeta`.
+-/
+
+import Zeta23Ext.Current
+import Zeta23Ext.CertificateBridge
+import Zeta23Ext.CurrentAssembly
+import Zeta23Ext.CurrentZetaAssembly
