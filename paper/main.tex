@@ -50,9 +50,9 @@ two independent runs; the deduction is reproduced in full.
 
 \section{Statement and imported inputs}\label{sec:setup}
 
-Throughout, $N(T,2T)$ counts zeros of $\zeta$ with ordinates in $(T,2T]$ with
-multiplicity, and $N_0^s(T,2T)$ counts the simple zeros on the critical line
-in that range.
+Throughout, write $N:=N(T,2T)$ for the number of zeros of $\zeta$ with
+ordinates in $(T,2T]$, counted with multiplicity, and
+$S:=N_0^s(T,2T)$ for the simple zeros on the critical line in that range.
 
 \begin{theorem}\label{thm:main}
 \[
@@ -70,6 +70,20 @@ on~\cite{Ainta26} and~\cite{Claude26}.  We import the following two
 statements exactly as they are established (and used) there; everything else
 in this paper is self-contained.
 
+\begin{impinput}[Normalized ordinates and total span]\label{inp:span}
+Put $\ell_T=\log(T/(2\pi))$ and, for a zero of ordinate $\gamma$, put
+\[
+ x_\gamma=\frac{\ell_T(\gamma-T)}{2\pi}.
+\]
+After the deletion of $o(N)$ exceptional zeros, the retained simple zeros
+have normalized ordinates $x_1<\cdots<x_{S^\circ}$ with
+$S^\circ=S-o(N)$ and
+\begin{equation}\label{eq:totalspan}
+ x_{S^\circ}-x_1\le\frac{T\ell_T}{2\pi}=N+o(N).
+\end{equation}
+The final equality is the Riemann--von Mangoldt formula.
+\end{impinput}
+
 \begin{impinput}[Stability counting inequality]\label{inp:stability}
 Let $v:[-\tfrac12,\tfrac12]\to[\tfrac34,1]$ be an even trigonometric
 polynomial (an \emph{admissible window profile}), used in the test family of
@@ -80,7 +94,7 @@ polynomial (an \emph{admissible window profile}), used in the test family of
  H(v)=2-\frac1{c_1(v)},
 \]
 where $c_1(v)=\bigl(\int v\bigr)^2/\bigl(\int v^2+\iint|s-s'|v(s)v(s')\,ds\,ds'\bigr)$.
-Then, with $S=N_0^s(T,2T)$ and $N=N(T,2T)$,
+Then
 \begin{equation}\label{eq:stability}
  S\;\ge\;H(v)\,N+\tr\Psi(M)-o(N),
 \end{equation}
@@ -89,6 +103,10 @@ $\Psi(t)=(t-1)^2$ for $0\le t\le2$ and $2t-3$ for $t\ge2$, and the entries of
 $M$ satisfy $M_{ij}=k_v(x_i-x_j)+o(1)$ uniformly for normalized ordinate
 differences in compact sets, the exceptional $o(N)$ zeros being deleted.
 \end{impinput}
+
+We use one retained set for both imported inputs, enlarging the exceptional
+set to the union of the two $o(N)$ sets if necessary; it still has size
+$o(N)$.
 
 Input~\ref{inp:stability} is the stability form of the rank--trace argument:
 the analytic content (explicit formula, Gabor trace asymptotics for
@@ -153,11 +171,18 @@ is subadditive, so for the eigenvalues $\lambda_i$ of $G$,
  =g\bigl(\|G-I\|_{\F}^2\bigr)\;\ge\;g(E),
 \]
 using that $\|G-I\|_{\F}^2=\sum_i(\lambda_i-1)^2$ and that the off-diagonal
-part alone contributes $E$.  For sharpness, let $u_n=n^{-1/2}(1,\ldots,1)$
-and set $G_n=I+t_nu_nu_n^*$, where
-$t_n=\sqrt{E/(1-1/n)}$.  Then the off-diagonal energy of $G_n$ is exactly
-$E$, while $\tr\Psi(G_n)=\Psi(1+t_n)$ tends to $2\sqrt E-1$ for $E\ge1$
-and to $E$ for $0\le E\le1$.  Thus no larger lower profile is possible.
+part alone contributes $E$.  For sharpness, put
+$t_n=\sqrt{E(n-1)/n}$, $a_n=1+t_n$, and
+$b_n=1-t_n/(n-1)$, taking $n$ large enough that $b_n\ge0$.  With
+$u_n=n^{-1/2}(1,\ldots,1)$, set
+$G_n=b_nI+(a_n-b_n)u_nu_n^*$.  This matrix is positive semidefinite with
+constant diagonal one and off-diagonal energy exactly $E$.  Its eigenvalues
+are $a_n,b_n,\ldots,b_n$, and therefore
+\[
+ \tr\Psi(G_n)=\Psi(1+t_n)+(n-1)\Psi\bigl(1-t_n/(n-1)\bigr)
+ \longrightarrow h(E).
+\]
+Thus no larger lower profile is possible even among correlation matrices.
 \end{proof}
 
 \begin{corollary}[Chord bound]\label{cor:chord}
@@ -240,7 +265,7 @@ most $7-r$ windows and its weight totals at most the span capacity $2$; each
 gap lies in at most $6$ windows, contributing at most
 $6p\sum g_i=B_p\,\mathrm{span}(B)$.  By the nonnegativity of the weights,
 this gives the purely kernel-level bound
-\begin{equation}\label{eq:blockenergy}
+\begin{equation}\label{eq:kernelblock}
  2\sum_{i<j}w(y_j-y_i)+B_p\,\mathrm{span}(B)\;\ge\;A.
 \end{equation}
 
@@ -250,31 +275,42 @@ We claim
 \begin{equation}\label{eq:blockdefect}
  \tr\Psi(G_B)+\eta\,B_p\,\mathrm{span}(B)\;\ge\;R-o(1).
 \end{equation}
-Put $L=A/B_p=47603/100$.  If $\mathrm{span}(B)\ge L$, this is immediate:
+Put
+\[
+ L:=A/B_p=714127/1500.
+\]
+If $\mathrm{span}(B)\ge L$, \eqref{eq:blockdefect} is immediate:
 $\tr\Psi(G_B)\ge0$ and
 $\eta B_p\,\mathrm{span}(B)\ge\eta A=R$.  We may therefore suppose that
-$\mathrm{span}(B)<L$.  Every pair separation in $B$ then belongs to the
-fixed compact interval $[0,L]$, so the compact-uniform Gram-entry asymptotic
-of Input~\ref{inp:stability} applies uniformly over these blocks.  It gives
-$2\sum_{i<j}w(y_j-y_i)\le E_B+o(1)$; together with
-\eqref{eq:blockenergy},
+$\mathrm{span}(B)<L$.  Every pair separation in $B$ then lies in the fixed
+compact interval $[0,L]$.  The Gram-entry asymptotic of
+Input~\ref{inp:stability} is uniform there, and hence
 \[
- E_B+B_p\,\mathrm{span}(B)\;\ge\;A-o(1).
+ 2\sum_{i<j}w(y_j-y_i)\le E_B+o(1).
 \]
+Together with \eqref{eq:kernelblock}, this gives
+\begin{equation}\label{eq:blockenergy}
+ E_B+B_p\,\mathrm{span}(B)\;\ge\;A-o(1).
+\end{equation}
 If $E_B\ge A$, then Lemma~\ref{lem:profile} and monotonicity give
 $\tr\Psi(G_B)\ge h(E_B)\ge h(A)=R$.  If $E_B<A$, the chord bound
 (Corollary~\ref{cor:chord}) gives
 $\tr\Psi(G_B)\ge\eta E_B$, and \eqref{eq:blockenergy} yields
 $\eta E_B+\eta B_p\,\mathrm{span}(B)\ge\eta A-o(1)=R-o(1)$.
+Because $m$ and $L$ are fixed, the $o(1)$ here is uniform over the
+small-span blocks; the large-span case has no asymptotic error.
 
 \subsection{Pinching and averaging}
 
 Exactly as in \cite[\S5]{Ainta26} (and \cite[\S4]{Trmdy26}): for each of the
 $m$ offsets, partition the retained simple zeros into consecutive blocks of
-size $m$; pinching preserves $\tr\Psi$ ($X\mapsto\tr\Psi(X)$ is convex and
-unitarily invariant), so summing \eqref{eq:blockdefect} over the full blocks
-of one offset and averaging over the $m$ offsets gives, with $S^\circ=S-o(N)$
-retained zeros of total normalized span at most $N+o(N)$, each interior gap
+size $m$.  Pinching does not increase $\tr\Psi$ because
+$X\mapsto\tr\Psi(X)$ is convex and unitarily invariant; hence
+$\tr\Psi(M)$ dominates the sum of the block defects.  Since there are
+$O(N)$ blocks, the uniform per-block $o(1)$ above sums to $o(N)$.  Summing
+\eqref{eq:blockdefect} over the full blocks of one offset and averaging over
+the $m$ offsets therefore gives, with the retained ordinates of
+Input~\ref{inp:span}, each interior gap
 lying in a block span for at most $m-1$ of the $m$ offsets,
 \begin{equation}\label{eq:defect}
  \tr\Psi(M)\;\ge\;\frac Rm\,S-\eta\,B_p\,\frac{m-1}{m}\,N-o(N).
