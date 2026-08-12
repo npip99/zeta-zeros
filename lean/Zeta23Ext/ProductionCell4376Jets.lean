@@ -619,6 +619,86 @@ theorem minusTwo_sound {y : ℝ}
   simpa [minusTwo] using minusTwo.sound minusTwo_checked
     minusTwo_sin minusTwo_cos hy'
 
+private def minusThreeTrig : RationalTrigCell.Witness :=
+  ⟨-2, reducedCenter, 1 / 10000000, 1, 3 / 10000000⟩
+
+/-- The reflected periodic `j=3` minus argument, centered at `5.9874829`. -/
+def minusThree : SincJetCertificate.Witness where
+  q := 59874829 / 10000000
+  radius := 1 / 2500
+  upper := 59878829 / 10000000
+  sinApprox := -(reducedCenter - reducedCenter ^ 3 / 6 +
+    reducedCenter ^ 5 / 120 - reducedCenter ^ 7 / 5040)
+  cosApprox := 1 - reducedCenter ^ 2 / 2 + reducedCenter ^ 4 / 24 -
+    reducedCenter ^ 6 / 720 + reducedCenter ^ 8 / 40320
+  trigError := 3 / 10000000
+  valueLower := -48738 / 1000000
+  valueUpper := -24301 / 500000
+  firstLower := 167891 / 1000000
+  firstUpper := 167899 / 1000000
+  secondLower := -7481 / 1000000
+  secondUpper := -7343 / 1000000
+
+theorem minusThree_checked : minusThree.check = true := by
+  norm_num [minusThree, reducedCenter, SincJetCertificate.Witness.check,
+    SincJetCertificate.Witness.secondApprox,
+    SincJetCertificate.Witness.secondError,
+    SincJetCertificate.Witness.secondAbs,
+    SincJetCertificate.Witness.firstApprox,
+    SincJetCertificate.Witness.firstError,
+    SincJetCertificate.Witness.firstAbs,
+    SincJetCertificate.Witness.valueApprox,
+    SincJetCertificate.Witness.valueError]
+
+private theorem minusThree_reduction :
+    |((-(minusThree.q : ℝ) - (minusThreeTrig.k : ℝ) * Real.pi) -
+      (minusThreeTrig.center : ℝ))| ≤ (minusThreeTrig.radius : ℝ) := by
+  have hp := TranscendentalBounds.pi_rational_bounds
+  rw [abs_le]
+  norm_num [minusThree, minusThreeTrig, reducedCenter] at hp ⊢
+  constructor <;> linarith [hp.1, hp.2]
+
+private theorem minusThree_sin :
+    |Real.sin (minusThree.q : ℝ) - (minusThree.sinApprox : ℝ)| ≤
+      (minusThree.trigError : ℝ) := by
+  have h := RationalTrigCell.sin_sound
+    (w := minusThreeTrig)
+    (by norm_num [minusThreeTrig, reducedCenter, RationalTrigCell.check])
+    (x := -(minusThree.q : ℝ)) minusThree_reduction
+  rw [show |Real.sin (minusThree.q : ℝ) - (minusThree.sinApprox : ℝ)| =
+      |((-1 : ℝ) ^ minusThreeTrig.k) * Real.sin (-(minusThree.q : ℝ)) -
+        TranscendentalBounds.sinTaylor7 (minusThreeTrig.center : ℝ)| by
+    apply abs_eq_abs.mpr
+    right
+    norm_num [minusThree, minusThreeTrig, reducedCenter, Real.sin_neg,
+      TranscendentalBounds.sinTaylor7]
+    ring
+  ]
+  exact h
+
+private theorem minusThree_cos :
+    |Real.cos (minusThree.q : ℝ) - (minusThree.cosApprox : ℝ)| ≤
+      (minusThree.trigError : ℝ) := by
+  have h := RationalTrigCell.cos_sound
+    (w := minusThreeTrig)
+    (by norm_num [minusThreeTrig, reducedCenter, RationalTrigCell.cosCheck])
+    (x := -(minusThree.q : ℝ)) minusThree_reduction
+  simpa [minusThree, minusThreeTrig, reducedCenter, Real.cos_neg,
+    TranscendentalBounds.cosTaylor8] using h
+
+theorem minusThree_sound {y : ℝ}
+    (hy : |y - (59874829 / 10000000 : ℝ)| ≤ 1 / 2500) :
+    ((-48738 / 1000000 : ℝ) ≤ Real.sinc y ∧
+      Real.sinc y ≤ -24301 / 500000) ∧
+    ((167891 / 1000000 : ℝ) ≤ sincD1 y ∧
+      sincD1 y ≤ 167899 / 1000000) ∧
+    ((-7481 / 1000000 : ℝ) ≤ sincD2 y ∧
+      sincD2 y ≤ -7343 / 1000000) := by
+  have hy' : |y - (minusThree.q : ℝ)| ≤ (minusThree.radius : ℝ) := by
+    simpa [minusThree] using hy
+  simpa [minusThree] using minusThree.sound minusThree_checked
+    minusThree_sin minusThree_cos hy'
+
 end Zeta23Ext.ProductionCell4376Jets
 
 end

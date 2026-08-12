@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 SPDX-License-Identifier: Apache-2.0
 -/
 import Zeta23Ext.CurrentWindowHybridMonotonicity
-import Zeta23Ext.CurrentWindowMonotonicityRows
 
 /-!
 # Semantic rows for hybrid current-window monotonicity
@@ -25,11 +24,70 @@ open CurrentWindow
 open CurrentWindowAdmissibility
 open CurrentWindowFiniteCertificate
 open CurrentWindowHybridMonotonicity
-open CurrentWindowMonotonicityRows
 
 def cosApproximation (w : RationalTrigCell.Witness) : ℝ :=
   ((-1 : ℝ) ^ w.k) *
     TranscendentalBounds.cosTaylor8 (w.center : ℝ)
+
+def sinApproximation (w : RationalTrigCell.Witness) : ℝ :=
+  ((-1 : ℝ) ^ w.k) *
+    TranscendentalBounds.sinTaylor7 (w.center : ℝ)
+
+/-- Seven semantic sine rows at an arbitrary first-derivative cell. -/
+structure FirstRow (cell : DerivativeCell) where
+  witness : Fin 7 → RationalTrigCell.Witness
+  checked : ∀ j, RationalTrigCell.check (witness j) = true
+  reduced : ∀ j,
+    |(frequency j * cell.center - ((witness j).k : ℝ) * Real.pi) -
+      ((witness j).center : ℝ)| ≤ ((witness j).radius : ℝ)
+  arithmetic :
+    (∑ j : Fin 7,
+        -(coefficient j * frequency j) * sinApproximation (witness j)) +
+      (∑ j : Fin 7,
+        |-(coefficient j * frequency j)| * ((witness j).err : ℝ)) +
+      curvatureBound * cell.radius ≤ 0
+
+lemma FirstRow.sin_close {cell : DerivativeCell} (row : FirstRow cell)
+    (j : Fin 7) :
+    |Real.sin (frequency j * cell.center) -
+      sinApproximation (row.witness j)| ≤ ((row.witness j).err : ℝ) := by
+  have h := RationalTrigCell.sin_sound (row.checked j) (row.reduced j)
+  unfold sinApproximation
+  have hsign : |((-1 : ℝ) ^ (row.witness j).k)| = 1 := by
+    rw [abs_zpow]
+    norm_num
+  calc
+    |Real.sin (frequency j * cell.center) -
+        ((-1 : ℝ) ^ (row.witness j).k) *
+          TranscendentalBounds.sinTaylor7 ((row.witness j).center : ℝ)| =
+      |((-1 : ℝ) ^ (row.witness j).k) *
+        (((-1 : ℝ) ^ (row.witness j).k) *
+            Real.sin (frequency j * cell.center) -
+          TranscendentalBounds.sinTaylor7
+            ((row.witness j).center : ℝ))| := by
+        have hsquare : ((-1 : ℝ) ^ (row.witness j).k) ^ 2 = 1 := by
+          rw [zpow_two]
+          norm_num
+        apply congrArg abs
+        nlinarith
+    _ = |((-1 : ℝ) ^ (row.witness j).k) *
+          Real.sin (frequency j * cell.center) -
+        TranscendentalBounds.sinTaylor7
+          ((row.witness j).center : ℝ)| := by
+      rw [abs_mul, hsign, one_mul]
+    _ ≤ ((row.witness j).err : ℝ) := h
+
+theorem FirstRow.firstUpper {cell : DerivativeCell}
+    (row : FirstRow cell) :
+    deriv window cell.center + curvatureBound * cell.radius ≤ 0 := by
+  rw [deriv_window]
+  have hsum := RationalTrigCell.weighted_sum_le
+    (coefficient := fun j : Fin 7 => -(coefficient j * frequency j))
+    (value := fun j => Real.sin (frequency j * cell.center))
+    (approximation := fun j => sinApproximation (row.witness j))
+    (error := fun j => ((row.witness j).err : ℝ))
+    row.sin_close
+  linarith [row.arithmetic]
 
 /-- Seven semantic cosine rows at one second-derivative cell. -/
 structure SecondRow (cell : DerivativeCell) where
@@ -99,8 +157,7 @@ structure Table (nSecond nFirst : ℕ) where
   secondCover : ∀ s ∈ Icc (0 : ℝ) junction,
     ∃ i, (secondCells i).Covers s
   firstCells : Fin nFirst → DerivativeCell
-  firstRow : ∀ i, CurrentWindowMonotonicityRows.CenterRow nFirst i
-  firstCells_eq : ∀ i, firstCells i = CurrentWindowUniformGrid.cell nFirst i
+  firstRow : ∀ i, FirstRow (firstCells i)
   firstCover : ∀ s ∈ Icc junction (1 / 2),
     ∃ i, (firstCells i).Covers s
 
@@ -113,10 +170,7 @@ def Table.toCertificate {nSecond nFirst : ℕ}
   secondUpper := fun i => (table.secondRow i).secondUpper
   secondCover := table.secondCover
   firstCells := table.firstCells
-  firstUpper := by
-    intro i
-    rw [table.firstCells_eq i]
-    exact (table.firstRow i).centerUpper
+  firstUpper := fun i => (table.firstRow i).firstUpper
   firstCover := table.firstCover
 
 theorem Table.window_antitone {nSecond nFirst : ℕ}
@@ -125,4 +179,3 @@ theorem Table.window_antitone {nSecond nFirst : ℕ}
   table.toCertificate.window_antitone
 
 end Zeta23Ext.CurrentWindowHybridRows
-

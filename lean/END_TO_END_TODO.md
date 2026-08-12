@@ -90,7 +90,7 @@ de-risked theorem by theorem before an end-to-end ETA is credible.
   impractical; three representative roots exceeded two million nodes each.
   The generic sinc/sinc'/sinc'' checker, one delicate reduced-argument row,
   the `K,K',K'' -> w''` combiner, and the `K(0)` bound are complete.  Two more
-  actual production rows are now checked, leaving 7 of the 14 arguments for
+  actual production rows are now checked, leaving 5 of the 14 arguments for
   the first full semantic tangent cell.
 - [ ] Convert the compact tree, root boxes, table data, and tangent evidence to
   checked Lean values and prove the concrete `Forest.check = true` and
@@ -130,9 +130,10 @@ long-term Git artifact.
   be positive eventually, before retained data or Gram bounds are constructed.
 - [ ] Discharge the concrete central `Az` moment/tail premise and rebase its
   count and error terms to `NIprime`.
-- [ ] Package the resulting moment, stability, Gram, span, and endpoint errors
-  into `AsymptoticEntrywiseAnalyticInputs.errorsAreSmall`, including eventual
-  `delta_small`.
+- [x] Package the moment, stability, Gram, span, endpoint, positivity, and
+  deletion errors into the exact lossy finite records and final asymptotic
+  target.  The analytic theorem now reduces cleanly to the concrete central
+  `Az` moment premise with two little-o error rates.
 - [ ] Instantiate the already-proved zeta and cumulative capstones and run the
   final adversarial theorem/axiom audit.
 

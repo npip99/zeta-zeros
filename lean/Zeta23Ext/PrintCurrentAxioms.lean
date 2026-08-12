@@ -137,6 +137,8 @@ in theorem arguments, not declared axioms.
 #print axioms Zeta23Ext.CurrentWindowHybridMonotonicity.window_antitone
 #print axioms Zeta23Ext.CurrentWindowHybridRows.SecondRow.cos_close
 #print axioms Zeta23Ext.CurrentWindowHybridRows.SecondRow.secondUpper
+#print axioms Zeta23Ext.CurrentWindowHybridRows.FirstRow.sin_close
+#print axioms Zeta23Ext.CurrentWindowHybridRows.FirstRow.firstUpper
 #print axioms Zeta23Ext.CurrentWindowHybridRows.Table.window_antitone
 #print axioms Zeta23Ext.CurrentWindowClosedHScalable.closed_masses_eq_entry_sum
 #print axioms Zeta23Ext.CurrentWindowClosedHScalable.combinedEntry_zero_zero
@@ -211,6 +213,10 @@ in theorem arguments, not declared axioms.
 #print axioms Zeta23Ext.ProductionCell4376Jets.plusSix_checked
 #print axioms Zeta23Ext.ProductionCell4376Jets.plusSix_sound
 #print axioms Zeta23Ext.ProductionCell4376Jets.minusOne_sound
+#print axioms Zeta23Ext.ProductionCell4376Jets.minusTwo_checked
+#print axioms Zeta23Ext.ProductionCell4376Jets.minusTwo_sound
+#print axioms Zeta23Ext.ProductionCell4376Jets.minusThree_checked
+#print axioms Zeta23Ext.ProductionCell4376Jets.minusThree_sound
 #print axioms Zeta23Ext.CurrentInfiniteKernel.uniformly_normalizedInfiniteKernel_current
 #print axioms Zeta23Ext.CurrentInfiniteKernel.Wfun_le_four
 #print axioms Zeta23Ext.CurrentInfiniteKernel.compactUniformScaledCurrentGram_of_rhoTail
@@ -230,6 +236,8 @@ in theorem arguments, not declared axioms.
 #print axioms Zeta23Ext.CurrentInteriorAsymptotic.eventually_currentInterior_card_pos_of_moments
 #print axioms Zeta23Ext.CurrentInteriorAsymptotic.currentInteriorCount_isBigO_NIprime
 #print axioms Zeta23Ext.CurrentInteriorAsymptotic.currentBaseTotalError_isLittleO_NIprime
+#print axioms Zeta23Ext.CurrentInteriorAsymptotic.eventually_currentInterior_lossyFinite
+#print axioms Zeta23Ext.CurrentInteriorAsymptotic.currentInterior_target_of_AzMoments
 #print axioms Zeta23Ext.CurrentCentralSelection.canonicalRetainedZeroData
 #print axioms Zeta23Ext.CurrentCentralSelection.canonical_lossyMomentData
 #print axioms Zeta23Ext.CurrentCentralAssembler.CanonicalHeightPremises.toLossyFinite

@@ -332,7 +332,9 @@ theorem currentInteriorCount_isBigO_NIprime
           ZeroSide.phiHatConj))
   rw [card_retainedAtom] at hsub
   exact_mod_cast hsub.trans
-    ((ZeroConfig.trivial_chain Z T (2 * T)).1.trans
+    (((ZeroConfig.trivial_chain Z T (2 * T)).1.trans
+      (ZeroConfig.trivial_chain Z T (2 * T)).2.1 |>.trans
+      (ZeroConfig.trivial_chain Z T (2 * T)).2.2.1).trans
       (by
         rw [Assembly.NIprime_eq Z hT]
         exact Nat.le_add_right _ _))
@@ -340,8 +342,9 @@ theorem currentInteriorCount_isBigO_NIprime
 lemma one_isLittleO_NIprime (Z : ZeroConfig) (hR : RiemannVonMangoldt Z) :
     (fun _ : ℝ => (1 : ℝ)) =o[atTop] (fun T => (Z.NIprime T : ℝ)) := by
   rw [isLittleO_one_left_iff]
-  simpa only [Real.norm_eq_abs, abs_of_nonneg (Nat.cast_nonneg _)] using
-    tendsto_NIprime_atTop Z hR
+  apply (tendsto_NIprime_atTop Z hR).congr'
+  exact Eventually.of_forall fun T => by
+    rw [Real.norm_eq_abs, abs_of_nonneg (Nat.cast_nonneg _)]
 
 theorem currentBaseTotalError_isLittleO_NIprime
     {Z : ZeroConfig} {P : Params} (hP : P.Valid) (hlam : P.lam < 1)
@@ -363,13 +366,19 @@ theorem currentBaseTotalError_isLittleO_NIprime
         =o[atTop] (fun _ => (1 : ℝ)) := by
     have h := herrOne.const_mul_left
       (Current.eta * (2 * (Current.m : ℝ) ^ 2) / 250)
-    simpa [blockDelta_entryEnergyError] using h
+    convert h using 1 <;> simp [blockDelta_entryEnergyError] <;> ring
   have hgram := hcoeffOne.mul_isBigO
     (currentInteriorCount_isBigO_NIprime Z P)
+  have hgram' : (fun T =>
+      (Current.eta * blockDelta
+        (entryEnergyError (currentInteriorGramError P T)) / 250) *
+          (currentInteriorCount Z P T : ℝ)) =o[atTop]
+        (fun T => (Z.NIprime T : ℝ)) := by
+    simpa only [one_mul] using hgram
   have hspan :=
     (centralScaledSpanError_isLittleO_NIprime hP hlam hR).const_mul_left
       (Current.eta * Current.pressureCap * (249 / 250 : ℝ))
-  have hsum := hstab.add hconst |>.add hgram |>.add hspan
+  have hsum := hstab.add hconst |>.add hgram' |>.add hspan
   change (fun T =>
     (4 * R₁ T + R₂ T) +
       ((249 / 250 : ℝ) * Current.R +
@@ -380,5 +389,95 @@ theorem currentBaseTotalError_isLittleO_NIprime
           centralScaledSpanError Z P T)) =o[atTop]
       (fun T => (Z.NIprime T : ℝ))
   simpa only [add_assoc] using hsum
+
+/-- The exact filter-level analytic record required by the lossy assembler.
+The only non-finite inputs are the concrete `Az` moments and their two
+little-o rates. -/
+theorem eventually_currentInterior_lossyFinite
+    {Z : ZeroConfig} {P : Params} (hP : P.Valid)
+    (hR : RiemannVonMangoldt Z)
+    (hcert : CurrentWindow.WindowCertificate)
+    (hfinite : CurrentWindow.FiniteWindowInputs)
+    {R₁ R₂ : ℝ → ℝ}
+    (hR₁ : R₁ =o[atTop] (fun T => (Z.NIprime T : ℝ)))
+    (hR₂ : R₂ =o[atTop] (fun T => (Z.NIprime T : ℝ)))
+    (hMom : ∀ᶠ T in atTop,
+      CentralAzMomentPremise Z (P.atV CurrentWindow.window T) T
+        (Z.NIprime T : ℝ) (R₁ T) (R₂ T)) :
+    ∀ᶠ T in atTop, ∃ d b : ℕ,
+      Nonempty (LossyFiniteEntrywiseAnalyticInputs d
+        (currentInteriorCount Z P T) b (Z.NIprime T : ℝ)
+        (centralScaledSpanError Z P T) (currentInteriorGramError P T)
+        (R₁ T) (R₂ T) (currentInteriorDeletionLoss Z P T)) := by
+  have hpos := eventually_currentInterior_card_pos_of_moments
+    hP hR hcert hR₁ hR₂ hMom
+  have hgram := eventually_currentInterior_entrywiseGramData
+    (Z := Z) hP hcert
+  have hzero := currentWindowZeroSide_of_certificate hP hR hcert
+  have hdelta : Tendsto (fun T => Current.eta *
+      blockDelta (entryEnergyError (currentInteriorGramError P T)))
+      atTop (nhds 0) := by
+    have h := (tendsto_currentInteriorGramError hP hcert).const_mul
+      (Current.eta * (2 * (Current.m : ℝ) ^ 2))
+    simpa [blockDelta_entryEnergyError, mul_assoc] using h
+  have hdeltaSmall : ∀ᶠ T in atTop, Current.eta *
+      blockDelta (entryEnergyError (currentInteriorGramError P T)) ≤
+        Current.R :=
+    hdelta.eventually (eventually_le_nhds Current.R_pos)
+  filter_upwards [hpos, hgram, hMom, hzero.poisson, hzero.a_half,
+    (Params.tendsto_L_of_valid hP).eventually_gt_atTop 0,
+    hdeltaSmall] with T hr hgramT hm hPois ha hL hsmall
+  let Q := P.atV CurrentWindow.window T
+  have hc : 0 < Q.a T * Q.L T ^ 2 := by
+    dsimp [Q]
+    positivity
+  let H : InteriorHeightPremises Z Q T (R₁ T) (R₂ T)
+      (currentInteriorGramError P T) ZeroSide.phiHatConj
+      ZeroSide.phiHatReal hPois :=
+    { finiteWindow := hfinite
+      hc := hc
+      hL := by simpa [Q] using hL
+      interior_pos := by simpa [currentInteriorCount, Q] using hr
+      gram := by
+        simpa [Q, CurrentInteriorData] using
+          hgramT.2 (by simpa [currentInteriorCount, Q] using hr)
+      azMoments := hm
+      delta_small := hsmall }
+  let S0 := canonicalCentralSelection Z Q T ZeroSide.phiHatConj
+    ZeroSide.phiHatReal hPois hc
+  let b := Fintype.card (EndpointIndex Z Q T ZeroSide.phiHatConj) +
+    (S0.deleted + (Z.s2 T + Z.p T))
+  refine ⟨Q.d T, b, ⟨?_⟩⟩
+  have hx := H.toLossyFinite
+  rw [interiorCountLoss_eq_current] at hx
+  simpa [currentInteriorCount, currentInteriorDeletionLoss,
+    centralBoundaryDeletion, centralScaledSpanError, scaledWindowLength,
+    Q, S0, b] using hx
+
+/-- Asymptotic target after reducing the entire analytic lane to concrete
+`Az` moment estimates with little-o errors. -/
+theorem currentInterior_target_of_AzMoments
+    {Z : ZeroConfig} {P : Params} (hP : P.Valid) (hlam : P.lam < 1)
+    (hR : RiemannVonMangoldt Z)
+    (hcert : CurrentWindow.WindowCertificate)
+    (hfinite : CurrentWindow.FiniteWindowInputs)
+    {R₁ R₂ : ℝ → ℝ}
+    (hR₁ : R₁ =o[atTop] (fun T => (Z.NIprime T : ℝ)))
+    (hR₂ : R₂ =o[atTop] (fun T => (Z.NIprime T : ℝ)))
+    (hMom : ∀ᶠ T in atTop,
+      CentralAzMomentPremise Z (P.atV CurrentWindow.window T) T
+        (Z.NIprime T : ℝ) (R₁ T) (R₂ T)) :
+    ∀ᶠ T in atTop, Current.target * (Z.NIprime T : ℝ) ≤
+      (currentInteriorCount Z P T : ℝ) := by
+  apply target_of_littleO (currentInteriorCount Z P)
+    (fun T => (Z.NIprime T : ℝ)) (centralScaledSpanError Z P)
+    (currentInteriorGramError P) R₁ R₂
+    (currentInteriorDeletionLoss Z P)
+  · exact currentInteriorDeletionLoss_nonneg Z P
+  · exact eventually_currentInterior_lossyFinite hP hR hcert hfinite
+      hR₁ hR₂ hMom
+  · exact Eventually.of_forall fun _ => Nat.cast_nonneg _
+  · exact currentBaseTotalError_isLittleO_NIprime hP hlam hR hcert hR₁ hR₂
+  · exact currentInteriorDeletionLoss_isLittleO_NIprime hP hR
 
 end Zeta23Ext.CurrentInteriorAsymptotic
