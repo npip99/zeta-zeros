@@ -59,6 +59,7 @@ import Zeta23Ext.CurrentKernelTotalDerivatives
 import Zeta23Ext.ProductionCell4376Jets
 import Zeta23Ext.CurrentTangentCurrentSemantics
 import Zeta23Ext.CurrentAnnotatedReplay
+import Zeta23Ext.VerifiedAnnotatedForestDecoder
 
 /-
 Run with `lake env lean Zeta23Ext/PrintCurrentAxioms.lean` to audit the
@@ -320,6 +321,8 @@ in theorem arguments, not declared axioms.
 #print axioms Zeta23Ext.VerifiedCertificate.CurrentTangent.CurrentSemantics.ofProducerInputs
 #print axioms Zeta23Ext.VerifiedCertificate.CurrentAnnotatedReplay.currentLocalCertificate_of_annotated_replay
 #print axioms Zeta23Ext.VerifiedCertificate.CurrentAnnotatedReplay.currentLocalCertificate_of_producer_replay
+#print axioms Zeta23Ext.VerifiedCertificate.AnnotatedDecoder.decodeForest_length
+#print axioms Zeta23Ext.VerifiedCertificate.AnnotatedDecoder.currentLocalCertificate_of_decoded_annotated_replay
 #print axioms Zeta23Ext.CurrentCentralSelection.canonicalRetainedZeroData
 #print axioms Zeta23Ext.CurrentCentralSelection.canonical_lossyMomentData
 #print axioms Zeta23Ext.CurrentCentralAssembler.CanonicalHeightPremises.toLossyFinite

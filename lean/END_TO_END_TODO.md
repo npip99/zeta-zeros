@@ -104,6 +104,9 @@ de-risked theorem by theorem before an end-to-end ETA is credible.
 - [x] Connect the heterogeneous annotated forest and existing initialization
   bridge directly to `CurrentWindow.LocalCertificate`, with a convenience
   capstone accepting only the finite tangent producer facts.
+- [x] Decode the strict `Z23ANN1` leaf-tagged topology format in Lean,
+  resolving every 64-bit tangent payload index and validating the exact root,
+  node, and tangent-leaf counts before replay.
 - [ ] Convert the compact tree, root boxes, table data, and tangent evidence to
   checked Lean values and prove the concrete `Forest.check = true` and
   `InitialRootEvidence` facts.
