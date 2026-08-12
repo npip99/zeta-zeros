@@ -1,0 +1,5 @@
+import Zeta23Ext.CurrentTangentCurrentSemantics
+
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentTangent.CurrentSemantics.hasDerivAt_objective_line
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentTangent.CurrentSemantics.hasDerivAt_lineFirst
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentTangent.CurrentSemantics.ofProducerInputs

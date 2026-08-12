@@ -1,0 +1,4 @@
+import Zeta23Ext.CurrentAnnotatedReplay
+
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentAnnotatedReplay.currentLocalCertificate_of_annotated_replay
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentAnnotatedReplay.currentLocalCertificate_of_producer_replay

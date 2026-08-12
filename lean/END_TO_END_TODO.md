@@ -93,6 +93,14 @@ de-risked theorem by theorem before an end-to-end ETA is credible.
   the `K(0)` bound are complete.  All 14 actual production argument rows and
   their weighted composition are checked for cell 4376, yielding the exact
   recorded binary64 lower bound throughout that cell.
+- [x] Localize tangent semantics to the checked leaf, bind its objective to
+  the actual current `F6`, and derive line continuity and both derivatives
+  from the all-real total kernel derivative theorems.  The remaining producer
+  facts are finite value/gradient enclosures and the exact 20-row Hessian
+  comparison.
+- [x] Connect the heterogeneous annotated forest and existing initialization
+  bridge directly to `CurrentWindow.LocalCertificate`, with a convenience
+  capstone accepting only the finite tangent producer facts.
 - [ ] Convert the compact tree, root boxes, table data, and tangent evidence to
   checked Lean values and prove the concrete `Forest.check = true` and
   `InitialRootEvidence` facts.

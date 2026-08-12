@@ -52,9 +52,12 @@ import Zeta23Ext.CurrentEndToEnd
 import Zeta23Ext.CurrentFiniteCapstone
 import Zeta23Ext.SincDerivativeCertificate
 import Zeta23Ext.SincJetCertificate
+import Zeta23Ext.CheckedSincJet
 import Zeta23Ext.CurrentKernelDerivatives
 import Zeta23Ext.CurrentKernelTotalDerivatives
 import Zeta23Ext.ProductionCell4376Jets
+import Zeta23Ext.CurrentTangentCurrentSemantics
+import Zeta23Ext.CurrentAnnotatedReplay
 
 /-
 Run with `lake env lean Zeta23Ext/PrintCurrentAxioms.lean` to audit the
@@ -306,6 +309,14 @@ in theorem arguments, not declared axioms.
 #print axioms Zeta23Ext.CurrentWindowMonotonicityTable.windowCertificate
 #print axioms Zeta23Ext.CurrentFiniteCapstone.exists_current_zeta_dyadic_target
 #print axioms Zeta23Ext.CurrentFiniteCapstone.current_zeta_cumulative_target
+#print axioms Zeta23Ext.CheckedSincJet.Witness.argument_ne_zero
+#print axioms Zeta23Ext.CheckedSincJet.Witness.sound
+#print axioms Zeta23Ext.CheckedSincJet.SignedWitness.sound
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentTangent.CurrentSemantics.hasDerivAt_objective_line
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentTangent.CurrentSemantics.hasDerivAt_lineFirst
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentTangent.CurrentSemantics.ofProducerInputs
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentAnnotatedReplay.currentLocalCertificate_of_annotated_replay
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentAnnotatedReplay.currentLocalCertificate_of_producer_replay
 #print axioms Zeta23Ext.CurrentCentralSelection.canonicalRetainedZeroData
 #print axioms Zeta23Ext.CurrentCentralSelection.canonical_lossyMomentData
 #print axioms Zeta23Ext.CurrentCentralAssembler.CanonicalHeightPremises.toLossyFinite
