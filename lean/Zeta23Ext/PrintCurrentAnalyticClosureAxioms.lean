@@ -1,0 +1,11 @@
+import Zeta23Ext.CurrentAnalyticClosure
+
+#print axioms Zeta23Ext.CurrentAzMoments.gzTraceDefect_isLittleO_N
+#print axioms Zeta23Ext.CurrentAzMoments.gzFrobDefect_isLittleO_N
+#print axioms Zeta23Ext.CurrentAzMoments.exists_currentTailData
+#print axioms Zeta23Ext.CurrentAzMoments.eventually_currentAzMomentPremise
+#print axioms Zeta23Ext.CurrentAzMomentErrors.currentAzTraceError_isLittleO_NIprime
+#print axioms Zeta23Ext.CurrentAzMomentErrors.currentAzFrobError_isLittleO_NIprime
+#print axioms Zeta23Ext.CurrentAnalyticClosure.currentInterior_target_of_GzMoments
+#print axioms Zeta23Ext.CurrentAnalyticClosure.exists_current_zeta_dyadic_target_of_Hcert_lt
+#print axioms Zeta23Ext.CurrentAnalyticClosure.current_zeta_cumulative_target_of_Hcert_lt

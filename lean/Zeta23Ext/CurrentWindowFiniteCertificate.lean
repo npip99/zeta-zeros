@@ -131,6 +131,26 @@ lemma jerkBound_le_153 : jerkBound ≤ 153 := by
       gcongr
     _ ≤ 153 := by norm_num
 
+/-- A compact rational envelope for the second derivative.  Generated
+first-derivative cells use this instead of repeatedly expanding all seven
+frequency terms. -/
+lemma curvatureBound_le_8 : curvatureBound ≤ 8 := by
+  unfold curvatureBound
+  have hp : Real.pi ≤ (31416 : ℝ) / 10000 := by
+    have hpi := Real.pi_lt_d4
+    norm_num at hpi ⊢
+    exact hpi.le
+  have hs : Real.sqrt 2 ≤ (283 : ℝ) / 200 :=
+    TranscendentalBounds.sqrt_two_bounds.2
+  have hp0 : 0 ≤ Real.pi := Real.pi_pos.le
+  have hs0 : 0 ≤ Real.sqrt 2 := Real.sqrt_nonneg _
+  rw [frequency_eq_explicit]
+  norm_num [coefficient, Fin.sum_univ_succ, abs_of_nonneg hp0,
+    abs_of_nonneg hs0]
+  have hs2 : (Real.sqrt 2) ^ 2 = 2 := Real.sq_sqrt (by norm_num)
+  have hp2 : Real.pi ^ 2 ≤ ((31416 : ℝ) / 10000) ^ 2 := by nlinarith
+  nlinarith
+
 lemma deriv2_window_zero_le : deriv (deriv window) 0 ≤ -(4 / 5) := by
   rw [deriv2_window_zero]
   have hp : Real.pi ≤ (31416 : ℝ) / 10000 := by

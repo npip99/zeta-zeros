@@ -64,10 +64,19 @@ lemma CenterRow.sin_close {n : ℕ} {i : Fin n} (row : CenterRow n i)
           TranscendentalBounds.sinTaylor7
             ((row.witness j).center : ℝ))| := by
         have hsquare : ((-1 : ℝ) ^ (row.witness j).k) ^ 2 = 1 := by
-          rw [zpow_two]
-          norm_num
+          nlinarith [sq_abs ((-1 : ℝ) ^ (row.witness j).k)]
         apply congrArg abs
-        nlinarith
+        calc
+          Real.sin (frequency j * (cell n i).center) -
+              (-1 : ℝ) ^ (row.witness j).k *
+                TranscendentalBounds.sinTaylor7
+                  ((row.witness j).center : ℝ) =
+              (((-1 : ℝ) ^ (row.witness j).k) ^ 2) *
+                Real.sin (frequency j * (cell n i).center) -
+              (-1 : ℝ) ^ (row.witness j).k *
+                TranscendentalBounds.sinTaylor7
+                  ((row.witness j).center : ℝ) := by rw [hsquare, one_mul]
+          _ = _ := by ring
     _ = |((-1 : ℝ) ^ (row.witness j).k) *
           Real.sin (frequency j * (cell n i).center) -
         TranscendentalBounds.sinTaylor7
@@ -86,7 +95,24 @@ theorem CenterRow.centerUpper {n : ℕ} {i : Fin n}
     (approximation := fun j => approximation (row.witness j))
     (error := fun j => ((row.witness j).err : ℝ))
     row.sin_close
-  linarith [row.arithmetic]
+  have hsum0 :
+      (∑ j, -(coefficient j * frequency j *
+        Real.sin (frequency j * (cell n i).center))) ≤
+        (∑ j, -(coefficient j * frequency j) *
+          approximation (row.witness j)) +
+        ∑ j, |-(coefficient j * frequency j)| *
+          ((row.witness j).err : ℝ) := by
+    simpa only [neg_mul, mul_assoc] using hsum
+  calc
+    ∑ j, -(coefficient j * frequency j *
+          Real.sin (frequency j * (cell n i).center)) +
+        curvatureBound * (cell n i).radius ≤
+      (∑ j, -(coefficient j * frequency j) *
+          approximation (row.witness j) +
+        ∑ j, |-(coefficient j * frequency j)| *
+          ((row.witness j).err : ℝ)) +
+        curvatureBound * (cell n i).radius := add_le_add_left hsum0 _
+    _ ≤ 0 := row.arithmetic
 
 /-- A generated family of semantic centre rows produces exactly the compact
 uniform-grid certificate consumed by the global monotonicity proof. -/
@@ -104,4 +130,3 @@ theorem Table.window_antitone {n : ℕ} (table : Table n) :
   table.toUniformCertificate.window_antitone
 
 end Zeta23Ext.CurrentWindowMonotonicityRows
-

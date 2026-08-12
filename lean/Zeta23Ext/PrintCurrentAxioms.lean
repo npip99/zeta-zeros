@@ -16,7 +16,9 @@ import Zeta23Ext.CurrentWindowUniformGrid
 import Zeta23Ext.CurrentWindowMonotonicityRows
 import Zeta23Ext.CurrentWindowHybridMonotonicity
 import Zeta23Ext.CurrentWindowHybridRows
+import Zeta23Ext.CurrentWindowArgumentReduction
 import Zeta23Ext.CurrentWindowClosedHScalable
+import Zeta23Ext.CurrentWindowClosedHMixed
 import Zeta23Ext.VerifiedCertificateForest
 import Zeta23Ext.VerifiedCertificateArithmetic
 import Zeta23Ext.CurrentCertificateReplay
@@ -36,6 +38,9 @@ import Zeta23Ext.CurrentInteriorRetention
 import Zeta23Ext.CurrentInteriorRetentionBridge
 import Zeta23Ext.CurrentInteriorAnalyticPackage
 import Zeta23Ext.CurrentInteriorAsymptotic
+import Zeta23Ext.CurrentAzMoments
+import Zeta23Ext.CurrentAzMomentErrors
+import Zeta23Ext.CurrentAnalyticClosure
 import Zeta23Ext.SincDerivativeCertificate
 import Zeta23Ext.SincJetCertificate
 import Zeta23Ext.CurrentKernelDerivatives
@@ -125,6 +130,7 @@ in theorem arguments, not declared axioms.
 #print axioms Zeta23Ext.CurrentWindowFiniteCertificate.windowDistanceMass_closed
 #print axioms Zeta23Ext.CurrentWindowFiniteCertificate.H_eq_closedH
 #print axioms Zeta23Ext.CurrentWindowFiniteCertificate.H_lower_iff_closedHLower
+#print axioms Zeta23Ext.CurrentWindowFiniteCertificate.curvatureBound_le_8
 #print axioms Zeta23Ext.CurrentWindowFiniteCertificate.cos_sqrt_two_half_lower
 #print axioms Zeta23Ext.CurrentWindowFiniteCertificate.window_half_lower
 #print axioms Zeta23Ext.CurrentWindowFiniteCertificate.NumericCertificate.toWindowCertificate
@@ -139,7 +145,11 @@ in theorem arguments, not declared axioms.
 #print axioms Zeta23Ext.CurrentWindowHybridRows.SecondRow.secondUpper
 #print axioms Zeta23Ext.CurrentWindowHybridRows.FirstRow.sin_close
 #print axioms Zeta23Ext.CurrentWindowHybridRows.FirstRow.firstUpper
+#print axioms Zeta23Ext.CurrentWindowHybridRows.CheckedFirstRow.firstUpper
+#print axioms Zeta23Ext.CurrentWindowHybridRows.CheckedSecondRow.secondUpper
 #print axioms Zeta23Ext.CurrentWindowHybridRows.Table.window_antitone
+#print axioms Zeta23Ext.CurrentWindowArgumentReduction.argument_mem
+#print axioms Zeta23Ext.CurrentWindowArgumentReduction.reductionCheck_sound
 #print axioms Zeta23Ext.CurrentWindowClosedHScalable.closed_masses_eq_entry_sum
 #print axioms Zeta23Ext.CurrentWindowClosedHScalable.combinedEntry_zero_zero
 #print axioms Zeta23Ext.CurrentWindowClosedHScalable.combinedEntry_one_one
@@ -147,6 +157,9 @@ in theorem arguments, not declared axioms.
 #print axioms Zeta23Ext.CurrentWindowClosedHScalable.periodic_block_sum
 #print axioms Zeta23Ext.CurrentWindowClosedHScalable.combinedEntry_zero_periodic_pair
 #print axioms Zeta23Ext.CurrentWindowClosedHScalable.strong_closedH_lower_of_compact
+#print axioms Zeta23Ext.CurrentWindowClosedHMixed.mixed_kernel_cancellation
+#print axioms Zeta23Ext.CurrentWindowClosedHMixed.mixed_entry_pair
+#print axioms Zeta23Ext.CurrentWindowClosedHMixed.mixed_entries_sum
 #print axioms Zeta23Ext.VerifiedCertificate.Forest.check_sound
 #print axioms Zeta23Ext.VerifiedCertificate.currentLocalCertificate_of_decoded_forest
 #print axioms Zeta23Ext.VerifiedCertificate.TermwiseIntegerBounds.lowerScore_sound
@@ -217,6 +230,15 @@ in theorem arguments, not declared axioms.
 #print axioms Zeta23Ext.ProductionCell4376Jets.minusTwo_sound
 #print axioms Zeta23Ext.ProductionCell4376Jets.minusThree_checked
 #print axioms Zeta23Ext.ProductionCell4376Jets.minusThree_sound
+#print axioms Zeta23Ext.ProductionCell4376Jets.minusFour_checked
+#print axioms Zeta23Ext.ProductionCell4376Jets.minusFour_sound
+#print axioms Zeta23Ext.ProductionCell4376Jets.minusFive_checked
+#print axioms Zeta23Ext.ProductionCell4376Jets.minusFive_sound
+#print axioms Zeta23Ext.ProductionCell4376Jets.minusSix_checked
+#print axioms Zeta23Ext.ProductionCell4376Jets.minusSix_sound
+#print axioms Zeta23Ext.ProductionCell4376Jets.minusZero_sound
+#print axioms Zeta23Ext.ProductionCell4376Jets.plusZero_sound
+#print axioms Zeta23Ext.ProductionCell4376Jets.cell4376_semantic
 #print axioms Zeta23Ext.CurrentInfiniteKernel.uniformly_normalizedInfiniteKernel_current
 #print axioms Zeta23Ext.CurrentInfiniteKernel.Wfun_le_four
 #print axioms Zeta23Ext.CurrentInfiniteKernel.compactUniformScaledCurrentGram_of_rhoTail
@@ -238,6 +260,15 @@ in theorem arguments, not declared axioms.
 #print axioms Zeta23Ext.CurrentInteriorAsymptotic.currentBaseTotalError_isLittleO_NIprime
 #print axioms Zeta23Ext.CurrentInteriorAsymptotic.eventually_currentInterior_lossyFinite
 #print axioms Zeta23Ext.CurrentInteriorAsymptotic.currentInterior_target_of_AzMoments
+#print axioms Zeta23Ext.CurrentAzMoments.gzTraceDefect_isLittleO_N
+#print axioms Zeta23Ext.CurrentAzMoments.gzFrobDefect_isLittleO_N
+#print axioms Zeta23Ext.CurrentAzMoments.exists_currentTailData
+#print axioms Zeta23Ext.CurrentAzMoments.eventually_currentAzMomentPremise
+#print axioms Zeta23Ext.CurrentAzMomentErrors.currentAzTraceError_isLittleO_NIprime
+#print axioms Zeta23Ext.CurrentAzMomentErrors.currentAzFrobError_isLittleO_NIprime
+#print axioms Zeta23Ext.CurrentAnalyticClosure.currentInterior_target_of_GzMoments
+#print axioms Zeta23Ext.CurrentAnalyticClosure.exists_current_zeta_dyadic_target_of_Hcert_lt
+#print axioms Zeta23Ext.CurrentAnalyticClosure.current_zeta_cumulative_target_of_Hcert_lt
 #print axioms Zeta23Ext.CurrentCentralSelection.canonicalRetainedZeroData
 #print axioms Zeta23Ext.CurrentCentralSelection.canonical_lossyMomentData
 #print axioms Zeta23Ext.CurrentCentralAssembler.CanonicalHeightPremises.toLossyFinite

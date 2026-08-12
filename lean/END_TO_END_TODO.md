@@ -50,6 +50,8 @@ de-risked theorem by theorem before an end-to-end ETA is credible.
   smaller adaptive certificate than 8,188 uniform derivative rows.
 - [x] Hybrid rows are fully semantic: rational cosine witnesses discharge the
   `v''` cells and rational sine witnesses discharge the `v'` cells.
+- [x] A Boolean rational interval checker now proves every current-window
+  frequency argument lies in its generated `k*pi` Taylor cell.
 - [x] Tight rational endpoint bounds and the compact numeric inequality
   needed after normalizing the 49-term expression.
 - [x] Exact-rational shadow replay of every non-tangent production leaf and
@@ -90,8 +92,9 @@ de-risked theorem by theorem before an end-to-end ETA is credible.
   impractical; three representative roots exceeded two million nodes each.
   The generic sinc/sinc'/sinc'' checker, one delicate reduced-argument row,
   the `K,K',K'' -> w''` combiner, and the `K(0)` bound are complete.  Two more
-  actual production rows are now checked, leaving 5 of the 14 arguments for
-  the first full semantic tangent cell.
+  all 14 actual production argument rows are now checked for the first
+  semantic tangent cell; their weighted `K,K',K''` composition into the
+  recorded `w''` row remains.
 - [ ] Convert the compact tree, root boxes, table data, and tangent evidence to
   checked Lean values and prove the concrete `Forest.check = true` and
   `InitialRootEvidence` facts.
@@ -129,7 +132,9 @@ long-term Git artifact.
   seam and little-o moment/deletion errors force the interior cardinality to
   be positive eventually, before retained data or Gram bounds are constructed.
 - [ ] Discharge the concrete central `Az` moment/tail premise and rebase its
-  count and error terms to `NIprime`.
+  count and error terms to `NIprime`.  The transfer from actual `GzMoments`
+  through the current tail package to explicit central `Az` trace/Frobenius
+  errors is proved; their final little-o rate arithmetic remains.
 - [x] Package the moment, stability, Gram, span, endpoint, positivity, and
   deletion errors into the exact lossy finite records and final asymptotic
   target.  The analytic theorem now reduces cleanly to the concrete central

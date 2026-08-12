@@ -344,7 +344,9 @@ lemma one_isLittleO_NIprime (Z : ZeroConfig) (hR : RiemannVonMangoldt Z) :
   rw [isLittleO_one_left_iff]
   apply (tendsto_NIprime_atTop Z hR).congr'
   exact Eventually.of_forall fun T => by
-    rw [Real.norm_eq_abs, abs_of_nonneg (Nat.cast_nonneg _)]
+    simpa only using
+      (Real.norm_of_nonneg
+        (show 0 ≤ (Z.NIprime T : ℝ) from Nat.cast_nonneg _)).symm
 
 theorem currentBaseTotalError_isLittleO_NIprime
     {Z : ZeroConfig} {P : Params} (hP : P.Valid) (hlam : P.lam < 1)
@@ -366,7 +368,11 @@ theorem currentBaseTotalError_isLittleO_NIprime
         =o[atTop] (fun _ => (1 : ℝ)) := by
     have h := herrOne.const_mul_left
       (Current.eta * (2 * (Current.m : ℝ) ^ 2) / 250)
-    convert h using 1 <;> simp [blockDelta_entryEnergyError] <;> ring
+    apply h.congr'
+    exact Eventually.of_forall fun T => by
+      simp only [blockDelta, entryEnergyError]
+      ring
+    exact Eventually.of_forall fun _ => rfl
   have hgram := hcoeffOne.mul_isBigO
     (currentInteriorCount_isBigO_NIprime Z P)
   have hgram' : (fun T =>
@@ -388,7 +394,9 @@ theorem currentBaseTotalError_isLittleO_NIprime
         Current.eta * Current.pressureCap * (249 / 250 : ℝ) *
           centralScaledSpanError Z P T)) =o[atTop]
       (fun T => (Z.NIprime T : ℝ))
-  simpa only [add_assoc] using hsum
+  apply hsum.congr'
+  · exact Eventually.of_forall fun T => by ring
+  · exact Eventually.of_forall fun _ => rfl
 
 /-- The exact filter-level analytic record required by the lossy assembler.
 The only non-finite inputs are the concrete `Az` moments and their two

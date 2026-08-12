@@ -8,6 +8,13 @@ import Zeta23Ext.ProductionCell4376Jets
 #print axioms Zeta23Ext.ProductionCell4376Jets.plusThree_sound
 #print axioms Zeta23Ext.ProductionCell4376Jets.plusFour_checked
 #print axioms Zeta23Ext.ProductionCell4376Jets.plusFour_sound
+#print axioms Zeta23Ext.ProductionCell4376Jets.minusSix_checked
+#print axioms Zeta23Ext.ProductionCell4376Jets.minusSix_sound
+#print axioms Zeta23Ext.ProductionCell4376Jets.minusZero_checked
+#print axioms Zeta23Ext.ProductionCell4376Jets.minusZero_sound
+#print axioms Zeta23Ext.ProductionCell4376Jets.plusZero_checked
+#print axioms Zeta23Ext.ProductionCell4376Jets.plusZero_sound
+#print axioms Zeta23Ext.ProductionCell4376Jets.cell4376_semantic
 #print axioms Zeta23Ext.ProductionCell4376Jets.plusFive_checked
 #print axioms Zeta23Ext.ProductionCell4376Jets.plusFive_sound
 #print axioms Zeta23Ext.ProductionCell4376Jets.plusSix_checked
@@ -17,3 +24,9 @@ import Zeta23Ext.ProductionCell4376Jets
 #print axioms Zeta23Ext.ProductionCell4376Jets.minusTwo_sound
 #print axioms Zeta23Ext.ProductionCell4376Jets.minusThree_checked
 #print axioms Zeta23Ext.ProductionCell4376Jets.minusThree_sound
+#print axioms Zeta23Ext.ProductionCell4376Jets.minusFour_checked
+#print axioms Zeta23Ext.ProductionCell4376Jets.minusFour_sound
+#print axioms Zeta23Ext.ProductionCell4376Jets.minusFive_checked
+#print axioms Zeta23Ext.ProductionCell4376Jets.minusFive_sound
+#print axioms Zeta23Ext.ProductionCell4376Jets.minusSix_checked
+#print axioms Zeta23Ext.ProductionCell4376Jets.minusSix_sound

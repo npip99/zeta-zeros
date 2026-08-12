@@ -23,7 +23,9 @@ import Zeta23Ext.CurrentWindowUniformGrid
 import Zeta23Ext.CurrentWindowMonotonicityRows
 import Zeta23Ext.CurrentWindowHybridMonotonicity
 import Zeta23Ext.CurrentWindowHybridRows
+import Zeta23Ext.CurrentWindowArgumentReduction
 import Zeta23Ext.CurrentWindowClosedHScalable
+import Zeta23Ext.CurrentWindowClosedHMixed
 import Zeta23Ext.VerifiedCertificateForest
 import Zeta23Ext.VerifiedCertificateArithmetic
 import Zeta23Ext.CurrentCertificateReplay
@@ -43,6 +45,9 @@ import Zeta23Ext.CurrentInteriorRetention
 import Zeta23Ext.CurrentInteriorRetentionBridge
 import Zeta23Ext.CurrentInteriorAnalyticPackage
 import Zeta23Ext.CurrentInteriorAsymptotic
+import Zeta23Ext.CurrentAzMoments
+import Zeta23Ext.CurrentAzMomentErrors
+import Zeta23Ext.CurrentAnalyticClosure
 import Zeta23Ext.SincDerivativeCertificate
 import Zeta23Ext.SincJetCertificate
 import Zeta23Ext.CurrentKernelDerivatives
