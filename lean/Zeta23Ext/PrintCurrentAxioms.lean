@@ -14,6 +14,7 @@ import Zeta23Ext.CurrentWindowAdmissibility
 import Zeta23Ext.CurrentWindowFiniteCertificate
 import Zeta23Ext.CurrentWindowUniformGrid
 import Zeta23Ext.CurrentWindowMonotonicityRows
+import Zeta23Ext.CurrentWindowHybridMonotonicity
 import Zeta23Ext.CurrentWindowClosedHScalable
 import Zeta23Ext.VerifiedCertificateForest
 import Zeta23Ext.VerifiedCertificateArithmetic
@@ -131,6 +132,8 @@ in theorem arguments, not declared axioms.
 #print axioms Zeta23Ext.CurrentWindowMonotonicityRows.CenterRow.sin_close
 #print axioms Zeta23Ext.CurrentWindowMonotonicityRows.CenterRow.centerUpper
 #print axioms Zeta23Ext.CurrentWindowMonotonicityRows.Table.window_antitone
+#print axioms Zeta23Ext.CurrentWindowHybridMonotonicity.derivative_nonpos
+#print axioms Zeta23Ext.CurrentWindowHybridMonotonicity.window_antitone
 #print axioms Zeta23Ext.CurrentWindowClosedHScalable.closed_masses_eq_entry_sum
 #print axioms Zeta23Ext.CurrentWindowClosedHScalable.combinedEntry_zero_zero
 #print axioms Zeta23Ext.CurrentWindowClosedHScalable.combinedEntry_one_one
@@ -199,6 +202,11 @@ in theorem arguments, not declared axioms.
 #print axioms Zeta23Ext.ProductionCell4376Jets.plusThree_sound
 #print axioms Zeta23Ext.ProductionCell4376Jets.plusFour_checked
 #print axioms Zeta23Ext.ProductionCell4376Jets.plusFour_sound
+#print axioms Zeta23Ext.ProductionCell4376Jets.plusFive_checked
+#print axioms Zeta23Ext.ProductionCell4376Jets.plusFive_sound
+#print axioms Zeta23Ext.ProductionCell4376Jets.plusSix_checked
+#print axioms Zeta23Ext.ProductionCell4376Jets.plusSix_sound
+#print axioms Zeta23Ext.ProductionCell4376Jets.minusOne_sound
 #print axioms Zeta23Ext.CurrentInfiniteKernel.uniformly_normalizedInfiniteKernel_current
 #print axioms Zeta23Ext.CurrentInfiniteKernel.Wfun_le_four
 #print axioms Zeta23Ext.CurrentInfiniteKernel.compactUniformScaledCurrentGram_of_rhoTail
@@ -213,6 +221,9 @@ in theorem arguments, not declared axioms.
 #print axioms Zeta23Ext.CurrentInteriorAsymptotic.centralBoundaryDeletion_isLittleO_NIprime
 #print axioms Zeta23Ext.CurrentInteriorAsymptotic.currentInteriorDeletionLoss_isLittleO_NIprime
 #print axioms Zeta23Ext.CurrentInteriorAsymptotic.centralScaledSpanError_isLittleO_NIprime
+#print axioms Zeta23Ext.CurrentInteriorAsymptotic.interiorCard_pos_of_lossyStabilityError_lt
+#print axioms Zeta23Ext.CurrentInteriorAsymptotic.currentInteriorStabilityError_isLittleO_NIprime
+#print axioms Zeta23Ext.CurrentInteriorAsymptotic.eventually_currentInterior_card_pos_of_moments
 #print axioms Zeta23Ext.CurrentCentralSelection.canonicalRetainedZeroData
 #print axioms Zeta23Ext.CurrentCentralSelection.canonical_lossyMomentData
 #print axioms Zeta23Ext.CurrentCentralAssembler.CanonicalHeightPremises.toLossyFinite

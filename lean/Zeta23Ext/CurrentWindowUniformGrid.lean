@@ -23,7 +23,7 @@ namespace Zeta23Ext.CurrentWindowUniformGrid
 open CurrentWindowAdmissibility
 open CurrentWindowFiniteCertificate
 
-def leftEndpoint : ℝ := 1 / 16384
+def leftEndpoint : ℝ := 1 / 4096
 def rightEndpoint : ℝ := 1 / 2
 
 def step (n : ℕ) : ℝ := (rightEndpoint - leftEndpoint) / n
@@ -115,7 +115,7 @@ def Certificate.toAwayMonotonicityTable {n : ℕ} (cert : Certificate n) :
   centerUpper := cert.centerUpper
   cover := by
     intro s hs
-    rw [show (1 : ℝ) / 16384 = leftEndpoint by rfl,
+    rw [show (1 : ℝ) / 4096 = leftEndpoint by rfl,
       show (1 : ℝ) / 2 = rightEndpoint by rfl] at hs
     rcases eq_or_lt_of_le hs.2 with rfl | hlt
     · exact ⟨⟨n - 1, Nat.sub_lt cert.n_pos (by omega)⟩, covers_right cert.n_pos⟩

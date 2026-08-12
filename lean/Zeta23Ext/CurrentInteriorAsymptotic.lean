@@ -17,6 +17,7 @@ noncomputable section
 set_option maxHeartbeats 4000000
 
 open Filter Asymptotics
+open scoped ComplexOrder BigOperators
 
 namespace Zeta23Ext.CurrentInteriorAsymptotic
 
@@ -28,6 +29,9 @@ open Zeta23Ext.CurrentInteriorRetentionBridge
 open Zeta23Ext.CurrentInteriorAnalyticPackage
 open Zeta23Ext.CurrentCentralAssembler
 open Zeta23Ext.CurrentRetainedWithLoss
+open Zeta23Ext.CurrentCentralSimple
+open Zeta23Ext.CurrentAnalyticBridge
+open Zeta23Ext.CurrentAnalyticInstantiation
 
 /-- The enlarged-window boundary count appearing in the canonical central
 selection, written without proof-dependent selection data. -/
@@ -186,5 +190,122 @@ theorem centralScaledSpanError_isLittleO_NIprime
       T hzero
   rw [hzero, norm_zero]
   exact mul_nonneg hc.le (norm_nonneg _)
+
+/-! ## Non-circular interior positivity -/
+
+/-- Moment stability itself forces the interior compression to be nonempty
+once its total stability error is strictly smaller than the positive main
+term.  This proof does not assume a retained-zero datum or a Gram theorem. -/
+theorem interiorCard_pos_of_lossyStabilityError_lt
+    (Z : ZeroConfig) (P : Params) (T R₁ R₂ : ℝ)
+    (hconj : ZeroSide.PhiHatConj T P)
+    (hreal : ZeroSide.PhiHatReal T P) (hPois : ZeroSide.PoissonSq T P)
+    (hc : 0 < P.a T * P.L T ^ 2)
+    (hm : CentralAzMomentPremise Z P T (Z.NIprime T : ℝ) R₁ R₂)
+    (hsmall : lossyStabilityError R₁ R₂
+        (interiorCountLoss Z P T hconj hreal hPois hc) <
+      Current.Hcert * (Z.NIprime T : ℝ)) :
+    0 < Fintype.card (InteriorIndex Z P T hconj) := by
+  let SI := orderedCanonicalInteriorCompression Z P T hconj hreal hPois hc
+  have hmom0 := canonical_lossyMomentData Z P T R₁ R₂ hconj hreal hPois hc hm
+  have hmom := CurrentCentralAssembler.LossyMomentData.compressInterior hmom0 SI
+  have hstab := hmom.stabilitySeam
+  have hdefect : 0 ≤ CurrentAssembly.globalDefect
+      (Matrix.conjTranspose SI.V * SI.V)
+      (Matrix.posSemidef_conjTranspose_mul_self SI.V) := by
+    unfold CurrentAssembly.globalDefect
+    exact Finset.sum_nonneg fun j _ => StabilityRankTrace.Psi_nonneg _
+  have hposR : 0 < (Fintype.card (InteriorIndex Z P T hconj) : ℝ) := by
+    have herrEq :
+        lossyStabilityError R₁ R₂
+          (2 * ((canonicalCentralSelection Z P T hconj hreal hPois hc).deleted : ℝ) +
+            2 * (Fintype.card (EndpointIndex Z P T hconj) : ℝ)) =
+        lossyStabilityError R₁ R₂
+          (interiorCountLoss Z P T hconj hreal hPois hc) := by
+      rfl
+    change Current.Hcert * (Z.NIprime T : ℝ) +
+        CurrentAssembly.globalDefect (Matrix.conjTranspose SI.V * SI.V)
+          (Matrix.posSemidef_conjTranspose_mul_self SI.V) -
+        lossyStabilityError R₁ R₂
+          (2 * ((canonicalCentralSelection Z P T hconj hreal hPois hc).deleted : ℝ) +
+            2 * (Fintype.card (EndpointIndex Z P T hconj) : ℝ)) ≤
+          (Fintype.card (InteriorIndex Z P T hconj) : ℝ) at hstab
+    rw [herrEq] at hstab
+    linarith
+  exact_mod_cast hposR
+
+/-- Family form of the stability error charged by the current interior
+compression. -/
+def currentInteriorStabilityError
+    (Z : ZeroConfig) (P : Params) (R₁ R₂ : ℝ → ℝ) (T : ℝ) : ℝ :=
+  lossyStabilityError (R₁ T) (R₂ T)
+    (currentInteriorDeletionLoss Z P T)
+
+theorem currentInteriorStabilityError_isLittleO_NIprime
+    {Z : ZeroConfig} {P : Params} (hP : P.Valid)
+    (hR : RiemannVonMangoldt Z) {R₁ R₂ : ℝ → ℝ}
+    (hR₁ : R₁ =o[atTop] (fun T => (Z.NIprime T : ℝ)))
+    (hR₂ : R₂ =o[atTop] (fun T => (Z.NIprime T : ℝ))) :
+    currentInteriorStabilityError Z P R₁ R₂ =o[atTop]
+      (fun T => (Z.NIprime T : ℝ)) := by
+  have hsum := (hR₁.const_mul_left 4).add hR₂ |>.add
+    (currentInteriorDeletionLoss_isLittleO_NIprime hP hR)
+  change (fun T => 4 * R₁ T + R₂ T +
+    currentInteriorDeletionLoss Z P T) =o[atTop]
+      (fun T => (Z.NIprime T : ℝ))
+  exact hsum
+
+theorem tendsto_NIprime_atTop (Z : ZeroConfig)
+    (hR : RiemannVonMangoldt Z) :
+    Tendsto (fun T => (Z.NIprime T : ℝ)) atTop atTop := by
+  refine tendsto_atTop.2 fun b => ?_
+  filter_upwards [(Assembly.tendsto_N_atTop Z hR).eventually_ge_atTop b,
+    eventually_ge_atTop (0 : ℝ)] with T hb hT
+  exact hb.trans (by
+    exact_mod_cast (show Z.N T (2 * T) ≤ Z.NIprime T by
+      rw [Assembly.NIprime_eq Z hT]
+      exact Nat.le_add_right _ _))
+
+/-- If current-window Az moment errors are little-o, moment stability proves
+eventual interior positivity.  This removes the formerly circular positivity
+premise before the one-height retained data and Gram record are constructed. -/
+theorem eventually_currentInterior_card_pos_of_moments
+    {Z : ZeroConfig} {P : Params} (hP : P.Valid)
+    (hR : RiemannVonMangoldt Z)
+    (hcert : CurrentWindow.WindowCertificate)
+    {R₁ R₂ : ℝ → ℝ}
+    (hR₁ : R₁ =o[atTop] (fun T => (Z.NIprime T : ℝ)))
+    (hR₂ : R₂ =o[atTop] (fun T => (Z.NIprime T : ℝ)))
+    (hMom : ∀ᶠ T in atTop,
+      CentralAzMomentPremise Z (P.atV CurrentWindow.window T) T
+        (Z.NIprime T : ℝ) (R₁ T) (R₂ T)) :
+    ∀ᶠ T in atTop, 0 < Fintype.card
+      (InteriorIndex Z (P.atV CurrentWindow.window T) T
+        ZeroSide.phiHatConj) := by
+  let Np : ℝ → ℝ := fun T => (Z.NIprime T : ℝ)
+  have herrO := currentInteriorStabilityError_isLittleO_NIprime
+    hP hR hR₁ hR₂
+  have hH : 0 < Current.Hcert / 2 := by norm_num [Current.Hcert]
+  have herrSmall := isLittleO_iff.mp herrO hH
+  have hNp := (tendsto_NIprime_atTop Z hR).eventually_gt_atTop 0
+  have hzero := currentWindowZeroSide_of_certificate hP hR hcert
+  filter_upwards [herrSmall, hNp, hMom, hzero.poisson,
+    hzero.a_half, (Params.tendsto_L_of_valid hP).eventually_gt_atTop 0] with
+      T herr hN hm hPois ha hL
+  have hc : 0 < (P.atV CurrentWindow.window T).a T *
+      (P.atV CurrentWindow.window T).L T ^ 2 := by
+    simp only [Params.atV_L]
+    positivity
+  apply interiorCard_pos_of_lossyStabilityError_lt Z
+    (P.atV CurrentWindow.window T) T (R₁ T) (R₂ T)
+    ZeroSide.phiHatConj ZeroSide.phiHatReal hPois hc hm
+  have herr' : currentInteriorStabilityError Z P R₁ R₂ T <
+      Current.Hcert * (Z.NIprime T : ℝ) := by
+    rw [Real.norm_eq_abs, Real.norm_eq_abs, abs_of_pos hN] at herr
+    have habs := (le_abs_self _).trans herr
+    nlinarith [hN, show (0 : ℝ) < Current.Hcert by norm_num [Current.Hcert]]
+  rw [interiorCountLoss_eq_current]
+  simpa [currentInteriorStabilityError, currentInteriorDeletionLoss,
+    centralBoundaryDeletion] using herr'
 
 end Zeta23Ext.CurrentInteriorAsymptotic

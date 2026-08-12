@@ -39,11 +39,15 @@ de-risked theorem by theorem before an end-to-end ETA is credible.
   `pi`, plus the first Boolean rational sine-cell checker.
 - [x] Window endpoint bound `3/4 <= v(1/2)`.
 - [x] Exact origin-cell monotonicity inequality; generated monotonicity data
-  now starts at `1/16384` through `AwayMonotonicityTable`.
+  now starts at `1/4096` through `AwayMonotonicityTable`, matching the first
+  four origin cells in the numerical verifier.
 - [x] Uniform-grid coverage and endpoint handling for monotonicity; generated
   data now supplies only the finitely many derivative centre inequalities.
 - [x] Semantic seven-sine centre rows: checked rational range reductions and
   Taylor errors now imply each uniform-grid derivative inequality.
+- [x] A hybrid finite certificate can cover an initial interval using
+  `v'' <= 0` cells and the remainder using `v' <= 0` cells, allowing a much
+  smaller adaptive certificate than 8,188 uniform derivative rows.
 - [x] Tight rational endpoint bounds and the compact numeric inequality
   needed after normalizing the 49-term expression.
 - [x] Exact-rational shadow replay of every non-tangent production leaf and
@@ -84,7 +88,7 @@ de-risked theorem by theorem before an end-to-end ETA is credible.
   impractical; three representative roots exceeded two million nodes each.
   The generic sinc/sinc'/sinc'' checker, one delicate reduced-argument row,
   the `K,K',K'' -> w''` combiner, and the `K(0)` bound are complete.  Two more
-  actual production rows are now checked, leaving 10 of the 14 arguments for
+  actual production rows are now checked, leaving 7 of the 14 arguments for
   the first full semantic tangent cell.
 - [ ] Convert the compact tree, root boxes, table data, and tangent evidence to
   checked Lean values and prove the concrete `Forest.check = true` and
@@ -119,9 +123,9 @@ long-term Git artifact.
   eventual/one-height interface, and package the ordered interior rho-tail and
   matrix equality into concrete actual-scale `EntrywiseGramData` for every
   locally positive height.
-- [ ] Resolve local interior positivity in the final asymptotic assembly
-  without assuming the target content; use a case split or vacuous finite
-  bound at zero-cardinality heights rather than filler atoms.
+- [x] Resolve local interior positivity non-circularly: the lossy stability
+  seam and little-o moment/deletion errors force the interior cardinality to
+  be positive eventually, before retained data or Gram bounds are constructed.
 - [ ] Discharge the concrete central `Az` moment/tail premise and rebase its
   count and error terms to `NIprime`.
 - [ ] Package the resulting moment, stability, Gram, span, and endpoint errors

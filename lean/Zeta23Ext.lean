@@ -21,6 +21,7 @@ import Zeta23Ext.CurrentWindowAdmissibility
 import Zeta23Ext.CurrentWindowFiniteCertificate
 import Zeta23Ext.CurrentWindowUniformGrid
 import Zeta23Ext.CurrentWindowMonotonicityRows
+import Zeta23Ext.CurrentWindowHybridMonotonicity
 import Zeta23Ext.CurrentWindowClosedHScalable
 import Zeta23Ext.VerifiedCertificateForest
 import Zeta23Ext.VerifiedCertificateArithmetic

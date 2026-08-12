@@ -348,6 +348,197 @@ theorem plusFour_sound {y : ℝ}
   simpa [plusFour] using plusFour.sound plusFour_checked
     plusFour_sin plusFour_cos hy'
 
+private def plusFiveTrig : RationalTrigCell.Witness :=
+  ⟨6, reducedCenter, 1 / 10000000, 1, 3 / 10000000⟩
+
+/-- The periodic `j=5` plus argument, centered at `19.1452583`. -/
+def plusFive : SincJetCertificate.Witness where
+  q := 191452583 / 10000000
+  radius := 1 / 2500
+  upper := 191456583 / 10000000
+  sinApprox := reducedCenter - reducedCenter ^ 3 / 6 +
+    reducedCenter ^ 5 / 120 - reducedCenter ^ 7 / 5040
+  cosApprox := 1 - reducedCenter ^ 2 / 2 + reducedCenter ^ 4 / 24 -
+    reducedCenter ^ 6 / 720 + reducedCenter ^ 8 / 40320
+  trigError := 3 / 10000000
+  valueLower := 15201 / 1000000
+  valueUpper := 15241 / 1000000
+  firstLower := 24581 / 500000
+  firstUpper := 49179 / 1000000
+  secondLower := -20381 / 1000000
+  secondUpper := -10167 / 500000
+
+theorem plusFive_checked : plusFive.check = true := by
+  norm_num [plusFive, reducedCenter, SincJetCertificate.Witness.check,
+    SincJetCertificate.Witness.secondApprox,
+    SincJetCertificate.Witness.secondError,
+    SincJetCertificate.Witness.secondAbs,
+    SincJetCertificate.Witness.firstApprox,
+    SincJetCertificate.Witness.firstError,
+    SincJetCertificate.Witness.firstAbs,
+    SincJetCertificate.Witness.valueApprox,
+    SincJetCertificate.Witness.valueError]
+
+private theorem plusFive_reduction :
+    |(((plusFive.q : ℝ) - (6 : ℝ) * Real.pi) -
+      (plusFiveTrig.center : ℝ))| ≤ (plusFiveTrig.radius : ℝ) := by
+  have hp := TranscendentalBounds.pi_rational_bounds
+  rw [abs_le]
+  norm_num [plusFive, plusFiveTrig, reducedCenter] at hp ⊢
+  constructor <;> linarith [hp.1, hp.2]
+
+private theorem plusFive_sin :
+    |Real.sin (plusFive.q : ℝ) - (plusFive.sinApprox : ℝ)| ≤
+      (plusFive.trigError : ℝ) := by
+  have h := RationalTrigCell.sin_sound
+    (w := plusFiveTrig)
+    (by norm_num [plusFiveTrig, reducedCenter, RationalTrigCell.check])
+    (x := (plusFive.q : ℝ)) plusFive_reduction
+  rw [show ((-1 : ℝ) ^ plusFiveTrig.k) = 1 by norm_num [plusFiveTrig]] at h
+  simpa [plusFive, plusFiveTrig, reducedCenter,
+    TranscendentalBounds.sinTaylor7] using h
+
+private theorem plusFive_cos :
+    |Real.cos (plusFive.q : ℝ) - (plusFive.cosApprox : ℝ)| ≤
+      (plusFive.trigError : ℝ) := by
+  have h := RationalTrigCell.cos_sound
+    (w := plusFiveTrig)
+    (by norm_num [plusFiveTrig, reducedCenter, RationalTrigCell.cosCheck])
+    (x := (plusFive.q : ℝ)) plusFive_reduction
+  rw [show ((-1 : ℝ) ^ plusFiveTrig.k) = 1 by norm_num [plusFiveTrig]] at h
+  simpa [plusFive, plusFiveTrig, reducedCenter,
+    TranscendentalBounds.cosTaylor8] using h
+
+theorem plusFive_sound {y : ℝ}
+    (hy : |y - (191452583 / 10000000 : ℝ)| ≤ 1 / 2500) :
+    ((15201 / 1000000 : ℝ) ≤ Real.sinc y ∧
+      Real.sinc y ≤ 15241 / 1000000) ∧
+    ((24581 / 500000 : ℝ) ≤ sincD1 y ∧
+      sincD1 y ≤ 49179 / 1000000) ∧
+    ((-20381 / 1000000 : ℝ) ≤ sincD2 y ∧
+      sincD2 y ≤ -10167 / 500000) := by
+  have hy' : |y - (plusFive.q : ℝ)| ≤ (plusFive.radius : ℝ) := by
+    simpa [plusFive] using hy
+  simpa [plusFive] using plusFive.sound plusFive_checked
+    plusFive_sin plusFive_cos hy'
+
+private def plusSixTrig : RationalTrigCell.Witness :=
+  ⟨7, reducedCenter, 1 / 10000000, 1, 3 / 10000000⟩
+
+/-- The periodic `j=6` plus argument, centered at `22.286851`. -/
+def plusSix : SincJetCertificate.Witness where
+  q := 22286851 / 1000000
+  radius := 1 / 2500
+  upper := 22287251 / 1000000
+  sinApprox := -(reducedCenter - reducedCenter ^ 3 / 6 +
+    reducedCenter ^ 5 / 120 - reducedCenter ^ 7 / 5040)
+  cosApprox := -(1 - reducedCenter ^ 2 / 2 + reducedCenter ^ 4 / 24 -
+    reducedCenter ^ 6 / 720 + reducedCenter ^ 8 / 40320)
+  trigError := 3 / 10000000
+  valueLower := -13093 / 1000000
+  valueUpper := -6529 / 500000
+  firstLower := -42343 / 1000000
+  firstUpper := -5291 / 125000
+  secondLower := 3371 / 200000
+  secondUpper := 8447 / 500000
+
+theorem plusSix_checked : plusSix.check = true := by
+  norm_num [plusSix, reducedCenter, SincJetCertificate.Witness.check,
+    SincJetCertificate.Witness.secondApprox,
+    SincJetCertificate.Witness.secondError,
+    SincJetCertificate.Witness.secondAbs,
+    SincJetCertificate.Witness.firstApprox,
+    SincJetCertificate.Witness.firstError,
+    SincJetCertificate.Witness.firstAbs,
+    SincJetCertificate.Witness.valueApprox,
+    SincJetCertificate.Witness.valueError]
+
+private theorem plusSix_reduction :
+    |(((plusSix.q : ℝ) - (7 : ℝ) * Real.pi) -
+      (plusSixTrig.center : ℝ))| ≤ (plusSixTrig.radius : ℝ) := by
+  have hp := TranscendentalBounds.pi_rational_bounds
+  rw [abs_le]
+  norm_num [plusSix, plusSixTrig, reducedCenter] at hp ⊢
+  constructor <;> linarith [hp.1, hp.2]
+
+private theorem plusSix_sin :
+    |Real.sin (plusSix.q : ℝ) - (plusSix.sinApprox : ℝ)| ≤
+      (plusSix.trigError : ℝ) := by
+  have h := RationalTrigCell.sin_sound
+    (w := plusSixTrig)
+    (by norm_num [plusSixTrig, reducedCenter, RationalTrigCell.check])
+    (x := (plusSix.q : ℝ)) plusSix_reduction
+  rw [show |Real.sin (plusSix.q : ℝ) - (plusSix.sinApprox : ℝ)| =
+      |((-1 : ℝ) ^ plusSixTrig.k) * Real.sin (plusSix.q : ℝ) -
+        TranscendentalBounds.sinTaylor7 (plusSixTrig.center : ℝ)| by
+    apply abs_eq_abs.mpr
+    right
+    rw [show ((-1 : ℝ) ^ plusSixTrig.k) = -1 by norm_num [plusSixTrig]]
+    norm_num [plusSix, plusSixTrig, reducedCenter,
+      TranscendentalBounds.sinTaylor7]
+    ring
+  ]
+  exact h
+
+private theorem plusSix_cos :
+    |Real.cos (plusSix.q : ℝ) - (plusSix.cosApprox : ℝ)| ≤
+      (plusSix.trigError : ℝ) := by
+  have h := RationalTrigCell.cos_sound
+    (w := plusSixTrig)
+    (by norm_num [plusSixTrig, reducedCenter, RationalTrigCell.cosCheck])
+    (x := (plusSix.q : ℝ)) plusSix_reduction
+  rw [show |Real.cos (plusSix.q : ℝ) - (plusSix.cosApprox : ℝ)| =
+      |((-1 : ℝ) ^ plusSixTrig.k) * Real.cos (plusSix.q : ℝ) -
+        TranscendentalBounds.cosTaylor8 (plusSixTrig.center : ℝ)| by
+    apply abs_eq_abs.mpr
+    right
+    rw [show ((-1 : ℝ) ^ plusSixTrig.k) = -1 by norm_num [plusSixTrig]]
+    norm_num [plusSix, plusSixTrig, reducedCenter,
+      TranscendentalBounds.cosTaylor8]
+    ring
+  ]
+  exact h
+
+theorem plusSix_sound {y : ℝ}
+    (hy : |y - (22286851 / 1000000 : ℝ)| ≤ 1 / 2500) :
+    ((-13093 / 1000000 : ℝ) ≤ Real.sinc y ∧
+      Real.sinc y ≤ -6529 / 500000) ∧
+    ((-42343 / 1000000 : ℝ) ≤ sincD1 y ∧
+      sincD1 y ≤ -5291 / 125000) ∧
+    ((3371 / 200000 : ℝ) ≤ sincD2 y ∧
+      sincD2 y ≤ 8447 / 500000) := by
+  have hy' : |y - (plusSix.q : ℝ)| ≤ (plusSix.radius : ℝ) := by
+    simpa [plusSix] using hy
+  simpa [plusSix] using plusSix.sound plusSix_checked
+    plusSix_sin plusSix_cos hy'
+
+private lemma sincD1_neg (x : ℝ) : sincD1 (-x) = -sincD1 x := by
+  simp only [sincD1, Real.cos_neg, Real.sin_neg]
+  ring
+
+private lemma sincD2_neg (x : ℝ) : sincD2 (-x) = sincD2 x := by
+  simp only [sincD2, secondNumerator, Real.cos_neg, Real.sin_neg]
+  ring
+
+/-- The actual `j=1` minus argument is the negative of the delicate reduced
+cell.  Parity turns the reusable positive-row certificate into its semantic
+production enclosure. -/
+theorem minusOne_sound {y : ℝ}
+    (hy : |y - (-184814 / 625000 : ℝ)| ≤ 1 / 2500) :
+    ((98545 / 100000 : ℝ) ≤ Real.sinc y ∧
+      Real.sinc y ≤ 985531 / 1000000) ∧
+    ((243935 / 2500000 : ℝ) ≤ sincD1 y ∧
+      sincD1 y ≤ 97843 / 1000000) ∧
+    ((-327341 / 1000000 : ℝ) ≤ sincD2 y ∧
+      sincD2 y ≤ -40241 / 125000) := by
+  have hy' : |-y - (184814 / 625000 : ℝ)| ≤ 1 / 2500 := by
+    rw [show -y - (184814 / 625000 : ℝ) =
+      -(y - (-184814 / 625000 : ℝ)) by ring, abs_neg]
+    exact hy
+  have h := SincJetCertificate.productionReducedWitness_sound hy'
+  simp only [Real.sinc_neg, sincD1_neg, sincD2_neg] at h
+  exact ⟨h.1, ⟨by linarith [h.2.1.2], by linarith [h.2.1.1]⟩, h.2.2⟩
+
 end Zeta23Ext.ProductionCell4376Jets
 
 end

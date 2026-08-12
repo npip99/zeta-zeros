@@ -144,7 +144,7 @@ lemma deriv2_window_zero_le : deriv (deriv window) 0 ≤ -(4 / 5) := by
 /-- The origin part of the monotonicity certificate is discharged once and
 for all, rather than repeated in generated certificate data. -/
 lemma origin_second_upper :
-    deriv (deriv window) 0 + jerkBound * ((1 : ℝ) / 16384) ≤ 0 := by
+    deriv (deriv window) 0 + jerkBound * ((1 : ℝ) / 4096) ≤ 0 := by
   nlinarith [deriv2_window_zero_le, jerkBound_le_153, jerkBound_nonneg]
 
 lemma deriv_lipschitz (x y : ℝ) :
@@ -197,12 +197,12 @@ structure AwayMonotonicityTable (n : ℕ) where
   cells : Fin n → DerivativeCell
   centerUpper : ∀ i, deriv window (cells i).center +
     curvatureBound * (cells i).radius ≤ 0
-  cover : ∀ s ∈ Icc ((1 : ℝ) / 16384) (1 / 2),
+  cover : ∀ s ∈ Icc ((1 : ℝ) / 4096) (1 / 2),
     ∃ i, (cells i).Covers s
 
 def AwayMonotonicityTable.toMonotonicityTable {n : ℕ}
     (table : AwayMonotonicityTable n) : MonotonicityTable n where
-  originRadius := 1 / 16384
+  originRadius := 1 / 4096
   originRadius_pos := by norm_num
   originRadius_le_half := by norm_num
   originSecondUpper := origin_second_upper
