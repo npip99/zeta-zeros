@@ -40,27 +40,41 @@ de-risked theorem by theorem before an end-to-end ETA is credible.
 - [x] Window endpoint bound `3/4 <= v(1/2)`.
 - [x] Exact origin-cell monotonicity inequality; generated monotonicity data
   now starts at `1/16384` through `AwayMonotonicityTable`.
-- [x] Tight rational endpoint bounds and the final compact numeric inequality
-  underlying `ClosedHLower`.
-- [x] Exact normalization of the 49-term closed masses and the strengthened
-  strict certificate `67245701/10^8 <= H(window)`, hence
-  `Hcert < H(window)`.
+- [x] Tight rational endpoint bounds and the compact numeric inequality
+  needed after normalizing the 49-term expression.
 - [x] Exact-rational shadow replay of every non-tangent production leaf and
   every uncovered initialization cell at common dyadic precisions 48, 56,
   64, and 80 bits.
+- [x] Zeta-native coefficient, autocorrelation, and trace-transfer route for
+  `c_N=-Lambda(N), D(s)=s`, avoiding the xi-prime specialization.
+- [x] Canonical all-simple central decomposition, positive-index/count loss,
+  and ordinate-ordered central selection in the actual `P.L T` scale.
+- [x] Global normalized infinite-kernel convergence with explicit error, plus
+  an interior endpoint selection whose normalized Poisson tail tends to zero.
+- [x] The extra endpoint deletion is `o(N)` and `o(NIprime)`; its ordered
+  compression matrix is identified with the matching retained-zero matrix.
+- [x] A Boolean rational sinc-jet checker and one fully checked delicate
+  production row, plus the normalization bound
+  `0.918707 <= sinc(sqrt 2/2) <= 0.918744`.
 
 ## Finite and numerical certificate
 
 - [ ] Extend the rational sine/cosine-cell checker and weighted-sum combiner to
   the grouped seven-term derivative cells, then instantiate
   `AwayMonotonicityTable` for the current window.
-- [x] Kernel-check `ClosedHLower` by normalizing the 49-term closed masses to
-  the compact numeric inequality.
+- [ ] Kernel-check `ClosedHLower` by normalizing the 49-term closed masses to
+  the compact numeric inequality.  The numeric inequalities are proved, but
+  `CurrentWindowClosedHCertificate.lean` does not currently cold-build and is
+  intentionally excluded from the umbrella target.
 - [ ] Generate exact dyadic kernel and second-derivative table artifacts and
   prove `DyadicKernelTable.Sound` for the current closed kernel.
 - [ ] Formalize exact convex-tangent/LDL leaf evidence for the 406,186
   tangent-pruned leaves. A tangent-free production rerun is currently
   impractical; three representative roots exceeded two million nodes each.
+  The generic sinc/sinc'/sinc'' checker, one delicate reduced-argument row,
+  the `K,K',K'' -> w''` combiner, and the `K(0)` bound are complete; thirteen
+  production jet rows and their range-reduction proofs remain for the first
+  full semantic tangent cell.
 - [ ] Convert the compact tree, root boxes, table data, and tangent evidence to
   checked Lean values and prove the concrete `Forest.check = true` and
   `InitialRootEvidence` facts.
@@ -78,21 +92,26 @@ long-term Git artifact.
 
 ## Analytic instantiation
 
-- [x] Prove the zeta-native exact matrix route for the coefficient family
-  `c_N=-Lambda(N)`: `GpC=Gp`, eventual `Gz=GpC`, and the resulting trace
-  transfer. This avoids the xi-prime `D1` specialization.
-- [ ] Complete `CoeffMoments` for the zeta-native family `c_N=-Lambda(N)`,
-  `D(s)=s`, using the current-window autocorrelation estimate. Show its
-  endpoint constant is `c1(window)` and use the proved strict `H` margin to
-  choose one fixed `lambda<1` with `kappa <= 2-Hcert`.
-- [ ] Construct the central all-simple atom decomposition, prove its exact
-  inertia/count seam, then compress to the retained interior subset and charge
-  the deleted atoms explicitly as `o(N)`. `CurrentRetainedWithLoss` proves the
-  generic positive-index and stability algebra; do not use the older exact
-  post-deletion `DeletionSeam` as the end-to-end interface.
-- [ ] Prove compact-uniform Gram convergence for the actual retained vectors,
-  using ordinates scaled by `P.L T` (not the endpoint `l T` when
-  `lambda<1`).
+- [x] Prove the zeta-native exact matrix and moment route for
+  `c_N=-Lambda(N), D(s)=s`, including the current-window autocorrelation
+  estimate, `GpC=Gp`, eventual `Gz=GpC`, and trace transfer.
+- [x] Prove `cWin id 1 window = c1(window)` and continuity below the endpoint;
+  a strict endpoint `H` certificate then selects one fixed `lambda<1` with
+  `kappa < 2-Hcert`.
+- [x] Construct the central all-simple atom decomposition and exact lossy
+  inertia/count seam, then define the ordered interior compression and charge
+  its deletion as `o(NIprime)`.
+- [x] Prove the actual-scale infinite-kernel limit and the uniform endpoint
+  rho-tail bound for the interior family.  The coordinate is `P.L T`, not the
+  obsolete endpoint `l T` coordinate.
+- [ ] Replace the all-heights positive-cardinality requirement in
+  `RetainedZeroData` with an eventual/one-height interface.  Positivity of the
+  interior simple-zero family cannot be assumed without circularly using the
+  target theorem, and exceptional-height filler atoms would be unsound.
+- [ ] Package the ordered interior rho-tail and matrix equality through that
+  eventual interface to obtain the concrete scaled `EntrywiseGramData`.
+- [ ] Discharge the concrete central `Az` moment/tail premise and rebase its
+  count and error terms to `NIprime`.
 - [ ] Package the resulting moment, stability, Gram, span, and endpoint errors
   into `AsymptoticEntrywiseAnalyticInputs.errorsAreSmall`, including eventual
   `delta_small`.

@@ -12,12 +12,26 @@ import Zeta23Ext.RationalTrigCell
 import Zeta23Ext.CurrentKernelFormula
 import Zeta23Ext.CurrentWindowAdmissibility
 import Zeta23Ext.CurrentWindowFiniteCertificate
-import Zeta23Ext.CurrentWindowClosedHCertificate
 import Zeta23Ext.VerifiedCertificateForest
 import Zeta23Ext.VerifiedCertificateArithmetic
 import Zeta23Ext.CurrentCertificateReplay
 import Zeta23Ext.VerifiedCertificateRoots
 import Zeta23Ext.CurrentInitialRoots
+import Zeta23Ext.VerifiedAnnotatedForest
+import Zeta23Ext.CurrentZetaNative
+import Zeta23Ext.CurrentRetainedWithLoss
+import Zeta23Ext.CurrentZetaAutocorr
+import Zeta23Ext.CurrentZetaEndpoint
+import Zeta23Ext.CurrentCentralSimple
+import Zeta23Ext.CurrentCentralSelection
+import Zeta23Ext.CurrentCentralAssembler
+import Zeta23Ext.CurrentCompactGram
+import Zeta23Ext.CurrentInfiniteKernel
+import Zeta23Ext.CurrentInteriorRetention
+import Zeta23Ext.CurrentInteriorRetentionBridge
+import Zeta23Ext.SincDerivativeCertificate
+import Zeta23Ext.SincJetCertificate
+import Zeta23Ext.CurrentKernelDerivatives
 
 /-
 Run with `lake env lean Zeta23Ext/PrintCurrentAxioms.lean` to audit the
@@ -106,11 +120,6 @@ in theorem arguments, not declared axioms.
 #print axioms Zeta23Ext.CurrentWindowFiniteCertificate.cos_sqrt_two_half_lower
 #print axioms Zeta23Ext.CurrentWindowFiniteCertificate.window_half_lower
 #print axioms Zeta23Ext.CurrentWindowFiniteCertificate.NumericCertificate.toWindowCertificate
-#print axioms Zeta23Ext.CurrentWindowClosedHCertificate.sin_sqrt_two_half_tight
-#print axioms Zeta23Ext.CurrentWindowClosedHCertificate.periodicCorrection_upper
-#print axioms Zeta23Ext.CurrentWindowClosedHCertificate.closedH_lower
-#print axioms Zeta23Ext.CurrentWindowClosedHCertificate.Hcert_lt_H_window
-#print axioms Zeta23Ext.CurrentWindowClosedHCertificate.compact_numeric_inequality
 #print axioms Zeta23Ext.VerifiedCertificate.Forest.check_sound
 #print axioms Zeta23Ext.VerifiedCertificate.currentLocalCertificate_of_decoded_forest
 #print axioms Zeta23Ext.VerifiedCertificate.TermwiseIntegerBounds.lowerScore_sound
@@ -154,15 +163,23 @@ in theorem arguments, not declared axioms.
 #print axioms Zeta23Ext.CurrentCompactGram.gramEntry_eq_Kfun_div
 #print axioms Zeta23Ext.CurrentCompactGram.norm_gramEntry_sub_normalizedInfiniteKernel_le
 #print axioms Zeta23Ext.CurrentCompactGram.eventually_currentLocalHypsCore
-#print axioms Zeta23Ext.SincDerivativeCertificate.sincD1_eq_deriv
-#print axioms Zeta23Ext.SincDerivativeCertificate.sincD2_eq_deriv2
-#print axioms Zeta23Ext.SincDerivativeCertificate.SecondWitness.sound
+#print axioms Zeta23Ext.SincDerivativeCertificate.hasDerivAt_sinc
+#print axioms Zeta23Ext.SincDerivativeCertificate.hasDerivAt_sincD1
+#print axioms Zeta23Ext.SincDerivativeCertificate.SecondWitness.lower_sound
+#print axioms Zeta23Ext.SincJetCertificate.Witness.sound
+#print axioms Zeta23Ext.SincJetCertificate.productionReducedWitness_checked
+#print axioms Zeta23Ext.SincJetCertificate.productionReducedWitness_sound
 #print axioms Zeta23Ext.CurrentKernelDerivatives.closedWeightD2_lower_of_sign_bounds
 #print axioms Zeta23Ext.CurrentKernelDerivatives.cell4376_scalar_check
 #print axioms Zeta23Ext.CurrentKernelDerivatives.cell4376_arguments_nonzero
+#print axioms Zeta23Ext.CurrentKernelDerivatives.sinc_sqrt_two_half_bounds
 #print axioms Zeta23Ext.CurrentInfiniteKernel.uniformly_normalizedInfiniteKernel_current
 #print axioms Zeta23Ext.CurrentInfiniteKernel.Wfun_le_four
 #print axioms Zeta23Ext.CurrentInfiniteKernel.compactUniformScaledCurrentGram_of_rhoTail
+#print axioms Zeta23Ext.CurrentInteriorRetention.endpointDeletion_isLittleO_N
+#print axioms Zeta23Ext.CurrentInteriorRetention.eventually_current_interior_rho_tail
+#print axioms Zeta23Ext.CurrentInteriorRetentionBridge.currentEndpointDeletion_isLittleO_NIprime
+#print axioms Zeta23Ext.CurrentInteriorRetentionBridge.orderedCanonicalInteriorCompression_V_eq_retainedV
 #print axioms Zeta23Ext.CurrentCentralSelection.canonicalRetainedZeroData
 #print axioms Zeta23Ext.CurrentCentralSelection.canonical_lossyMomentData
 #print axioms Zeta23Ext.CurrentCentralAssembler.CanonicalHeightPremises.toLossyFinite

@@ -19,7 +19,6 @@ import Zeta23Ext.RationalTrigCell
 import Zeta23Ext.CurrentKernelFormula
 import Zeta23Ext.CurrentWindowAdmissibility
 import Zeta23Ext.CurrentWindowFiniteCertificate
-import Zeta23Ext.CurrentWindowClosedHCertificate
 import Zeta23Ext.VerifiedCertificateForest
 import Zeta23Ext.VerifiedCertificateArithmetic
 import Zeta23Ext.CurrentCertificateReplay
@@ -35,5 +34,8 @@ import Zeta23Ext.CurrentCentralSelection
 import Zeta23Ext.CurrentCentralAssembler
 import Zeta23Ext.CurrentCompactGram
 import Zeta23Ext.CurrentInfiniteKernel
+import Zeta23Ext.CurrentInteriorRetention
+import Zeta23Ext.CurrentInteriorRetentionBridge
 import Zeta23Ext.SincDerivativeCertificate
+import Zeta23Ext.SincJetCertificate
 import Zeta23Ext.CurrentKernelDerivatives

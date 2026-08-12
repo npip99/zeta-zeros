@@ -68,7 +68,9 @@ matrices, the large-span/small-span block split, pinching and offset
 averaging, error bookkeeping, the final strict numerical comparison, and the
 conditional dyadic-to-cumulative passage. For the current cosine window it
 also kernel-checks the exact square-mass and distance-mass formulas and the
-strict certificate `0.67245701 <= H(v)`.
+transcendental inequalities used by the scalar `H(v)` certificate. The final
+49-term normalization for the strict `H(v)` margin remains outside the green
+umbrella build and is listed explicitly below.
 
 ```bash
 cd lean
@@ -79,13 +81,14 @@ lake env lean Zeta23Ext/PrintCurrentAxioms.lean
 ```
 
 The capstone remains conditional, but the zeta-native coefficient family
-`c_N=-Lambda(N), D(s)=s`, its exact prime/zero matrix transfer, and the
-normalized-span error and its pressure contribution are now discharged. The
-remaining explicit hypotheses are away-cell window monotonicity,
-kernel-table/search soundness (especially semantic tangent-leaf evidence),
-the current-window autocorrelation estimate, actual
-current-kernel entrywise Gram asymptotics, and retained Gram/moment
-construction with explicit `o(N)` deletion and remaining errors. Current-window admissibility,
+`c_N=-Lambda(N), D(s)=s`, its autocorrelation and prime/zero matrix transfer,
+and the normalized-span error are discharged. The actual-scale infinite
+kernel, interior endpoint-tail bound, ordered compression, and its explicit
+`o(NIprime)` deletion loss are also checked. The remaining explicit tasks are
+away-cell window monotonicity, the cold-build proof of the strict scalar
+`H` certificate, kernel-table/search soundness (especially semantic
+tangent-leaf evidence), an eventual retained-data interface, concrete central
+tail/moment rebasing, and final error assembly. Current-window admissibility,
 entrywise-to-squared-energy conversion, retained-count domination, and the
 production topology, decoder, and real-score bridge are now recorded or
 kernel checked; see

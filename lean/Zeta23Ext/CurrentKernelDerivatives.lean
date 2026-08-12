@@ -447,6 +447,64 @@ theorem cell4376_arguments_nonzero {x : ℝ}
     fin_cases j <;> simp only [plusArgument, frequency] <;>
       norm_num <;> positivity
 
+/-! ## Normalization row -/
+
+private theorem sqrt_two_10_bounds :
+    (14142135623 : ℝ) / 10000000000 ≤ Real.sqrt 2 ∧
+      Real.sqrt 2 ≤ (3535533906 : ℝ) / 2500000000 := by
+  apply TranscendentalBounds.sqrt_mem_interval (x := (2 : ℝ)) <;> norm_num
+
+/-- Exact-rational enclosure used for the normalization denominator. -/
+theorem sinc_sqrt_two_half_bounds :
+    (918707 : ℝ) / 1000000 ≤ Real.sinc (Real.sqrt 2 / 2) ∧
+      Real.sinc (Real.sqrt 2 / 2) ≤ (918744 : ℝ) / 1000000 := by
+  let c : ℝ := 28284271247 / 40000000000
+  let r : ℝ := 1 / 40000000000
+  have hsqrt := sqrt_two_10_bounds
+  have hypos : 0 < Real.sqrt 2 / 2 := by positivity
+  have hcell : |Real.sqrt 2 / 2 - c| ≤ r := by
+    rw [abs_le]
+    dsimp [c, r]
+    constructor <;> linarith [hsqrt.1, hsqrt.2]
+  have hc : c ∈ Icc (0 : ℝ) 1 := by
+    dsimp [c]
+    constructor <;> norm_num
+  have hsin := TranscendentalBounds.abs_sin_sub_taylor7_center_le
+    (upper := (1 : ℝ)) (c := c) (x := Real.sqrt 2 / 2)
+    (radius := r) one_pos hc hcell
+  have hslo : TranscendentalBounds.sinTaylor7 c -
+      (r + c ^ 8 / 5040) ≤ Real.sin (Real.sqrt 2 / 2) := by
+    linarith [neg_abs_le (Real.sin (Real.sqrt 2 / 2) -
+      TranscendentalBounds.sinTaylor7 c), hsin]
+  have hshi : Real.sin (Real.sqrt 2 / 2) ≤
+      TranscendentalBounds.sinTaylor7 c + (r + c ^ 8 / 5040) := by
+    linarith [le_abs_self (Real.sin (Real.sqrt 2 / 2) -
+      TranscendentalBounds.sinTaylor7 c), hsin]
+  rw [Real.sinc_of_ne_zero hypos.ne']
+  constructor
+  · rw [le_div_iff₀ hypos]
+    have hyhi : Real.sqrt 2 / 2 ≤ c + r := by
+      rw [abs_le] at hcell
+      linarith [hcell.2]
+    calc
+      (918707 : ℝ) / 1000000 * (Real.sqrt 2 / 2) ≤
+          (918707 / 1000000 : ℝ) * (c + r) := by gcongr
+      _ ≤ TranscendentalBounds.sinTaylor7 c - (r + c ^ 8 / 5040) := by
+        dsimp [c, r, TranscendentalBounds.sinTaylor7]
+        norm_num
+      _ ≤ Real.sin (Real.sqrt 2 / 2) := hslo
+  · rw [div_le_iff₀ hypos]
+    have hylo : c - r ≤ Real.sqrt 2 / 2 := by
+      rw [abs_le] at hcell
+      linarith [hcell.1]
+    calc
+      Real.sin (Real.sqrt 2 / 2) ≤
+          TranscendentalBounds.sinTaylor7 c + (r + c ^ 8 / 5040) := hshi
+      _ ≤ (918744 / 1000000 : ℝ) * (c - r) := by
+        dsimp [c, r, TranscendentalBounds.sinTaylor7]
+        norm_num
+      _ ≤ (918744 / 1000000 : ℝ) * (Real.sqrt 2 / 2) := by gcongr
+
 end Zeta23Ext.CurrentKernelDerivatives
 
 end

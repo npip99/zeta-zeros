@@ -9,3 +9,4 @@ import Zeta23Ext.CurrentKernelDerivatives
 #print axioms Zeta23Ext.CurrentKernelDerivatives.closedWeightD2_lower_of_sign_bounds
 #print axioms Zeta23Ext.CurrentKernelDerivatives.cell4376_scalar_check
 #print axioms Zeta23Ext.CurrentKernelDerivatives.cell4376_arguments_nonzero
+#print axioms Zeta23Ext.CurrentKernelDerivatives.sinc_sqrt_two_half_bounds

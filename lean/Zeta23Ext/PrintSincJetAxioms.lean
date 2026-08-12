@@ -1,0 +1,5 @@
+import Zeta23Ext.SincJetCertificate
+
+#print axioms Zeta23Ext.SincJetCertificate.Witness.sound
+#print axioms Zeta23Ext.SincJetCertificate.productionReducedWitness_checked
+#print axioms Zeta23Ext.SincJetCertificate.productionReducedWitness_sound

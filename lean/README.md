@@ -27,14 +27,13 @@ kernel-checked 324-root forest verifier, production-format decoder, integer
 objective, and real-score transfer prove all structural replay steps.
 The current ramped window's full upstream `AdmWindow` witness—including C²,
 support, and all four derivative-integral bounds—is derived from the finite
-shape certificate. Its first two scaled moments are now proved to converge
-to the exact current-window mass and square mass, using the generic upstream
-edge estimate; autocorrelation continuity is also discharged. For zeta, the
+shape certificate. Its first two scaled moments are proved to converge to the
+exact current-window mass and square mass, and the needed autocorrelation
+comparison is now discharged. For zeta, the
 native coefficient family `c_N=-Lambda(N), D(s)=s` satisfies the complete
 generic coefficient hypotheses; its matrix is exactly the standard zeta
 prime-side matrix, and the explicit formula supplies trace transfer. Thus
-zeta `GzMoments` are reduced to one named current-window autocorrelation
-comparison, without xi-prime `XiEF` or re-expansion. The exact
+zeta `GzMoments` follow without xi-prime `XiEF` or re-expansion. The exact
 integral kernel is proved equal to the
 verifier's seven-term entire sinc expression. Kernel-checked sine, cosine,
 sinc, and square-root rational enclosures provide the transcendental
@@ -44,11 +43,13 @@ It does **not** claim an unconditional formalization of the paper's theorem.
 Still external are: the away-cell monotonicity portion of
 `WindowCertificate`; semantic bounds for the kernel and tangent tables; and
 the typed tangent-leaf evidence needed to replay the recorded production topology;
-actual current-kernel compact-uniform entrywise convergence; and construction
-of the retained Gram/moment data with its explicit deletion loss and remaining
-`o(N)` errors. The current-window autocorrelation estimate and selection of a
-fixed `lambda<1` remain analytic tasks; the strict endpoint `H` margin is now
-kernel checked. The old
+completion of the retained Gram/moment assembly and its remaining `o(N)`
+errors.  The actual-scale infinite-kernel limit, endpoint rho-tail estimate,
+ordered interior compression, and its `o(NIprime)` deletion loss are proved.
+What remains is an eventual-data interface (avoiding a circular all-height
+positivity premise), the concrete central tail/moment rebasing, and final error
+assembly.  The strict endpoint `H` normalization is not currently cold-build
+checked, so that module is excluded from the umbrella target. The old
 Montgomery--Taylor Gram theorem is not reused as if it applied to the current
 window. There are no `sorry`, `admit`, or new axioms in the current-result
 modules.
