@@ -60,6 +60,7 @@ import Zeta23Ext.CurrentFiniteCapstone
 import Zeta23Ext.SincDerivativeCertificate
 import Zeta23Ext.SincJetCertificate
 import Zeta23Ext.CheckedSincJet
+import Zeta23Ext.NearZeroTotalSincJet
 import Zeta23Ext.CurrentKernelDerivatives
 import Zeta23Ext.CurrentKernelTotalDerivatives
 import Zeta23Ext.ProductionCell4376Jets

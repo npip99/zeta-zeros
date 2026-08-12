@@ -1,0 +1,4 @@
+import Zeta23Ext.NearZeroTotalSincJet
+
+#print axioms Zeta23Ext.NearZeroTotalSincJet.Witness.sound
+#print axioms Zeta23Ext.NearZeroTotalSincJet.production_periodic_total_jet

@@ -93,6 +93,9 @@ de-risked theorem by theorem before an end-to-end ETA is credible.
   the `K(0)` bound are complete.  All 14 actual production argument rows and
   their weighted composition are checked for cell 4376, yielding the exact
   recorded binary64 lower bound throughout that cell.
+  The scalable ordinary-cell checker proves total sinc-jet bounds from Boolean
+  rational witnesses, while a pole-free Taylor checker covers all 12 cells
+  adjacent to the six removable periodic arguments.
 - [x] Localize tangent semantics to the checked leaf, bind its objective to
   the actual current `F6`, and derive line continuity and both derivatives
   from the all-real total kernel derivative theorems.  The remaining producer
