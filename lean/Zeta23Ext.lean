@@ -62,6 +62,15 @@ import Zeta23Ext.SincJetCertificate
 import Zeta23Ext.CheckedSincJet
 import Zeta23Ext.NearZeroTotalSincJet
 import Zeta23Ext.CurrentWeightD2CellChecker
+import Zeta23Ext.CurrentTangentCurvatureRMQ
+import Zeta23Ext.CurrentTangentCompactRangeEvidence
+import Zeta23Ext.CurrentTangentCompactHessianAssembly
+import Zeta23Ext.CurrentTangentValueGradientChecker
+import Zeta23Ext.CurrentTangentCompactValueGradient
+import Zeta23Ext.CurrentResolvedTangent
+import Zeta23Ext.CurrentResolvedAnnotatedReplay
+import Zeta23Ext.CurrentTangentPayloadDecoder
+import Zeta23Ext.CurrentDecodedResolvedReplay
 import Zeta23Ext.CurrentKernelDerivatives
 import Zeta23Ext.CurrentKernelTotalDerivatives
 import Zeta23Ext.ProductionCell4376Jets

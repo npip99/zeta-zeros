@@ -100,6 +100,10 @@ de-risked theorem by theorem before an end-to-end ETA is credible.
   checks all 14 argument inclusions, aggregates `K,K',K''` by rational
   interval arithmetic, and proves a sign-general bound for the genuine total
   current `w''` over one full grid cell.
+  A globally shared semantic-cell table and checked sparse range-minimum table
+  now let every tangent leaf carry only twenty constant-size RMQ queries.
+  Center value/gradient evidence likewise stores twenty-one bounded shared
+  cell indices rather than duplicating transcendental witnesses per leaf.
 - [x] Localize tangent semantics to the checked leaf, bind its objective to
   the actual current `F6`, and derive line continuity and both derivatives
   from the all-real total kernel derivative theorems.  The remaining producer
@@ -117,6 +121,11 @@ de-risked theorem by theorem before an end-to-end ETA is credible.
 - [x] Decode the strict `Z23ANN1` leaf-tagged topology format in Lean,
   resolving every 64-bit tangent payload index and validating the exact root,
   node, and tangent-leaf counts before replay.
+- [x] Prove the scalable resolved-leaf path: one global curvature-table check,
+  compact RMQ-backed Hessian rows, shared-index value/gradient witnesses, exact
+  payload linkage, and an annotated-replay theorem yielding `LocalCertificate`.
+- [ ] Decode the concrete shared semantic-cell/RMQ tables and resolved tangent
+  payload artifact, then prove their full Boolean acceptance.
 - [ ] Convert the compact tree, root boxes, table data, and tangent evidence to
   checked Lean values and prove the concrete `Forest.check = true` and
   `InitialRootEvidence` facts.

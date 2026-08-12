@@ -504,5 +504,56 @@ theorem CellWitness.sound (w : CellWitness) (h : w.check = true) {x : ℝ}
   exact hlower.trans (by
     simpa [weightD2Interval, closedWeightD2Total, div_eq_mul_inv] using hw.1)
 
+/-! ## Value and first-derivative projections
+
+The tangent-center checker uses the same fourteen jets.  These interval
+projections avoid replaying any transcendental work for `w` and `w'`. -/
+
+def weightInterval (minus plus : Fin 7 → JetRow) : QInterval :=
+  qmul (qmul (kernelInterval minus plus) (kernelInterval minus plus))
+    invK0SqInterval
+
+def weightD1Interval (minus plus : Fin 7 → JetRow) : QInterval :=
+  (qmul (qmul (kernelInterval minus plus) (kernelD1Interval minus plus))
+    invK0SqInterval).smul 2
+
+theorem CellWitness.value_first_sound (w : CellWitness) (h : w.check = true) {x : ℝ}
+    (hx : x ∈ Icc ((w.cell : ℝ) / 4000) ((w.cell + 1 : ℕ) / 4000)) :
+    (weightInterval w.minus w.plus).Mem (CurrentWindow.weight x) ∧
+    (weightD1Interval w.minus w.plus).Mem (closedWeightD1Total x) := by
+  have hf := cell_check_facts h
+  have hm (j : Fin 7) := JetRow.sound (hf.1 j).1 (hf.1 j).2.1
+    (minusArgumentInterval_mem j hx)
+  have hp (j : Fin 7) := JetRow.sound (hf.2.1 j).1 (hf.2.1 j).2.1
+    (plusArgumentInterval_mem j hx)
+  have hK := aggregate_kernel_mem (fun j => (hm j).1) (fun j => (hp j).1)
+  have hK1 := aggregate_kernelD1_mem (fun j => (hm j).2.1) (fun j => (hp j).2.1)
+    (fun j => QInterval.valid_sub (hf.2.1 j).2.2.2.1
+      (hf.1 j).2.2.2.1)
+  have vK := QInterval.valid_sum fun j => QInterval.valid_smul
+    (QInterval.valid_add (hf.1 j).2.2.1 (hf.2.1 j).2.2.1)
+      (coefficientQ j / 2)
+  have vK1 := QInterval.valid_sum fun j => QInterval.valid_mul piInterval_valid
+    (QInterval.valid_smul
+      (QInterval.valid_sub (hf.2.1 j).2.2.2.1 (hf.1 j).2.2.2.1)
+      (coefficientQ j / 2))
+  have vinv : Valid invK0SqInterval := by
+    norm_num [invK0SqInterval, k0Interval, Valid]
+  constructor
+  · have hsquare := QInterval.mem_mul vK vK hK hK
+    have hsound := QInterval.mem_mul (QInterval.valid_mul vK vK) vinv
+      hsquare invK0SqInterval_mem
+    rw [CurrentKernelFormula.weight_eq_closedKernel]
+    simpa [weightInterval, kernelInterval, div_pow, div_eq_mul_inv, pow_two,
+      mul_assoc, mul_left_comm, mul_comm] using hsound
+  · have hprod := QInterval.mem_mul vK vK1 hK hK1
+    have hscaled := QInterval.mem_mul (QInterval.valid_mul vK vK1) vinv
+      hprod invK0SqInterval_mem
+    have htwo := QInterval.mem_smul hscaled 2
+    norm_num only [Nat.cast_ofNat] at htwo
+    simpa [weightD1Interval, kernelInterval, kernelD1Interval, piMul,
+      closedWeightD1Total, div_eq_mul_inv,
+      mul_assoc, mul_left_comm, mul_comm] using htwo
+
 end Zeta23Ext.CurrentWeightD2CellChecker
 end

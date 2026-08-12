@@ -1,0 +1,8 @@
+import Zeta23Ext.CurrentDecodedResolvedReplay
+
+open Zeta23Ext.VerifiedCertificate.CurrentTangent.PayloadDecoder
+
+#print axioms decodeRecords_length
+#print axioms decodeProductionPayloads
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentTangent.PayloadDecoder.PayloadTable.resolveResolved
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentDecodedResolvedReplay.currentLocalCertificate_of_decoded_artifacts

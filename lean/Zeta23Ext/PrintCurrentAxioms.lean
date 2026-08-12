@@ -55,6 +55,14 @@ import Zeta23Ext.SincJetCertificate
 import Zeta23Ext.CheckedSincJet
 import Zeta23Ext.NearZeroTotalSincJet
 import Zeta23Ext.CurrentWeightD2CellChecker
+import Zeta23Ext.CurrentTangentCurvatureRMQ
+import Zeta23Ext.CurrentTangentCompactRangeEvidence
+import Zeta23Ext.CurrentTangentCompactHessianAssembly
+import Zeta23Ext.CurrentTangentCompactValueGradient
+import Zeta23Ext.CurrentResolvedTangent
+import Zeta23Ext.CurrentResolvedAnnotatedReplay
+import Zeta23Ext.CurrentTangentPayloadDecoder
+import Zeta23Ext.CurrentDecodedResolvedReplay
 import Zeta23Ext.CurrentKernelDerivatives
 import Zeta23Ext.CurrentKernelTotalDerivatives
 import Zeta23Ext.ProductionCell4376Jets
@@ -322,6 +330,16 @@ in theorem arguments, not declared axioms.
 #print axioms Zeta23Ext.NearZeroTotalSincJet.production_periodic_total_jet
 #print axioms Zeta23Ext.CurrentWeightD2CellChecker.JetRow.sound
 #print axioms Zeta23Ext.CurrentWeightD2CellChecker.CellWitness.sound
+#print axioms Zeta23Ext.CurrentWeightD2CellChecker.CellWitness.value_first_sound
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentTangent.CurvatureRMQ.RangeWitness.sound
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentTangent.CompactRange.Certificate.range_sound
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentTangent.CompactHessian.current_sound
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentTangent.CompactValueGradient.Witness.sound
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentTangent.Resolved.sound
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentResolvedAnnotatedReplay.currentLocalCertificate_of_decoded_resolved_replay
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentTangent.PayloadDecoder.decodeProductionPayloads
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentTangent.PayloadDecoder.PayloadTable.resolveResolved
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentDecodedResolvedReplay.currentLocalCertificate_of_decoded_artifacts
 #print axioms Zeta23Ext.VerifiedCertificate.CurrentTangent.CurrentSemantics.hasDerivAt_objective_line
 #print axioms Zeta23Ext.VerifiedCertificate.CurrentTangent.CurrentSemantics.hasDerivAt_lineFirst
 #print axioms Zeta23Ext.VerifiedCertificate.CurrentTangent.CurrentSemantics.ofProducerInputs

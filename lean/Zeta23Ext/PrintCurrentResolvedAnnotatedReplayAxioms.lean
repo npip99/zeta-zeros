@@ -1,0 +1,7 @@
+import Zeta23Ext.CurrentResolvedAnnotatedReplay
+
+open Zeta23Ext.VerifiedCertificate.CurrentResolvedAnnotatedReplay
+
+#print axioms tangentOK_sound
+#print axioms currentLocalCertificate_of_resolved_replay
+#print axioms currentLocalCertificate_of_decoded_resolved_replay
