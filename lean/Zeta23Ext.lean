@@ -11,12 +11,17 @@ import Zeta23Ext.CurrentZetaAssembly
 import Zeta23Ext.CurrentSpan
 import Zeta23Ext.CurrentAnalyticBridge
 import Zeta23Ext.CurrentAnalyticInstantiation
+import Zeta23Ext.CurrentWindowMoments
+import Zeta23Ext.CurrentXiSpecialization
 import Zeta23Ext.VerifiedCertificate
 import Zeta23Ext.TranscendentalBounds
 import Zeta23Ext.RationalTrigCell
 import Zeta23Ext.CurrentKernelFormula
 import Zeta23Ext.CurrentWindowAdmissibility
 import Zeta23Ext.CurrentWindowFiniteCertificate
+import Zeta23Ext.CurrentWindowClosedHCertificate
 import Zeta23Ext.VerifiedCertificateForest
 import Zeta23Ext.VerifiedCertificateArithmetic
 import Zeta23Ext.CurrentCertificateReplay
+import Zeta23Ext.VerifiedCertificateRoots
+import Zeta23Ext.CurrentInitialRoots

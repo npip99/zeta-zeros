@@ -1,13 +1,18 @@
+import hashlib
+import json
 import unittest
+from pathlib import Path
 
 from proof_certificate.export_interval_tree import (
     Leaf,
     Split,
     encode,
     encode_forest,
+    encode_root_boxes,
     forest_from_events,
     tree_from_events,
     validate_blob,
+    validate_root_blob,
     validate_tokens,
 )
 
@@ -63,6 +68,29 @@ class IntervalTreeExportTests(unittest.TestCase):
                 ],
                 q=1,
             )
+
+    def test_root_box_roundtrip_and_validation(self):
+        boxes = [[[1, 3], [5, 8]], [[0, 0], [9, 12]]]
+        blob = encode_root_boxes(boxes, q=2)
+        self.assertEqual(validate_root_blob(blob), (2, 2))
+        inverted = bytearray(blob)
+        # First low endpoint is bytes 13..16 and first high is 17..20.
+        inverted[13:21] = (4).to_bytes(4, "big") + (3).to_bytes(4, "big")
+        with self.assertRaisesRegex(ValueError, "inverted root interval"):
+            validate_root_blob(bytes(inverted))
+
+    def test_committed_production_roots_reconstruct_exactly(self):
+        repository = Path(__file__).resolve().parents[1]
+        root_json = repository / "certificates/weighted-p1-grid4000.roots.json"
+        root_binary = repository / "certificates/weighted-p1-grid4000.roots.bin"
+        boxes = json.loads(root_json.read_text())["roots"]
+        blob = root_binary.read_bytes()
+        self.assertEqual(validate_root_blob(blob), (6, 324))
+        self.assertEqual(blob, encode_root_boxes(boxes, q=6))
+        self.assertEqual(
+            hashlib.sha256(blob).hexdigest(),
+            "1f929f32b8c4d19f956b78c74461edfb0104af2118f5e1fb8708d691e7ffe692",
+        )
 
 
 if __name__ == "__main__":

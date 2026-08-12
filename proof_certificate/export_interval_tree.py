@@ -33,9 +33,10 @@ import json
 import struct
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, Iterable, Iterator, Mapping, Union
+from typing import Dict, Iterable, Iterator, Mapping, Sequence, Union
 
 MAGIC = b"Z23TREE1"
+ROOT_MAGIC = b"Z23ROOT1"
 
 
 @dataclass(frozen=True)
@@ -131,6 +132,57 @@ def validate_blob(blob: bytes) -> tuple[int, int, int, int, int]:
     if nodes != declared:
         raise ValueError(f"declared {declared} nodes but decoded {nodes}")
     return q, roots, nodes, splits, leaves
+
+
+def encode_root_boxes(root_boxes: Sequence[object], q: int) -> bytes:
+    """Encode inclusive root boxes as exact unsigned 32-bit endpoints."""
+
+    if not 1 <= q <= 254:
+        raise ValueError("q must lie in [1, 254]")
+    payload = bytearray()
+    for root, box in enumerate(root_boxes):
+        if not isinstance(box, (list, tuple)) or len(box) != q:
+            raise ValueError(f"root {root} does not have dimension {q}")
+        for coordinate, interval in enumerate(box):
+            if not isinstance(interval, (list, tuple)) or len(interval) != 2:
+                raise ValueError(
+                    f"root {root}, coordinate {coordinate} is not an interval"
+                )
+            low, high = interval
+            if not isinstance(low, int) or not isinstance(high, int):
+                raise ValueError("root endpoints must be integers")
+            if not 0 <= low <= high < 2**32:
+                raise ValueError("root endpoints must satisfy 0 <= low <= high < 2^32")
+            payload.extend(struct.pack(">II", low, high))
+    return (
+        ROOT_MAGIC
+        + bytes([q])
+        + struct.pack(">I", len(root_boxes))
+        + bytes(payload)
+    )
+
+
+def validate_root_blob(blob: bytes) -> tuple[int, int]:
+    """Validate a `Z23ROOT1` artifact and return `(q, roots)`."""
+
+    header = len(ROOT_MAGIC) + 5
+    if len(blob) < header or not blob.startswith(ROOT_MAGIC):
+        raise ValueError("bad root-box header")
+    q = blob[len(ROOT_MAGIC)]
+    roots = struct.unpack(">I", blob[len(ROOT_MAGIC) + 1 : header])[0]
+    expected = header + roots * q * 8
+    if len(blob) != expected:
+        raise ValueError(f"root-box payload has {len(blob)} bytes, expected {expected}")
+    offset = header
+    for root in range(roots):
+        for coordinate in range(q):
+            low, high = struct.unpack(">II", blob[offset : offset + 8])
+            offset += 8
+            if low > high:
+                raise ValueError(
+                    f"inverted root interval at root {root}, coordinate {coordinate}"
+                )
+    return q, roots
 
 
 def tree_from_events(records: Iterable[Mapping[str, object]], q: int) -> Tree:
@@ -244,7 +296,8 @@ def command_from_events(events: Path, output: Path, q: int, roots: int) -> None:
 
 
 def command_from_root_dir(
-    events_dir: Path, output: Path, roots_output: Path, q: int, roots: int
+    events_dir: Path, output: Path, roots_output: Path,
+    roots_bin_output: Path, q: int, roots: int
 ) -> None:
     """Assemble parallel-safe per-root traces in deterministic root order."""
 
@@ -268,8 +321,12 @@ def command_from_root_dir(
         json.dumps({"q": q, "roots": root_boxes}, separators=(",", ":")) + "\n",
         encoding="utf-8",
     )
+    roots_blob = encode_root_boxes(root_boxes, q)
+    roots_bin_output.write_bytes(roots_blob)
     print(f"wrote={output}")
     print(f"roots_wrote={roots_output}")
+    print(f"roots_bin_wrote={roots_bin_output}")
+    print(f"q,roots={validate_root_blob(roots_blob)}")
     print(f"q,nodes,splits,leaves={validate_blob(blob)}")
 
 
@@ -308,6 +365,7 @@ def main() -> int:
     root_dir.add_argument("events_dir", type=Path)
     root_dir.add_argument("output", type=Path)
     root_dir.add_argument("--roots-output", type=Path)
+    root_dir.add_argument("--roots-bin-output", type=Path)
     root_dir.add_argument("--q", type=int, default=6)
     root_dir.add_argument("--roots", type=int, default=324)
 
@@ -325,8 +383,11 @@ def main() -> int:
         roots_output = arguments.roots_output or arguments.output.with_suffix(
             ".roots.json"
         )
+        roots_bin_output = arguments.roots_bin_output or arguments.output.with_suffix(
+            ".roots.bin"
+        )
         command_from_root_dir(
-            arguments.events_dir, arguments.output, roots_output,
+            arguments.events_dir, arguments.output, roots_output, roots_bin_output,
             arguments.q, arguments.roots,
         )
     else:

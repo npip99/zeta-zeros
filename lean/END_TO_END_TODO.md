@@ -25,6 +25,8 @@ de-risked theorem by theorem before an end-to-end ETA is credible.
 - [x] Current ramped-window `AdmWindow`/`AdmFamily` admissibility, including
   support, global `C^2`, and all derivative-integral bounds.
 - [x] Exact seven-term sinc formula for the current kernel.
+- [x] Exact finite formulas for the square and distance masses, reducing
+  `H(window)` to the integral-free seven-by-seven expression `closedH`.
 - [x] Ordinary entrywise Gram closeness implies the squared-energy block bound,
   with explicit loss `2 * err` and block loss `2 * m^2 * err`.
 - [x] Concrete retained-matrix definitions `V` and `Q`, column bounds, exact
@@ -36,14 +38,19 @@ de-risked theorem by theorem before an end-to-end ETA is credible.
 - [x] Kernel-checked Taylor foundations for sine, cosine, sinc, `sqrt 2`, and
   `pi`, plus the first Boolean rational sine-cell checker.
 - [x] Window endpoint bound `3/4 <= v(1/2)`.
+- [x] Exact origin-cell monotonicity inequality; generated monotonicity data
+  now starts at `1/16384` through `AwayMonotonicityTable`.
+- [x] Tight rational endpoint bounds and the final compact numeric inequality
+  underlying `ClosedHLower`.
 
 ## Finite and numerical certificate
 
-- [ ] Extend the rational trig-cell checker from its first sine-cell slice to
+- [ ] Extend the rational sine/cosine-cell checker and weighted-sum combiner to
   the grouped seven-term derivative cells, then instantiate
-  `MonotonicityTable` for the current window.
-- [ ] Prove the closed form for `windowDistanceMass`, reduce `H(window)` to a
-  finite expression, and kernel-check `Hcert <= H(window)`.
+  `AwayMonotonicityTable` for the current window.
+- [ ] Kernel-check the remaining exact finite proposition
+  `ClosedHLower`, equivalently `Hcert <= H(window)`, by normalizing the
+  49-term closed masses to the already-proved compact numeric inequality.
 - [ ] Generate exact dyadic kernel and second-derivative table artifacts and
   prove `DyadicKernelTable.Sound` for the current closed kernel.
 - [ ] Formalize exact convex-tangent/LDL leaf evidence for the 406,186
@@ -61,10 +68,20 @@ long-term Git artifact.
 
 ## Analytic instantiation
 
-- [ ] Choose and instantiate the current `Params`/coefficient family and prove
-  the displayed current-window `ThmD.cRatio` limit.
-- [ ] Instantiate `XiPrime.XiEF` and the required `XiPrime.Reexpansion` for the
-  chosen current window/coefficient family.
+- [x] For `xiCoeffFamily`, instantiate the coefficient hypotheses,
+  re-expansion, xi-prime Riemann--von Mangoldt theorem, current mass/square-mass
+  limits, and autocorrelation continuity.
+- [ ] Prove the remaining shape-independent current-window autocorrelation
+  comparison `|gv - L * vConv(window)| <= 4w`; this completes the displayed
+  `ThmD.cRatio` limit to `cWin D1 lambda window`.
+- [ ] Construct a smooth globally bounded profile agreeing with the raw cosine
+  polynomial on the taper core, transport the family equality, and instantiate
+  upstream `XiPrime.XiEF`. The raw polynomial itself fails the global
+  `WindowProfile.le_one` requirement outside the core.
+- [ ] Connect the chosen analytic route's limiting moment constant to the
+  paper seam `kappa <= 2 - Hcert`. In particular, do not identify
+  `cWin D1 lambda window` with the endpoint functional `c1 window` without a
+  theorem.
 - [ ] Construct the eventual retained family and prove the concrete
   `RetainedZeroData.DeletionSeam`: Hermitianity, the positive-index/inertia
   bound, and the count seam after deleting exceptional zeros.

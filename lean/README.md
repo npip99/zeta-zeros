@@ -27,7 +27,14 @@ kernel-checked 324-root forest verifier, production-format decoder, integer
 objective, and real-score transfer prove all structural replay steps.
 The current ramped window's full upstream `AdmWindow` witness—including C²,
 support, and all four derivative-integral bounds—is derived from the finite
-shape certificate. The exact integral kernel is proved equal to the
+shape certificate. Its first two scaled moments are now proved to converge
+to the exact current-window mass and square mass, using the generic upstream
+edge estimate; autocorrelation continuity is also discharged.  For the
+actual `xiCoeffFamily`, the pinned coefficient hypotheses, coefficient
+re-expansion, and xi-prime Riemann--von Mangoldt theorem are instantiated, so
+the corresponding ratio/`GzMoments` route is reduced to the explicit
+current-window autocorrelation comparison and explicit formula. The exact
+integral kernel is proved equal to the
 verifier's seven-term entire sinc expression. Kernel-checked sine, cosine,
 sinc, and square-root rational enclosures provide the transcendental
 foundation for the remaining tables.
@@ -38,7 +45,14 @@ Still external are: the full `WindowCertificate` (range, monotonicity, and the
 root-box decoding, initialization evidence, and tangent-leaf semantics needed
 to replay the recorded production topology;
 actual current-kernel compact-uniform entrywise convergence; and construction
-of the retained Gram/moment data with its remaining `o(N)` errors. The old
+of the retained Gram/moment data with its remaining `o(N)` errors. The
+xi-prime route additionally retains the current-window autocorrelation bound
+and `XiEF`. Its limit constant is correctly exposed as
+`cWin D1 λ window`; it is not identified with the paper's endpoint distance
+functional `c1 window`. The raw cosine polynomial is not claimed to satisfy
+the upstream `WindowProfile` global `≤ 1` field; a smooth bounded extension
+agreeing on the taper core would still have to be constructed to reuse
+`xiEF_atV`. The old
 Montgomery--Taylor Gram theorem is not reused as if it applied to the current
 window. There are no `sorry`, `admit`, or new axioms in the current-result
 modules.

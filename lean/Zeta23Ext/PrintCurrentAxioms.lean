@@ -4,15 +4,20 @@ import Zeta23Ext.CurrentZetaAssembly
 import Zeta23Ext.CurrentSpan
 import Zeta23Ext.CurrentAnalyticBridge
 import Zeta23Ext.CurrentAnalyticInstantiation
+import Zeta23Ext.CurrentWindowMoments
+import Zeta23Ext.CurrentXiSpecialization
 import Zeta23Ext.VerifiedCertificate
 import Zeta23Ext.TranscendentalBounds
 import Zeta23Ext.RationalTrigCell
 import Zeta23Ext.CurrentKernelFormula
 import Zeta23Ext.CurrentWindowAdmissibility
 import Zeta23Ext.CurrentWindowFiniteCertificate
+import Zeta23Ext.CurrentWindowClosedHCertificate
 import Zeta23Ext.VerifiedCertificateForest
 import Zeta23Ext.VerifiedCertificateArithmetic
 import Zeta23Ext.CurrentCertificateReplay
+import Zeta23Ext.VerifiedCertificateRoots
+import Zeta23Ext.CurrentInitialRoots
 
 /-
 Run with `lake env lean Zeta23Ext/PrintCurrentAxioms.lean` to audit the
@@ -57,6 +62,15 @@ in theorem arguments, not declared axioms.
 #print axioms Zeta23Ext.CurrentAnalyticInstantiation.RetainedZeroData.toRetainedDecomposition
 #print axioms Zeta23Ext.CurrentAnalyticInstantiation.eventually_retainedMomentData
 #print axioms Zeta23Ext.CurrentAnalyticInstantiation.eventually_entrywiseGramData_of_compactUniform
+#print axioms Zeta23Ext.CurrentWindowMoments.current_window_sq_integral_pos
+#print axioms Zeta23Ext.CurrentWindowMoments.tendsto_aV_current
+#print axioms Zeta23Ext.CurrentWindowMoments.tendsto_bV_current
+#print axioms Zeta23Ext.CurrentWindowMoments.tendsto_cRatio_current_of_autocorr
+#print axioms Zeta23Ext.CurrentXiSpecialization.current_cWin_D1_pos
+#print axioms Zeta23Ext.CurrentXiSpecialization.current_traceTransfer_xi
+#print axioms Zeta23Ext.CurrentXiSpecialization.current_coeffMoments_xi
+#print axioms Zeta23Ext.CurrentXiSpecialization.current_gzMoments_xiDeriv
+#print axioms Zeta23Ext.CurrentXiSpecialization.current_gzMoments_xiDeriv_of_autocorr
 #print axioms Zeta23Ext.VerifiedCertificate.Tree.check_sound
 #print axioms Zeta23Ext.VerifiedCertificate.currentLocalCertificate_of_checked_tree
 #print axioms Zeta23Ext.TranscendentalBounds.abs_sin_sub_sinTaylorWithin_le
@@ -70,6 +84,8 @@ in theorem arguments, not declared axioms.
 #print axioms Zeta23Ext.TranscendentalBounds.abs_sinc_sub_sincTaylor6_le
 #print axioms Zeta23Ext.RationalTrigCell.check_sound
 #print axioms Zeta23Ext.RationalTrigCell.sin_sound
+#print axioms Zeta23Ext.RationalTrigCell.cos_sound
+#print axioms Zeta23Ext.RationalTrigCell.weighted_sum_le
 #print axioms Zeta23Ext.CurrentKernelFormula.integral_cos_linear
 #print axioms Zeta23Ext.CurrentKernelFormula.integral_cos_mul_cos
 #print axioms Zeta23Ext.CurrentKernelFormula.kernel_eq_closedKernel
@@ -80,11 +96,19 @@ in theorem arguments, not declared axioms.
 #print axioms Zeta23Ext.CurrentWindowAdmissibility.admWindow_current
 #print axioms Zeta23Ext.CurrentWindowAdmissibility.currentWindowAdmissibility
 #print axioms Zeta23Ext.CurrentWindowFiniteCertificate.abs_deriv3_window_le
+#print axioms Zeta23Ext.CurrentWindowFiniteCertificate.origin_second_upper
 #print axioms Zeta23Ext.CurrentWindowFiniteCertificate.derivative_nonpos_of_table
 #print axioms Zeta23Ext.CurrentWindowFiniteCertificate.windowSquareMass_closed
+#print axioms Zeta23Ext.CurrentWindowFiniteCertificate.integral_abs_cos_cos
+#print axioms Zeta23Ext.CurrentWindowFiniteCertificate.windowDistanceMass_closed
+#print axioms Zeta23Ext.CurrentWindowFiniteCertificate.H_eq_closedH
+#print axioms Zeta23Ext.CurrentWindowFiniteCertificate.H_lower_iff_closedHLower
 #print axioms Zeta23Ext.CurrentWindowFiniteCertificate.cos_sqrt_two_half_lower
 #print axioms Zeta23Ext.CurrentWindowFiniteCertificate.window_half_lower
 #print axioms Zeta23Ext.CurrentWindowFiniteCertificate.NumericCertificate.toWindowCertificate
+#print axioms Zeta23Ext.CurrentWindowClosedHCertificate.sin_sqrt_two_half_tight
+#print axioms Zeta23Ext.CurrentWindowClosedHCertificate.periodicCorrection_upper
+#print axioms Zeta23Ext.CurrentWindowClosedHCertificate.compact_numeric_inequality
 #print axioms Zeta23Ext.VerifiedCertificate.Forest.check_sound
 #print axioms Zeta23Ext.VerifiedCertificate.currentLocalCertificate_of_decoded_forest
 #print axioms Zeta23Ext.VerifiedCertificate.TermwiseIntegerBounds.lowerScore_sound
@@ -94,3 +118,12 @@ in theorem arguments, not declared axioms.
 #print axioms Zeta23Ext.VerifiedCertificate.CurrentReplay.exactScore_div_scale_le
 #print axioms Zeta23Ext.VerifiedCertificate.CurrentReplay.pressure_cutoff_local
 #print axioms Zeta23Ext.VerifiedCertificate.CurrentReplay.currentLocalCertificate_of_replay
+#print axioms Zeta23Ext.VerifiedCertificate.decodeRootBoxes_length
+#print axioms Zeta23Ext.VerifiedCertificate.currentLocalCertificate_of_decoded_artifacts
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentInitialRoots.roots_length
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentInitialRoots.covers_roots
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentInitialRoots.decoded_roots_cover
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentInitialRoots.oneBodyScore_implies_local
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentInitialRoots.initialCheck_cell
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentInitialRoots.initial_classify
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentInitialRoots.currentLocalCertificate_of_decoded_replay

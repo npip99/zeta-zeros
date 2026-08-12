@@ -85,6 +85,68 @@ lemma deriv_window_zero : deriv window 0 = 0 := by
   rw [deriv_window]
   simp
 
+private lemma frequency_eq_explicit : frequency = fun j : Fin 7 =>
+    match j.1 with
+    | 0 => Real.sqrt 2
+    | 1 => 2 * Real.pi
+    | 2 => 4 * Real.pi
+    | 3 => 6 * Real.pi
+    | 4 => 8 * Real.pi
+    | 5 => 10 * Real.pi
+    | _ => 12 * Real.pi := by
+  funext j
+  fin_cases j <;> norm_num [frequency] <;> ring
+
+/-- Exact closed form for the second derivative at the origin. -/
+lemma deriv2_window_zero :
+    deriv (deriv window) 0 = -2 + (929 / 8000) * Real.pi ^ 2 := by
+  rw [deriv2_window, frequency_eq_explicit]
+  norm_num [coefficient, Fin.sum_univ_succ]
+  ring
+
+/-- Exact closed form for the global third-derivative envelope. -/
+lemma jerkBound_closed : jerkBound =
+    2 * Real.sqrt 2 + (299875271 / 62500000) * Real.pi ^ 3 := by
+  unfold jerkBound
+  have hp : 0 < Real.pi := Real.pi_pos
+  have hs : 0 ≤ Real.sqrt 2 := Real.sqrt_nonneg _
+  rw [frequency_eq_explicit]
+  norm_num [coefficient, Fin.sum_univ_succ,
+    abs_of_pos hp, abs_of_nonneg hs]
+  have hs2 : (Real.sqrt 2) ^ 2 = 2 := Real.sq_sqrt (by norm_num)
+  ring_nf at hs2 ⊢
+  nlinarith
+
+lemma jerkBound_le_153 : jerkBound ≤ 153 := by
+  rw [jerkBound_closed]
+  have hs := TranscendentalBounds.sqrt_two_bounds.2
+  have hp : Real.pi ≤ (31416 : ℝ) / 10000 := by
+    have hpi := Real.pi_lt_d4
+    norm_num at hpi ⊢
+    exact hpi.le
+  calc
+    2 * Real.sqrt 2 + (299875271 / 62500000) * Real.pi ^ 3 ≤
+        2 * ((283 : ℝ) / 200) +
+          (299875271 / 62500000) * ((31416 : ℝ) / 10000) ^ 3 := by
+      gcongr
+    _ ≤ 153 := by norm_num
+
+lemma deriv2_window_zero_le : deriv (deriv window) 0 ≤ -(4 / 5) := by
+  rw [deriv2_window_zero]
+  have hp : Real.pi ≤ (31416 : ℝ) / 10000 := by
+    have hpi := Real.pi_lt_d4
+    norm_num at hpi ⊢
+    exact hpi.le
+  have hpn : 0 ≤ Real.pi := Real.pi_pos.le
+  have hp2 : Real.pi ^ 2 ≤ ((31416 : ℝ) / 10000) ^ 2 := by nlinarith
+  nlinarith
+
+/-- The origin part of the monotonicity certificate is discharged once and
+for all, rather than repeated in generated certificate data. -/
+lemma origin_second_upper :
+    deriv (deriv window) 0 + jerkBound * ((1 : ℝ) / 16384) ≤ 0 := by
+  nlinarith [deriv2_window_zero_le, jerkBound_le_153, jerkBound_nonneg]
+
 lemma deriv_lipschitz (x y : ℝ) :
     |deriv window y - deriv window x| ≤ curvatureBound * |y - x| := by
   have h := convex_univ.norm_image_sub_le_of_norm_deriv_le
@@ -128,6 +190,25 @@ structure MonotonicityTable (n : ℕ) where
   centerUpper : ∀ i, deriv window (cells i).center +
     curvatureBound * (cells i).radius ≤ 0
   cover : ∀ s ∈ Icc originRadius (1 / 2), ∃ i, (cells i).Covers s
+
+/-- The only generated portion of the monotonicity certificate.  The origin
+cell is fixed and proved analytically by `origin_second_upper`. -/
+structure AwayMonotonicityTable (n : ℕ) where
+  cells : Fin n → DerivativeCell
+  centerUpper : ∀ i, deriv window (cells i).center +
+    curvatureBound * (cells i).radius ≤ 0
+  cover : ∀ s ∈ Icc ((1 : ℝ) / 16384) (1 / 2),
+    ∃ i, (cells i).Covers s
+
+def AwayMonotonicityTable.toMonotonicityTable {n : ℕ}
+    (table : AwayMonotonicityTable n) : MonotonicityTable n where
+  originRadius := 1 / 16384
+  originRadius_pos := by norm_num
+  originRadius_le_half := by norm_num
+  originSecondUpper := origin_second_upper
+  cells := table.cells
+  centerUpper := table.centerUpper
+  cover := table.cover
 
 private lemma second_nonpos_on_origin {n : ℕ} (table : MonotonicityTable n)
     {s : ℝ} (hs : s ∈ Icc 0 table.originRadius) :
@@ -277,11 +358,6 @@ lemma windowSquareMass_closed :
       ∑ j : Fin 7, coefficient i * Real.cos (frequency i * s) *
         (coefficient j * Real.cos (frequency j * s)))).intervalIntegrable _ _
 
-/-
-The following direct antiderivative development is retained as design work,
-but is not compiled yet: interval-orientation bookkeeping still needs to be
-finished before it can be promoted to the trusted interface.
-
 /-! ## Closed form for the distance mass -/
 
 /-- The verifier's cosine/cosine integral abbreviation. -/
@@ -301,23 +377,33 @@ private lemma inner_abs_cos {b s : ℝ} (hb : b ≠ 0)
       Real.sin (b / 2) / b + 2 * Real.cos (b / 2) / b ^ 2 -
         2 * Real.cos (b * s) / b ^ 2 := by
   rw [← intervalIntegral.integral_add_adjacent_intervals
+    (b := s)
     (f := fun t : ℝ => |s - t| * Real.cos (b * t))
-    (by exact (by fun_prop : Continuous (fun t : ℝ =>
-      |s - t| * Real.cos (b * t))).intervalIntegrable _ _)
-    (by exact (by fun_prop : Continuous (fun t : ℝ =>
-      |s - t| * Real.cos (b * t))).intervalIntegrable _ _)]
+    ((continuous_const.sub continuous_id).abs.mul
+      (Real.continuous_cos.comp (continuous_const.mul continuous_id))
+      |>.intervalIntegrable _ _)
+    ((continuous_const.sub continuous_id).abs.mul
+      (Real.continuous_cos.comp (continuous_const.mul continuous_id))
+      |>.intervalIntegrable _ _)]
   have hleft : (∫ t in (-(1 : ℝ) / 2)..s, |s - t| * Real.cos (b * t)) =
       (∫ t in (-(1 : ℝ) / 2)..s, (s - t) * Real.cos (b * t)) := by
     apply intervalIntegral.integral_congr
     intro t ht
+    have ht' : t ∈ Icc (-(1 : ℝ) / 2) s := by
+      simpa [uIcc_of_le hs.1] using ht
+    change |s - t| * Real.cos (b * t) = (s - t) * Real.cos (b * t)
     rw [abs_of_nonneg]
-    linarith [ht.2]
+    linarith [ht'.2]
   have hright : (∫ t in s..(1 / 2), |s - t| * Real.cos (b * t)) =
       (∫ t in s..(1 / 2), (t - s) * Real.cos (b * t)) := by
     apply intervalIntegral.integral_congr
     intro t ht
-    rw [abs_of_nonpos]
-    linarith [ht.1]
+    have ht' : t ∈ Icc s (1 / 2) := by
+      rw [uIcc_of_le hs.2] at ht
+      exact ht
+    change |s - t| * Real.cos (b * t) = (t - s) * Real.cos (b * t)
+    rw [abs_of_nonpos (sub_nonpos.mpr ht'.1)]
+    ring
   rw [hleft, hright]
   rw [intervalIntegral.integral_eq_sub_of_hasDerivAt
     (f := fun t : ℝ => (s - t) * Real.sin (b * t) / b - Real.cos (b * t) / b ^ 2)]
@@ -333,16 +419,28 @@ private lemma inner_abs_cos {b s : ℝ} (hb : b ≠ 0)
       have hcos := (Real.hasDerivAt_cos (b * t)).comp t
         (hasDerivAt_const_mul (x := t) b)
       convert ((((hasDerivAt_id t).sub_const s).mul hsin).div_const b).add
-        (hcos.div_const (b ^ 2)) using 1 <;> field_simp [hb] <;> ring
-    · fun_prop
+        (hcos.div_const (b ^ 2)) using 1
+      · funext x
+        simp [Function.comp_apply]
+      · simp [Function.comp_apply]
+        field_simp [hb]
+        ring
+    · exact ((continuous_id.sub continuous_const).mul
+        (Real.continuous_cos.comp (continuous_const.mul continuous_id))).intervalIntegrable _ _
   · intro t _
     have hsin := (Real.hasDerivAt_sin (b * t)).comp t
       (hasDerivAt_const_mul (x := t) b)
     have hcos := (Real.hasDerivAt_cos (b * t)).comp t
       (hasDerivAt_const_mul (x := t) b)
     convert ((((hasDerivAt_const t s).sub (hasDerivAt_id t)).mul hsin).div_const b).sub
-      (hcos.div_const (b ^ 2)) using 1 <;> field_simp [hb] <;> ring
-  · fun_prop
+      (hcos.div_const (b ^ 2)) using 1
+    · funext x
+      simp [Function.comp_apply]
+    · simp [Function.comp_apply]
+      field_simp [hb]
+      ring
+  · exact ((continuous_const.sub continuous_id).mul
+      (Real.continuous_cos.comp (continuous_const.mul continuous_id))).intervalIntegrable _ _
 
 theorem integral_abs_cos_cos {a b : ℝ} (hb : b ≠ 0) :
     (∫ s in (-(1 : ℝ) / 2)..(1 / 2),
@@ -361,7 +459,9 @@ theorem integral_abs_cos_cos {a b : ℝ} (hb : b ≠ 0) :
           funext t; ring,
       intervalIntegral.integral_const_mul, inner_abs_cos hb hs]
   apply Eq.trans (intervalIntegral.integral_congr (fun s hs => hinner s (by
-    simpa [uIcc_of_le (by norm_num : (-(1 : ℝ) / 2) ≤ 1 / 2)] using hs)))
+    have hbounds : (-(1 : ℝ) / 2) ≤ 1 / 2 := by norm_num
+    rw [uIcc_of_le hbounds] at hs
+    exact hs)))
   rw [show (fun s : ℝ => Real.cos (a * s) *
       (Real.sin (b / 2) / b + 2 * Real.cos (b / 2) / b ^ 2 -
         2 * Real.cos (b * s) / b ^ 2)) =
@@ -385,26 +485,54 @@ def closedWindowDistanceMass : ℝ :=
     coefficient i * coefficient j * absKernelIntegral (frequency i) (frequency j)
 
 lemma frequency_ne_zero (j : Fin 7) : frequency j ≠ 0 := by
-  fin_cases j <;> simp [frequency, Real.sqrt_ne_zero'] <;> positivity
+  fin_cases j <;> simp [frequency] <;> positivity
 
 lemma windowDistanceMass_closed :
     windowDistanceMass window = closedWindowDistanceMass := by
   unfold windowDistanceMass window closedWindowDistanceMass
   simp_rw [Finset.mul_sum, Finset.sum_mul]
+  let F : Fin 7 → Fin 7 → ℝ → ℝ → ℝ := fun i j s t =>
+    |s - t| * (coefficient i * Real.cos (frequency i * s)) *
+      (coefficient j * Real.cos (frequency j * t))
+  change (∫ s in (-(1 : ℝ) / 2)..(1 / 2),
+      ∫ t in (-(1 : ℝ) / 2)..(1 / 2), ∑ j, ∑ i, F i j s t) = _
+  have hinner (s : ℝ) :
+      (∫ t in (-(1 : ℝ) / 2)..(1 / 2), ∑ j, ∑ i, F i j s t) =
+        ∑ i, ∑ j, ∫ t in (-(1 : ℝ) / 2)..(1 / 2), F i j s t := by
+    calc
+      (∫ t in (-(1 : ℝ) / 2)..(1 / 2), ∑ j, ∑ i, F i j s t) =
+          ∫ t in (-(1 : ℝ) / 2)..(1 / 2), ∑ i, ∑ j, F i j s t := by
+            apply intervalIntegral.integral_congr
+            intro t _
+            change (∑ j, ∑ i, F i j s t) = ∑ i, ∑ j, F i j s t
+            rw [Finset.sum_comm]
+      _ = ∑ i, ∑ j, ∫ t in (-(1 : ℝ) / 2)..(1 / 2), F i j s t := by
+        rw [intervalIntegral.integral_finsetSum]
+        · apply Finset.sum_congr rfl
+          intro i _
+          rw [intervalIntegral.integral_finsetSum]
+          intro j _
+          exact (by fun_prop : Continuous (F i j s)).intervalIntegrable _ _
+        · intro i _
+          exact (by fun_prop : Continuous (fun t => ∑ j, F i j s t)).intervalIntegrable _ _
+  rw [show (fun s : ℝ =>
+      ∫ t in (-(1 : ℝ) / 2)..(1 / 2), ∑ j, ∑ i, F i j s t) =
+      fun s => ∑ i, ∑ j, ∫ t in (-(1 : ℝ) / 2)..(1 / 2), F i j s t by
+        funext s
+        exact hinner s]
   rw [intervalIntegral.integral_finsetSum]
   · apply Finset.sum_congr rfl
     intro i _
     rw [intervalIntegral.integral_finsetSum]
     · apply Finset.sum_congr rfl
       intro j _
-      rw [show (fun s : ℝ => ∫ t in (-(1 : ℝ) / 2)..(1 / 2),
-          |s - t| * (coefficient i * Real.cos (frequency i * s)) *
-            (coefficient j * Real.cos (frequency j * t))) =
+      rw [show (fun s : ℝ => ∫ t in (-(1 : ℝ) / 2)..(1 / 2), F i j s t) =
           fun s => (coefficient i * coefficient j) *
             (∫ t in (-(1 : ℝ) / 2)..(1 / 2),
               |s - t| * Real.cos (frequency i * s) *
                 Real.cos (frequency j * t)) by
           funext s
+          dsimp [F]
           rw [← intervalIntegral.integral_const_mul]
           apply intervalIntegral.integral_congr
           intro t _
@@ -412,9 +540,19 @@ lemma windowDistanceMass_closed :
       rw [intervalIntegral.integral_const_mul,
         integral_abs_cos_cos (frequency_ne_zero j)]
     · intro j _
-      fun_prop
+      exact (show Continuous (fun s : ℝ =>
+          ∫ t in (-(1 : ℝ) / 2)..(1 / 2), F i j s t) by
+        apply intervalIntegral.continuous_parametric_intervalIntegral_of_continuous'
+        dsimp [F]
+        fun_prop).intervalIntegrable _ _
   · intro i _
-    fun_prop
+    exact (show Continuous (fun s : ℝ =>
+        ∑ j, ∫ t in (-(1 : ℝ) / 2)..(1 / 2), F i j s t) by
+      apply continuous_finsetSum
+      intro j _
+      apply intervalIntegral.continuous_parametric_intervalIntegral_of_continuous'
+      dsimp [F]
+      fun_prop).intervalIntegrable _ _
 
 /-- The exact finite scalar whose lower bound is the `H` certificate. -/
 def closedH : ℝ :=
@@ -424,18 +562,32 @@ def closedH : ℝ :=
 lemma H_eq_closedH : H window = closedH := by
   unfold H c1 closedH
   rw [windowMass_closed, windowSquareMass_closed, windowDistanceMass_closed]
-  field_simp <;> ring
--/
+  field_simp
+
+/-- The remaining `H` leaf is now a single exact finite proposition: all
+integrals have been eliminated in favor of seven-by-seven transcendental
+sums. -/
+def ClosedHLower : Prop := Hcert ≤ closedH
+
+lemma H_lower_iff_closedHLower : Hcert ≤ H window ↔ ClosedHLower := by
+  rw [H_eq_closedH]
+  rfl
 
 /-- Narrow numeric leaves from which the original broad certificate follows.
-`HLower` is one scalar functional inequality; `windowMass_closed` and
-`windowSquareMass_closed`
-remove two of its three analytic integrals, while the distance-mass closed
-formula remains future work.  All quantified range/monotonicity fields are
-derived from the finite table. -/
+`HLower` is the exact finite scalar proposition `ClosedHLower`; the three
+analytic integrals in `H` have all been eliminated.  All quantified
+range/monotonicity fields are derived from the finite table. -/
 structure NumericCertificate (n : ℕ) where
   monotonicity : MonotonicityTable n
-  HLower : Hcert ≤ H window
+  HLower : ClosedHLower
+
+/-- Generated certificates may omit all origin-cell data: the fixed origin
+cell is supplied by `origin_second_upper`. -/
+def NumericCertificate.ofAway {n : ℕ}
+    (monotonicity : AwayMonotonicityTable n) (HLower : ClosedHLower) :
+    NumericCertificate n where
+  monotonicity := monotonicity.toMonotonicityTable
+  HLower := HLower
 
 theorem NumericCertificate.toWindowCertificate {n : ℕ}
     (cert : NumericCertificate n) : WindowCertificate where
@@ -465,7 +617,7 @@ theorem NumericCertificate.toWindowCertificate {n : ℕ}
     exact hanti.trans window_zero_le_one
   even := window_even
   nonincreasing := window_antitone_of_table cert.monotonicity
-  H_lower := cert.HLower
+  H_lower := H_lower_iff_closedHLower.mpr cert.HLower
 
 end Zeta23Ext.CurrentWindowFiniteCertificate
 

@@ -66,7 +66,9 @@ algebraic core of the `0.673195` deduction: the exact window constants and
 21-weight table, the sharp square-root profile and realizing correlation
 matrices, the large-span/small-span block split, pinching and offset
 averaging, error bookkeeping, the final strict numerical comparison, and the
-conditional dyadic-to-cumulative passage.
+conditional dyadic-to-cumulative passage.  For the current cosine window it
+also kernel-checks the exact square-mass and distance-mass formulas, reducing
+the remaining `H(v)` certificate to one integral-free finite proposition.
 
 ```bash
 cd lean
