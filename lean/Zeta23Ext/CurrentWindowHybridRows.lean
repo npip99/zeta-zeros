@@ -1,0 +1,128 @@
+/-
+Copyright (c) 2026 Nicholas Pipitone. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+SPDX-License-Identifier: Apache-2.0
+-/
+import Zeta23Ext.CurrentWindowHybridMonotonicity
+import Zeta23Ext.CurrentWindowMonotonicityRows
+
+/-!
+# Semantic rows for hybrid current-window monotonicity
+
+Rational cosine witnesses certify the second-derivative cells in the first
+part of the interval.  The existing rational sine rows certify the
+first-derivative cells in the second part.
+-/
+
+noncomputable section
+
+open Real Set
+open scoped BigOperators
+
+namespace Zeta23Ext.CurrentWindowHybridRows
+
+open CurrentWindow
+open CurrentWindowAdmissibility
+open CurrentWindowFiniteCertificate
+open CurrentWindowHybridMonotonicity
+open CurrentWindowMonotonicityRows
+
+def cosApproximation (w : RationalTrigCell.Witness) : ℝ :=
+  ((-1 : ℝ) ^ w.k) *
+    TranscendentalBounds.cosTaylor8 (w.center : ℝ)
+
+/-- Seven semantic cosine rows at one second-derivative cell. -/
+structure SecondRow (cell : DerivativeCell) where
+  witness : Fin 7 → RationalTrigCell.Witness
+  checked : ∀ j, RationalTrigCell.cosCheck (witness j) = true
+  reduced : ∀ j,
+    |(frequency j * cell.center - ((witness j).k : ℝ) * Real.pi) -
+      ((witness j).center : ℝ)| ≤ ((witness j).radius : ℝ)
+  arithmetic :
+    (∑ j : Fin 7,
+        -(coefficient j * frequency j ^ 2) *
+          cosApproximation (witness j)) +
+      (∑ j : Fin 7,
+        |-(coefficient j * frequency j ^ 2)| *
+          ((witness j).err : ℝ)) +
+      jerkBound * cell.radius ≤ 0
+
+lemma SecondRow.cos_close {cell : DerivativeCell} (row : SecondRow cell)
+    (j : Fin 7) :
+    |Real.cos (frequency j * cell.center) -
+      cosApproximation (row.witness j)| ≤ ((row.witness j).err : ℝ) := by
+  have h := RationalTrigCell.cos_sound (row.checked j) (row.reduced j)
+  unfold cosApproximation
+  have hsign : |((-1 : ℝ) ^ (row.witness j).k)| = 1 := by
+    rw [abs_zpow]
+    norm_num
+  calc
+    |Real.cos (frequency j * cell.center) -
+        ((-1 : ℝ) ^ (row.witness j).k) *
+          TranscendentalBounds.cosTaylor8 ((row.witness j).center : ℝ)| =
+      |((-1 : ℝ) ^ (row.witness j).k) *
+        (((-1 : ℝ) ^ (row.witness j).k) *
+            Real.cos (frequency j * cell.center) -
+          TranscendentalBounds.cosTaylor8
+            ((row.witness j).center : ℝ))| := by
+        have hsquare : ((-1 : ℝ) ^ (row.witness j).k) ^ 2 = 1 := by
+          rw [zpow_two]
+          norm_num
+        apply congrArg abs
+        nlinarith
+    _ = |((-1 : ℝ) ^ (row.witness j).k) *
+          Real.cos (frequency j * cell.center) -
+        TranscendentalBounds.cosTaylor8
+          ((row.witness j).center : ℝ)| := by
+      rw [abs_mul, hsign, one_mul]
+    _ ≤ ((row.witness j).err : ℝ) := h
+
+theorem SecondRow.secondUpper {cell : DerivativeCell}
+    (row : SecondRow cell) :
+    deriv (deriv window) cell.center + jerkBound * cell.radius ≤ 0 := by
+  rw [deriv2_window]
+  have hsum := RationalTrigCell.weighted_sum_le
+    (coefficient := fun j : Fin 7 => -(coefficient j * frequency j ^ 2))
+    (value := fun j => Real.cos (frequency j * cell.center))
+    (approximation := fun j => cosApproximation (row.witness j))
+    (error := fun j => ((row.witness j).err : ℝ))
+    row.cos_close
+  linarith [row.arithmetic]
+
+/-- A completely semantic hybrid certificate.  Only rational trigonometric
+rows and the finite geometric covers are producer data. -/
+structure Table (nSecond nFirst : ℕ) where
+  junction : ℝ
+  junction_mem : junction ∈ Icc (0 : ℝ) (1 / 2)
+  secondCells : Fin nSecond → DerivativeCell
+  secondRow : ∀ i, SecondRow (secondCells i)
+  secondCover : ∀ s ∈ Icc (0 : ℝ) junction,
+    ∃ i, (secondCells i).Covers s
+  firstCells : Fin nFirst → DerivativeCell
+  firstRow : ∀ i, CurrentWindowMonotonicityRows.CenterRow nFirst i
+  firstCells_eq : ∀ i, firstCells i = CurrentWindowUniformGrid.cell nFirst i
+  firstCover : ∀ s ∈ Icc junction (1 / 2),
+    ∃ i, (firstCells i).Covers s
+
+def Table.toCertificate {nSecond nFirst : ℕ}
+    (table : Table nSecond nFirst) :
+    CurrentWindowHybridMonotonicity.Certificate nSecond nFirst where
+  junction := table.junction
+  junction_mem := table.junction_mem
+  secondCells := table.secondCells
+  secondUpper := fun i => (table.secondRow i).secondUpper
+  secondCover := table.secondCover
+  firstCells := table.firstCells
+  firstUpper := by
+    intro i
+    rw [table.firstCells_eq i]
+    exact (table.firstRow i).centerUpper
+  firstCover := table.firstCover
+
+theorem Table.window_antitone {nSecond nFirst : ℕ}
+    (table : Table nSecond nFirst) :
+    AntitoneOn window (Icc (0 : ℝ) (1 / 2)) :=
+  table.toCertificate.window_antitone
+
+end Zeta23Ext.CurrentWindowHybridRows
+

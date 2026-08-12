@@ -48,6 +48,8 @@ de-risked theorem by theorem before an end-to-end ETA is credible.
 - [x] A hybrid finite certificate can cover an initial interval using
   `v'' <= 0` cells and the remainder using `v' <= 0` cells, allowing a much
   smaller adaptive certificate than 8,188 uniform derivative rows.
+- [x] Hybrid rows are fully semantic: rational cosine witnesses discharge the
+  `v''` cells and rational sine witnesses discharge the `v'` cells.
 - [x] Tight rational endpoint bounds and the compact numeric inequality
   needed after normalizing the 49-term expression.
 - [x] Exact-rational shadow replay of every non-tangent production leaf and

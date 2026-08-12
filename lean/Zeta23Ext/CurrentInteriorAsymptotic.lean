@@ -308,4 +308,77 @@ theorem eventually_currentInterior_card_pos_of_moments
   simpa [currentInteriorStabilityError, currentInteriorDeletionLoss,
     centralBoundaryDeletion] using herr'
 
+/-! ## Eventual finite-package assembly -/
+
+def currentInteriorCount (Z : ZeroConfig) (P : Params) (T : ℝ) : ℕ :=
+  Fintype.card (InteriorIndex Z (P.atV CurrentWindow.window T) T
+    ZeroSide.phiHatConj)
+
+/-- Interior cardinality is at most the enlarged zero count eventually. -/
+theorem currentInteriorCount_isBigO_NIprime
+    (Z : ZeroConfig) (P : Params) :
+    (fun T => (currentInteriorCount Z P T : ℝ)) =O[atTop]
+      (fun T => (Z.NIprime T : ℝ)) := by
+  refine IsBigO.of_bound 1 ?_
+  filter_upwards [eventually_ge_atTop (0 : ℝ)] with T hT
+  rw [Real.norm_eq_abs, Real.norm_eq_abs,
+    abs_of_nonneg (Nat.cast_nonneg _), abs_of_nonneg (Nat.cast_nonneg _), one_mul]
+  have hsub : currentInteriorCount Z P T ≤
+      Fintype.card (RetainedAtom Z (P.atV CurrentWindow.window T) T
+        ZeroSide.phiHatConj) := by
+    simpa [currentInteriorCount] using
+      (Fintype.card_subtype_le
+        (IsInteriorIndex Z (P.atV CurrentWindow.window T) T
+          ZeroSide.phiHatConj))
+  rw [card_retainedAtom] at hsub
+  exact_mod_cast hsub.trans
+    ((ZeroConfig.trivial_chain Z T (2 * T)).1.trans
+      (by
+        rw [Assembly.NIprime_eq Z hT]
+        exact Nat.le_add_right _ _))
+
+lemma one_isLittleO_NIprime (Z : ZeroConfig) (hR : RiemannVonMangoldt Z) :
+    (fun _ : ℝ => (1 : ℝ)) =o[atTop] (fun T => (Z.NIprime T : ℝ)) := by
+  rw [isLittleO_one_left_iff]
+  simpa only [Real.norm_eq_abs, abs_of_nonneg (Nat.cast_nonneg _)] using
+    tendsto_NIprime_atTop Z hR
+
+theorem currentBaseTotalError_isLittleO_NIprime
+    {Z : ZeroConfig} {P : Params} (hP : P.Valid) (hlam : P.lam < 1)
+    (hR : RiemannVonMangoldt Z) (hcert : CurrentWindow.WindowCertificate)
+    {R₁ R₂ : ℝ → ℝ}
+    (hR₁ : R₁ =o[atTop] (fun T => (Z.NIprime T : ℝ)))
+    (hR₂ : R₂ =o[atTop] (fun T => (Z.NIprime T : ℝ))) :
+    baseTotalError (currentInteriorCount Z P)
+      (centralScaledSpanError Z P) (currentInteriorGramError P) R₁ R₂
+      =o[atTop] (fun T => (Z.NIprime T : ℝ)) := by
+  have hstab := (hR₁.const_mul_left 4).add hR₂
+  have hconst := (one_isLittleO_NIprime Z hR).const_mul_left
+    ((249 / 250 : ℝ) * Current.R)
+  have herrOne : currentInteriorGramError P =o[atTop] (fun _ => (1 : ℝ)) :=
+    (isLittleO_one_iff ℝ).2 (tendsto_currentInteriorGramError hP hcert)
+  have hcoeffOne :
+      (fun T => Current.eta *
+          blockDelta (entryEnergyError (currentInteriorGramError P T)) / 250)
+        =o[atTop] (fun _ => (1 : ℝ)) := by
+    have h := herrOne.const_mul_left
+      (Current.eta * (2 * (Current.m : ℝ) ^ 2) / 250)
+    simpa [blockDelta_entryEnergyError] using h
+  have hgram := hcoeffOne.mul_isBigO
+    (currentInteriorCount_isBigO_NIprime Z P)
+  have hspan :=
+    (centralScaledSpanError_isLittleO_NIprime hP hlam hR).const_mul_left
+      (Current.eta * Current.pressureCap * (249 / 250 : ℝ))
+  have hsum := hstab.add hconst |>.add hgram |>.add hspan
+  change (fun T =>
+    (4 * R₁ T + R₂ T) +
+      ((249 / 250 : ℝ) * Current.R +
+        (Current.eta * blockDelta
+          (entryEnergyError (currentInteriorGramError P T)) / 250) *
+            (currentInteriorCount Z P T : ℝ) +
+        Current.eta * Current.pressureCap * (249 / 250 : ℝ) *
+          centralScaledSpanError Z P T)) =o[atTop]
+      (fun T => (Z.NIprime T : ℝ))
+  simpa only [add_assoc] using hsum
+
 end Zeta23Ext.CurrentInteriorAsymptotic

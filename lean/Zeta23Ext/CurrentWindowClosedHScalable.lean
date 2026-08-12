@@ -80,6 +80,48 @@ private lemma sinc_half_add_periodic (k : ℕ) (hk : k ≠ 0) :
       Real.sqrt 2 / 2 + k * Real.pi by ring,
     Real.sinc_of_ne_zero harg, Real.sin_add_nat_mul_pi]
 
+private lemma sinc_root_sub_periodic (k : ℕ) (hk : k ≠ 0) :
+    Real.sinc ((Real.sqrt 2 - 2 * Real.pi * k) / 2) =
+      (-1 : ℝ) ^ k * Real.sin (Real.sqrt 2 / 2) /
+        (Real.sqrt 2 / 2 - k * Real.pi) := by
+  convert sinc_half_sub_periodic k hk using 1 <;> ring
+
+private lemma sinc_root_add_periodic (k : ℕ) (hk : k ≠ 0) :
+    Real.sinc ((Real.sqrt 2 + 2 * Real.pi * k) / 2) =
+      (-1 : ℝ) ^ k * Real.sin (Real.sqrt 2 / 2) /
+        (Real.sqrt 2 / 2 + k * Real.pi) := by
+  convert sinc_half_add_periodic k hk using 1 <;> ring
+
+private lemma sinc_periodic_sub_root (k : ℕ) (hk : k ≠ 0) :
+    Real.sinc ((2 * Real.pi * k - Real.sqrt 2) / 2) =
+      (-1 : ℝ) ^ k * Real.sin (Real.sqrt 2 / 2) /
+        (Real.sqrt 2 / 2 - k * Real.pi) := by
+  rw [show (2 * Real.pi * k - Real.sqrt 2) / 2 =
+      -((Real.sqrt 2 - 2 * Real.pi * k) / 2) by ring,
+    Real.sinc_neg, sinc_root_sub_periodic k hk]
+
+private lemma sinc_periodic_add_root (k : ℕ) (hk : k ≠ 0) :
+    Real.sinc ((2 * Real.pi * k + Real.sqrt 2) / 2) =
+      (-1 : ℝ) ^ k * Real.sin (Real.sqrt 2 / 2) /
+        (Real.sqrt 2 / 2 + k * Real.pi) := by
+  rw [add_comm, sinc_root_add_periodic k hk]
+
+private lemma sinc_periodic_half_eq_zero (k : ℕ) (hk : k ≠ 0) :
+    Real.sinc (2 * Real.pi * k / 2) = 0 := by
+  convert sinc_pi_mul_eq_zero k hk using 1 <;> ring
+
+private lemma sqrt_two_sub_two_pi_mul_ne_zero (k : ℕ) (hk : k ≠ 0) :
+    Real.sqrt 2 - 2 * Real.pi * k ≠ 0 := by
+  intro h
+  apply half_sqrt_two_sub_nat_pi_ne_zero k hk
+  linarith
+
+private lemma sqrt_two_add_two_pi_mul_ne_zero (k : ℕ) (hk : k ≠ 0) :
+    Real.sqrt 2 + 2 * Real.pi * k ≠ 0 := by
+  intro h
+  apply half_sqrt_two_add_nat_pi_ne_zero k hk
+  linarith
+
 /-- One summand of the square mass plus the corresponding summand of the
 distance mass. -/
 def combinedEntry (i j : Fin 7) : ℝ :=
@@ -176,6 +218,64 @@ theorem periodic_block_sum :
       ∑ k : Fin 6, periodicDiagonal k := by
   simp_rw [combinedEntry_periodic]
   simp
+
+private lemma mixed_pair_one : combinedEntry 0 1 + combinedEntry 1 0 = 0 := by
+  have rm := sinc_root_sub_periodic 1 (by norm_num)
+  have rp := sinc_root_add_periodic 1 (by norm_num)
+  have pm := sinc_periodic_sub_root 1 (by norm_num)
+  have pp := sinc_periodic_add_root 1 (by norm_num)
+  have zh := sinc_periodic_half_eq_zero 1 (by norm_num)
+  norm_num at rm rp pm pp zh
+  unfold combinedEntry absKernelIntegral cosCosIntegral
+  norm_num [coefficient, frequency, sinc_sqrt_two_half]
+  simp only [rm, rp, pm, pp, zh]
+  have dm := sqrt_two_sub_two_pi_mul_ne_zero 1 (by norm_num)
+  have dp := sqrt_two_add_two_pi_mul_ne_zero 1 (by norm_num)
+  ring_nf at dm dp
+  field_simp [Real.pi_ne_zero, sqrt_two_sub_two_pi_mul_ne_zero,
+    sqrt_two_add_two_pi_mul_ne_zero, dm, dp,
+    Real.sqrt_ne_zero'.mpr (by norm_num : (0 : ℝ) < 2)]
+  ring_nf
+  nlinarith [Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 2)]
+
+private lemma mixed_pair_two : combinedEntry 0 2 + combinedEntry 2 0 = 0 := by
+  have rm := sinc_root_sub_periodic 2 (by norm_num)
+  have rp := sinc_root_add_periodic 2 (by norm_num)
+  have pm := sinc_periodic_sub_root 2 (by norm_num)
+  have pp := sinc_periodic_add_root 2 (by norm_num)
+  have zh := sinc_periodic_half_eq_zero 2 (by norm_num)
+  norm_num at rm rp pm pp zh
+  unfold combinedEntry absKernelIntegral cosCosIntegral
+  norm_num [coefficient, frequency, sinc_sqrt_two_half]
+  simp only [rm, rp, pm, pp, zh]
+  have dm := sqrt_two_sub_two_pi_mul_ne_zero 2 (by norm_num)
+  have dp := sqrt_two_add_two_pi_mul_ne_zero 2 (by norm_num)
+  ring_nf at dm dp
+  field_simp [Real.pi_ne_zero, sqrt_two_sub_two_pi_mul_ne_zero,
+    sqrt_two_add_two_pi_mul_ne_zero, dm, dp,
+    Real.sqrt_ne_zero'.mpr (by norm_num : (0 : ℝ) < 2)]
+  ring_nf
+  nlinarith [Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 2)]
+
+private lemma mixed_pair_three : combinedEntry 0 3 + combinedEntry 3 0 = 0 := by
+  have rm := sinc_root_sub_periodic 3 (by norm_num)
+  have rp := sinc_root_add_periodic 3 (by norm_num)
+  have pm := sinc_periodic_sub_root 3 (by norm_num)
+  have pp := sinc_periodic_add_root 3 (by norm_num)
+  have zh := sinc_periodic_half_eq_zero 3 (by norm_num)
+  norm_num at rm rp pm pp zh
+  unfold combinedEntry absKernelIntegral cosCosIntegral
+  norm_num [coefficient, frequency, sinc_sqrt_two_half,
+    Real.sin_nat_mul_pi, Real.cos_nat_mul_pi, mul_comm]
+  try simp only [rm, rp, pm, pp, zh]
+  have dm := sqrt_two_sub_two_pi_mul_ne_zero 3 (by norm_num)
+  have dp := sqrt_two_add_two_pi_mul_ne_zero 3 (by norm_num)
+  ring_nf at dm dp
+  field_simp [Real.pi_ne_zero, sqrt_two_sub_two_pi_mul_ne_zero,
+    sqrt_two_add_two_pi_mul_ne_zero, dm, dp,
+    Real.sqrt_ne_zero'.mpr (by norm_num : (0 : ℝ) < 2)]
+  ring_nf
+  nlinarith [Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 2)]
 
 /-- The final strict arithmetic is independent of how the finite compact
 identity and its numerical upper bound are established.  This theorem is the

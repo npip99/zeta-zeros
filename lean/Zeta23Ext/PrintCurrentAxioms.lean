@@ -15,6 +15,7 @@ import Zeta23Ext.CurrentWindowFiniteCertificate
 import Zeta23Ext.CurrentWindowUniformGrid
 import Zeta23Ext.CurrentWindowMonotonicityRows
 import Zeta23Ext.CurrentWindowHybridMonotonicity
+import Zeta23Ext.CurrentWindowHybridRows
 import Zeta23Ext.CurrentWindowClosedHScalable
 import Zeta23Ext.VerifiedCertificateForest
 import Zeta23Ext.VerifiedCertificateArithmetic
@@ -134,6 +135,9 @@ in theorem arguments, not declared axioms.
 #print axioms Zeta23Ext.CurrentWindowMonotonicityRows.Table.window_antitone
 #print axioms Zeta23Ext.CurrentWindowHybridMonotonicity.derivative_nonpos
 #print axioms Zeta23Ext.CurrentWindowHybridMonotonicity.window_antitone
+#print axioms Zeta23Ext.CurrentWindowHybridRows.SecondRow.cos_close
+#print axioms Zeta23Ext.CurrentWindowHybridRows.SecondRow.secondUpper
+#print axioms Zeta23Ext.CurrentWindowHybridRows.Table.window_antitone
 #print axioms Zeta23Ext.CurrentWindowClosedHScalable.closed_masses_eq_entry_sum
 #print axioms Zeta23Ext.CurrentWindowClosedHScalable.combinedEntry_zero_zero
 #print axioms Zeta23Ext.CurrentWindowClosedHScalable.combinedEntry_one_one
@@ -224,6 +228,8 @@ in theorem arguments, not declared axioms.
 #print axioms Zeta23Ext.CurrentInteriorAsymptotic.interiorCard_pos_of_lossyStabilityError_lt
 #print axioms Zeta23Ext.CurrentInteriorAsymptotic.currentInteriorStabilityError_isLittleO_NIprime
 #print axioms Zeta23Ext.CurrentInteriorAsymptotic.eventually_currentInterior_card_pos_of_moments
+#print axioms Zeta23Ext.CurrentInteriorAsymptotic.currentInteriorCount_isBigO_NIprime
+#print axioms Zeta23Ext.CurrentInteriorAsymptotic.currentBaseTotalError_isLittleO_NIprime
 #print axioms Zeta23Ext.CurrentCentralSelection.canonicalRetainedZeroData
 #print axioms Zeta23Ext.CurrentCentralSelection.canonical_lossyMomentData
 #print axioms Zeta23Ext.CurrentCentralAssembler.CanonicalHeightPremises.toLossyFinite
