@@ -1,0 +1,6 @@
+import Zeta23Ext.CurrentTangentCurrentHessian
+
+open Zeta23Ext.VerifiedCertificate.CurrentTangent.CurrentHessian
+
+#print axioms evidence_secondDerivative_sound_inBox
+#print axioms termOfRange_quadratic_le

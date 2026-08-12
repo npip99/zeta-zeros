@@ -67,5 +67,6 @@ import Zeta23Ext.CurrentKernelTotalDerivatives
 import Zeta23Ext.ProductionCell4376Jets
 import Zeta23Ext.CurrentTangentCurrentSemantics
 import Zeta23Ext.CurrentTangentCurrentAssembly
+import Zeta23Ext.CurrentTangentCurrentHessian
 import Zeta23Ext.CurrentAnnotatedReplay
 import Zeta23Ext.VerifiedAnnotatedForestDecoder
