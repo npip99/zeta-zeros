@@ -1,7 +1,7 @@
-# Lean-checked deduction core
+# Lean-checked zeta deduction
 
-This pinned Lean 4 project formalizes the finite and algebraic core of the
-`0.673195` simple-zero deduction in the parent repository. It uses
+This pinned Lean 4 project formalizes the analytic and finite deduction of the
+`0.673195` simple-zero bound in the parent repository. It uses
 [`anthropics/zeta-23-lean`](https://github.com/anthropics/zeta-23-lean) at
 commit `3635e74826a4c1fcece7d1cd2b6fa75e43a00510` as its analytic and
 linear-algebra base.
@@ -14,7 +14,8 @@ The project checks:
 - matrix block deduction, pinching, offset averaging, and endpoint losses;
 - separate stability and block approximation errors;
 - the final strict comparison with `673195 / 10^6`; and
-- the conditional dyadic and cumulative zeta statements.
+- the dyadic and cumulative zeta statements, conditional only on replaying
+  the finite numerical certificate.
 
 The extension also discharges the normalized-span component unconditionally
 from the upstream Riemann--von Mangoldt theorem: the explicit span error and
@@ -39,20 +40,16 @@ verifier's seven-term entire sinc expression. Kernel-checked sine, cosine,
 sinc, and square-root rational enclosures provide the transcendental
 foundation for the remaining tables.
 
-It does **not** claim an unconditional formalization of the paper's theorem.
-Still external are: the away-cell monotonicity portion of
-`WindowCertificate`; semantic bounds for the kernel and tangent tables; and
-the typed tangent-leaf evidence needed to replay the recorded production topology;
-completion of the retained Gram/moment assembly and its remaining `o(N)`
-errors.  The actual-scale infinite-kernel limit, endpoint rho-tail estimate,
-ordered interior compression, and its `o(NIprime)` deletion loss are proved.
-What remains is an eventual-data interface (avoiding a circular all-height
-positivity premise), the concrete central tail/moment rebasing, and final error
-assembly.  The strict endpoint `H` normalization is not currently cold-build
-checked, so that module is excluded from the umbrella target. The old
-Montgomery--Taylor Gram theorem is not reused as if it applied to the current
-window. There are no `sorry`, `admit`, or new axioms in the current-result
-modules.
+It does **not** yet claim an unconditional formalization of the paper's
+theorem. `CurrentEndToEnd.current_zeta_cumulative_target` has exactly one
+remaining argument, `FiniteWindowInputs`. The strict endpoint `H` inequality,
+actual-scale Gram limit, endpoint deletion, central moment rebasing, and final
+`o(N)` assembly are now kernel checked. What remains is entirely finite:
+generate and replay the compact hybrid monotonicity table, and replay the
+recorded local seven-point search, including semantic kernel tables and the
+406,186 convex-tangent leaves. The old Montgomery--Taylor Gram theorem is not
+reused as if it applied to the current window. There are no `sorry`, `admit`,
+or new axioms in the current-result modules.
 
 See [`END_TO_END_TODO.md`](END_TO_END_TODO.md) for the canonical list of
 completed components and the exact theorem arguments still to eliminate.

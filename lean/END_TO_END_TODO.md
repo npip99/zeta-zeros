@@ -1,11 +1,12 @@
 # End-to-end Lean proof status
 
-Last audited: 2026-08-11.
+Last audited: 2026-08-12.
 
-The finite deduction is kernel checked, but the theorem about zeta zeros is
-still conditional. This is the canonical checklist for removing the remaining
-theorem arguments. An item is complete only when the current window and
-constants are instantiated, not merely when a generic interface exists.
+The analytic deduction and finite bookkeeping are kernel checked, but the
+theorem about zeta zeros still awaits replay of its finite certificate. This
+is the canonical checklist for removing the remaining theorem argument. An
+item is complete only when the current window and constants are instantiated,
+not merely when a generic interface exists.
 
 No percentage-complete or calendar ETA is currently authoritative. The
 remaining analytic seams may dominate the total proof effort; they must be
@@ -75,26 +76,22 @@ de-risked theorem by theorem before an end-to-end ETA is credible.
 
 ## Finite and numerical certificate
 
-- [ ] Generate and kernel-check the concrete seven-sine rows that instantiate
-  `CurrentWindowMonotonicityRows.Table`.  Their semantic combination,
-  uniform-grid coverage, and conversion to global monotonicity are proved.
-- [ ] Kernel-check `ClosedHLower` by normalizing the 49-term closed masses to
-  the compact numeric inequality.  The numeric inequalities are proved, but
-  `CurrentWindowClosedHCertificate.lean` does not currently cold-build and is
-  intentionally excluded from the umbrella target.  A scalable replacement
-  proves the entry-sum decomposition, representative reductions, and the
-  exact final strict-H arithmetic contract; the remaining entries are finite
-  normalization work.
+- [ ] Generate and kernel-check the compact hybrid monotonicity table.  Its
+  semantic sine/cosine combination, rational global derivative envelopes,
+  finite coverage, and conversion to global monotonicity are proved.
+- [x] Kernel-check the strict `Hcert < H(window)` endpoint inequality.  The
+  scalable proof normalizes all 49 closed-mass entries, proves independent
+  rational Taylor bounds, and derives the strengthened rational lower bound
+  `67245701 / 10^8 <= closedH`.
 - [ ] Generate exact dyadic kernel and second-derivative table artifacts and
   prove `DyadicKernelTable.Sound` for the current closed kernel.
 - [ ] Formalize exact convex-tangent/LDL leaf evidence for the 406,186
   tangent-pruned leaves. A tangent-free production rerun is currently
   impractical; three representative roots exceeded two million nodes each.
-  The generic sinc/sinc'/sinc'' checker, one delicate reduced-argument row,
-  the `K,K',K'' -> w''` combiner, and the `K(0)` bound are complete.  Two more
-  all 14 actual production argument rows are now checked for the first
-  semantic tangent cell; their weighted `K,K',K''` composition into the
-  recorded `w''` row remains.
+  The generic sinc/sinc'/sinc'' checker, the `K,K',K'' -> w''` combiner, and
+  the `K(0)` bound are complete.  All 14 actual production argument rows and
+  their weighted composition are checked for cell 4376, yielding the exact
+  recorded binary64 lower bound throughout that cell.
 - [ ] Convert the compact tree, root boxes, table data, and tangent evidence to
   checked Lean values and prove the concrete `Forest.check = true` and
   `InitialRootEvidence` facts.
@@ -131,16 +128,17 @@ long-term Git artifact.
 - [x] Resolve local interior positivity non-circularly: the lossy stability
   seam and little-o moment/deletion errors force the interior cardinality to
   be positive eventually, before retained data or Gram bounds are constructed.
-- [ ] Discharge the concrete central `Az` moment/tail premise and rebase its
-  count and error terms to `NIprime`.  The transfer from actual `GzMoments`
-  through the current tail package to explicit central `Az` trace/Frobenius
-  errors is proved; their final little-o rate arithmetic remains.
+- [x] Discharge the concrete central `Az` moment/tail premise and rebase its
+  count and error terms to `NIprime`, including both explicit trace and
+  Frobenius little-o rates.
 - [x] Package the moment, stability, Gram, span, endpoint, positivity, and
   deletion errors into the exact lossy finite records and final asymptotic
   target.  The analytic theorem now reduces cleanly to the concrete central
   `Az` moment premise with two little-o error rates.
-- [ ] Instantiate the already-proved zeta and cumulative capstones and run the
-  final adversarial theorem/axiom audit.
+- [x] Instantiate the zeta dyadic and cumulative capstones and discharge the
+  strict endpoint inequality.  `CurrentEndToEnd` now depends only on the
+  explicit `FiniteWindowInputs` certificate; a final hostile audit is in
+  progress.
 
 ## Validation invariant
 

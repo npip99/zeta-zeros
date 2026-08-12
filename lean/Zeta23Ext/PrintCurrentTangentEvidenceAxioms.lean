@@ -1,0 +1,7 @@
+import Zeta23Ext.CurrentTangentEvidence
+
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentTangent.KernelCellWitness.sound
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentTangent.SpanEvidence.realSpan_mem_cell
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentTangent.SpanEvidence.secondDerivative_sound
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentTangent.tangentOK_sound
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentTangent.Demo.tree_sound

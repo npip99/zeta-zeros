@@ -1,7 +1,7 @@
 /-
-The Lean-checked finite and algebraic core of the `0.673195` simple-zero
-deduction. The analytic inputs remain explicit hypotheses; see
-`Zeta23Ext.CurrentZeta`.
+The Lean formalization of the `0.673195` simple-zero deduction.  The current
+zeta analytic chain is assembled in `Zeta23Ext.CurrentEndToEnd`; its only
+remaining explicit premise is the finite-window certificate.
 -/
 
 import Zeta23Ext.Current
@@ -24,14 +24,19 @@ import Zeta23Ext.CurrentWindowMonotonicityRows
 import Zeta23Ext.CurrentWindowHybridMonotonicity
 import Zeta23Ext.CurrentWindowHybridRows
 import Zeta23Ext.CurrentWindowArgumentReduction
+import Zeta23Ext.CurrentWindowMonotonicityProductionRow
 import Zeta23Ext.CurrentWindowClosedHScalable
 import Zeta23Ext.CurrentWindowClosedHMixed
+import Zeta23Ext.CurrentWindowClosedHAssembly
+import Zeta23Ext.CurrentWindowClosedHNumeric
+import Zeta23Ext.CurrentFiniteReduction
 import Zeta23Ext.VerifiedCertificateForest
 import Zeta23Ext.VerifiedCertificateArithmetic
 import Zeta23Ext.CurrentCertificateReplay
 import Zeta23Ext.VerifiedCertificateRoots
 import Zeta23Ext.CurrentInitialRoots
 import Zeta23Ext.VerifiedAnnotatedForest
+import Zeta23Ext.CurrentTangentEvidence
 import Zeta23Ext.CurrentZetaNative
 import Zeta23Ext.CurrentRetainedWithLoss
 import Zeta23Ext.CurrentZetaAutocorr
@@ -48,6 +53,7 @@ import Zeta23Ext.CurrentInteriorAsymptotic
 import Zeta23Ext.CurrentAzMoments
 import Zeta23Ext.CurrentAzMomentErrors
 import Zeta23Ext.CurrentAnalyticClosure
+import Zeta23Ext.CurrentEndToEnd
 import Zeta23Ext.SincDerivativeCertificate
 import Zeta23Ext.SincJetCertificate
 import Zeta23Ext.CurrentKernelDerivatives

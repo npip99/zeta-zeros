@@ -61,8 +61,8 @@ this repository's tightened constants.
 
 ## Lean formalization
 
-The pinned Lean 4 project under [`lean/`](lean/) checks the finite and
-algebraic core of the `0.673195` deduction: the exact window constants and
+The pinned Lean 4 project under [`lean/`](lean/) checks the analytic and
+finite deduction of the `0.673195` bound: the exact window constants and
 21-weight table, the sharp square-root profile and realizing correlation
 matrices, the large-span/small-span block split, pinching and offset
 averaging, error bookkeeping, the final strict numerical comparison, and the
@@ -83,15 +83,16 @@ lake env lean Zeta23Ext/PrintCurrentAxioms.lean
 The capstone remains conditional, but the zeta-native coefficient family
 `c_N=-Lambda(N), D(s)=s`, its autocorrelation and prime/zero matrix transfer,
 and the normalized-span error are discharged. The actual-scale infinite
-kernel, interior endpoint-tail bound, ordered compression, and its explicit
-`o(NIprime)` deletion loss are also checked. The remaining explicit tasks are
-away-cell window monotonicity, the cold-build proof of the strict scalar
-`H` certificate, kernel-table/search soundness (especially semantic
-tangent-leaf evidence), an eventual retained-data interface, concrete central
-tail/moment rebasing, and final error assembly. Current-window admissibility,
+kernel, interior endpoint-tail bound, ordered compression, central moment
+rebasing, final error assembly, and strict scalar `H` certificate are also
+checked. `CurrentEndToEnd.current_zeta_cumulative_target` now has exactly one
+premise: `FiniteWindowInputs`. The remaining work is finite certificate
+replay—constructing the compact hybrid monotonicity table and checking the
+recorded local search, especially its semantic kernel tables and 406,186
+convex-tangent leaves. Current-window admissibility,
 entrywise-to-squared-energy conversion, retained-count domination, and the
-production topology, decoder, and real-score bridge are now recorded or
-kernel checked; see
+production topology, decoder, and real-score bridge are recorded or kernel
+checked; see
 [`CurrentAnalyticBridge`](lean/Zeta23Ext/CurrentAnalyticBridge.lean) and
 [`VerifiedCertificate`](lean/Zeta23Ext/VerifiedCertificate.lean). The
 repository does not claim these remaining external inputs have been replayed
