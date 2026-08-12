@@ -96,11 +96,16 @@ de-risked theorem by theorem before an end-to-end ETA is credible.
   The scalable ordinary-cell checker proves total sinc-jet bounds from Boolean
   rational witnesses, while a pole-free Taylor checker covers all 12 cells
   adjacent to the six removable periodic arguments.
+  A single generator-facing Boolean `CellWitness` now combines those rows,
+  checks all 14 argument inclusions, aggregates `K,K',K''` by rational
+  interval arithmetic, and proves a sign-general bound for the genuine total
+  current `w''` over one full grid cell.
 - [x] Localize tangent semantics to the checked leaf, bind its objective to
   the actual current `F6`, and derive line continuity and both derivatives
   from the all-real total kernel derivative theorems.  The remaining producer
   facts are finite value/gradient enclosures and the exact 20-row Hessian
-  comparison.
+  comparison.  The canonical coordinate-gradient formula and its directional
+  identity at the payload center are now proved by finite-sum exchange.
 - [x] Connect the heterogeneous annotated forest and existing initialization
   bridge directly to `CurrentWindow.LocalCertificate`, with a convenience
   capstone accepting only the finite tangent producer facts.

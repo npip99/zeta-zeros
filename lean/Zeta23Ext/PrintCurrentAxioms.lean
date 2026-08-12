@@ -54,10 +54,12 @@ import Zeta23Ext.SincDerivativeCertificate
 import Zeta23Ext.SincJetCertificate
 import Zeta23Ext.CheckedSincJet
 import Zeta23Ext.NearZeroTotalSincJet
+import Zeta23Ext.CurrentWeightD2CellChecker
 import Zeta23Ext.CurrentKernelDerivatives
 import Zeta23Ext.CurrentKernelTotalDerivatives
 import Zeta23Ext.ProductionCell4376Jets
 import Zeta23Ext.CurrentTangentCurrentSemantics
+import Zeta23Ext.CurrentTangentCurrentAssembly
 import Zeta23Ext.CurrentAnnotatedReplay
 import Zeta23Ext.VerifiedAnnotatedForestDecoder
 
@@ -316,9 +318,13 @@ in theorem arguments, not declared axioms.
 #print axioms Zeta23Ext.CheckedSincJet.SignedWitness.sound
 #print axioms Zeta23Ext.NearZeroTotalSincJet.Witness.sound
 #print axioms Zeta23Ext.NearZeroTotalSincJet.production_periodic_total_jet
+#print axioms Zeta23Ext.CurrentWeightD2CellChecker.JetRow.sound
+#print axioms Zeta23Ext.CurrentWeightD2CellChecker.CellWitness.sound
 #print axioms Zeta23Ext.VerifiedCertificate.CurrentTangent.CurrentSemantics.hasDerivAt_objective_line
 #print axioms Zeta23Ext.VerifiedCertificate.CurrentTangent.CurrentSemantics.hasDerivAt_lineFirst
 #print axioms Zeta23Ext.VerifiedCertificate.CurrentTangent.CurrentSemantics.ofProducerInputs
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentTangent.CurrentAssembly.gradient_zero
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentTangent.CurrentAssembly.producerInputs
 #print axioms Zeta23Ext.VerifiedCertificate.CurrentAnnotatedReplay.currentLocalCertificate_of_annotated_replay
 #print axioms Zeta23Ext.VerifiedCertificate.CurrentAnnotatedReplay.currentLocalCertificate_of_producer_replay
 #print axioms Zeta23Ext.VerifiedCertificate.AnnotatedDecoder.decodeForest_length
