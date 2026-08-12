@@ -1,0 +1,16 @@
+import Zeta23Ext.CurrentCentralSimple
+
+#print axioms Zeta23Ext.CurrentCentralSimple.AllSimple.allSimpleAtoms_gram
+#print axioms Zeta23Ext.CurrentCentralSimple.AllSimple.allSimpleAtoms_colSq_le
+#print axioms Zeta23Ext.CurrentCentralSimple.AllSimple.allSimpleQ_posIndex_le
+#print axioms Zeta23Ext.CurrentCentralSimple.AllSimple.allSimple_decomposition
+#print axioms Zeta23Ext.CurrentCentralSimple.CentralSimpleSelection.retained_decomposition
+#print axioms Zeta23Ext.CurrentCentralSimple.CentralSimpleSelection.matrix_identity
+#print axioms Zeta23Ext.CurrentCentralSimple.CentralSimpleSelection.ofEquiv
+#print axioms Zeta23Ext.CurrentCentralSimple.hat_Az_allSimple_decomposition
+#print axioms Zeta23Ext.CurrentCentralSimple.concreteAllSimpleQ_posIndex_le
+#print axioms Zeta23Ext.CurrentCentralSimple.ConcreteCentralSelection.lossyRetained
+#print axioms Zeta23Ext.CurrentCentralSimple.ConcreteCentralSelection.hatAz_identity
+#print axioms Zeta23Ext.CurrentCentralSimple.ConcreteCentralReindexing.toCentralSelection
+#print axioms Zeta23Ext.CurrentCentralSimple.hat_Gz_eq_hat_Az_add_hat_Ez
+#print axioms Zeta23Ext.CurrentCentralSimple.CentralAzMomentPremise.ofGzTail

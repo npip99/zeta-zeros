@@ -1,0 +1,9 @@
+import Zeta23Ext.CurrentZetaEndpoint
+
+#print axioms Zeta23Ext.CurrentZetaAutocorr.currentAutocorr
+#print axioms Zeta23Ext.CurrentZetaAutocorr.current_zeta_gzMoments
+#print axioms Zeta23Ext.CurrentZetaEndpoint.distanceMass_eq_two_integral_vConv
+#print axioms Zeta23Ext.CurrentZetaEndpoint.current_cWin_one_eq_c1
+#print axioms Zeta23Ext.CurrentZetaEndpoint.exists_current_lambda_of_Hcert_lt
+#print axioms Zeta23Ext.CurrentZetaEndpoint.exists_current_params_of_Hcert_lt
+#print axioms Zeta23Ext.CurrentZetaEndpoint.exists_current_zeta_moment_params_of_Hcert_lt

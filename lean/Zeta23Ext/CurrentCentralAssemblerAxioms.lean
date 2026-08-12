@@ -1,0 +1,8 @@
+import Zeta23Ext.CurrentCentralAssembler
+
+#print axioms Zeta23Ext.CurrentCentralAssembler.scaledWindowLength_le_NIprime_add_error
+#print axioms Zeta23Ext.CurrentCentralAssembler.LossyRetainedDecomposition.compressInterior
+#print axioms Zeta23Ext.CurrentCentralAssembler.LossyMomentData.compressInterior
+#print axioms Zeta23Ext.CurrentCentralAssembler.CanonicalHeightPremises.toLossyFinite
+#print axioms Zeta23Ext.CurrentCentralAssembler.deletionLossLittleO_of_boundary
+#print axioms Zeta23Ext.CurrentCentralAssembler.target_of_boundaryLossLittleO

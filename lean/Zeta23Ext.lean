@@ -28,3 +28,12 @@ import Zeta23Ext.CurrentInitialRoots
 import Zeta23Ext.VerifiedAnnotatedForest
 import Zeta23Ext.CurrentZetaNative
 import Zeta23Ext.CurrentRetainedWithLoss
+import Zeta23Ext.CurrentZetaAutocorr
+import Zeta23Ext.CurrentZetaEndpoint
+import Zeta23Ext.CurrentCentralSimple
+import Zeta23Ext.CurrentCentralSelection
+import Zeta23Ext.CurrentCentralAssembler
+import Zeta23Ext.CurrentCompactGram
+import Zeta23Ext.CurrentInfiniteKernel
+import Zeta23Ext.SincDerivativeCertificate
+import Zeta23Ext.CurrentKernelDerivatives

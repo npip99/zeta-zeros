@@ -1,0 +1,19 @@
+import Zeta23Ext.CurrentCentralSelection
+
+#print axioms Zeta23Ext.CurrentCentralSelection.retainedAtomToCentralZero
+#print axioms Zeta23Ext.CurrentCentralSelection.card_retainedAtom
+#print axioms Zeta23Ext.CurrentCentralSelection.centralBoundaryEquiv
+#print axioms Zeta23Ext.CurrentCentralSelection.orderedRetainedEquiv
+#print axioms Zeta23Ext.CurrentCentralSelection.orderedRetainedEquiv_ordinate_strictMono
+#print axioms Zeta23Ext.CurrentCentralSelection.canonicalReindexing
+#print axioms Zeta23Ext.CurrentCentralSelection.canonicalCentralSelection
+#print axioms Zeta23Ext.CurrentCentralSelection.canonicalRetainedZeroData
+#print axioms Zeta23Ext.CurrentCentralSelection.canonicalCentralSelection_V_eq_retainedV
+#print axioms Zeta23Ext.CurrentCentralSelection.canonicalScaledY_strictMono
+#print axioms Zeta23Ext.CurrentCentralSelection.canonicalScaledY_span_le
+#print axioms Zeta23Ext.CurrentCentralSelection.canonicalCentralSelection_r
+#print axioms Zeta23Ext.CurrentCentralSelection.canonicalCentralSelection_deleted
+#print axioms Zeta23Ext.CurrentCentralSelection.canonical_deleted_le_NII
+#print axioms Zeta23Ext.CurrentCentralSelection.canonical_countLoss_le_two_NII
+#print axioms Zeta23Ext.CurrentCentralSelection.canonical_lossyRetained
+#print axioms Zeta23Ext.CurrentCentralSelection.canonical_lossyMomentData

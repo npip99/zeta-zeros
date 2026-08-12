@@ -1,0 +1,6 @@
+import Zeta23Ext.SincDerivativeCertificate
+
+#print axioms Zeta23Ext.SincDerivativeCertificate.hasDerivAt_sinc
+#print axioms Zeta23Ext.SincDerivativeCertificate.hasDerivAt_sincD1
+#print axioms Zeta23Ext.SincDerivativeCertificate.SecondWitness.lower_sound
+#print axioms Zeta23Ext.SincDerivativeCertificate.halfWitness_sound

@@ -1,0 +1,11 @@
+import Zeta23Ext.CurrentKernelDerivatives
+
+#print axioms Zeta23Ext.CurrentKernelDerivatives.hasDerivAt_closedKernel
+#print axioms Zeta23Ext.CurrentKernelDerivatives.hasDerivAt_closedKernelD1
+#print axioms Zeta23Ext.CurrentKernelDerivatives.hasDerivAt_closedWeightD1
+#print axioms Zeta23Ext.CurrentKernelDerivatives.abs_closedKernel_sub_approximateKernel_le
+#print axioms Zeta23Ext.CurrentKernelDerivatives.abs_closedKernelD1_sub_approximateKernelD1_le
+#print axioms Zeta23Ext.CurrentKernelDerivatives.abs_closedKernelD2_sub_approximateKernelD2_le
+#print axioms Zeta23Ext.CurrentKernelDerivatives.closedWeightD2_lower_of_sign_bounds
+#print axioms Zeta23Ext.CurrentKernelDerivatives.cell4376_scalar_check
+#print axioms Zeta23Ext.CurrentKernelDerivatives.cell4376_arguments_nonzero
