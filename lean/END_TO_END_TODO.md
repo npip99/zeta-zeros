@@ -40,6 +40,8 @@ de-risked theorem by theorem before an end-to-end ETA is credible.
 - [x] Window endpoint bound `3/4 <= v(1/2)`.
 - [x] Exact origin-cell monotonicity inequality; generated monotonicity data
   now starts at `1/16384` through `AwayMonotonicityTable`.
+- [x] Uniform-grid coverage and endpoint handling for monotonicity; generated
+  data now supplies only the finitely many derivative centre inequalities.
 - [x] Tight rational endpoint bounds and the compact numeric inequality
   needed after normalizing the 49-term expression.
 - [x] Exact-rational shadow replay of every non-tangent production leaf and
@@ -56,25 +58,33 @@ de-risked theorem by theorem before an end-to-end ETA is credible.
 - [x] A Boolean rational sinc-jet checker and one fully checked delicate
   production row, plus the normalization bound
   `0.918707 <= sinc(sqrt 2/2) <= 0.918744`.
+- [x] An eventual one-height interior Gram package: for every locally positive
+  interior selection it combines the endpoint tail and infinite-kernel limit
+  into explicit `EntrywiseGramData`, with no filler atoms or global positivity
+  assumption.
 
 ## Finite and numerical certificate
 
 - [ ] Extend the rational sine/cosine-cell checker and weighted-sum combiner to
-  the grouped seven-term derivative cells, then instantiate
-  `AwayMonotonicityTable` for the current window.
+  the grouped seven-term derivative centres, then instantiate the
+  `CurrentWindowUniformGrid.Certificate`; its conversion to
+  `AwayMonotonicityTable`, including the full geometric cover, is proved.
 - [ ] Kernel-check `ClosedHLower` by normalizing the 49-term closed masses to
   the compact numeric inequality.  The numeric inequalities are proved, but
   `CurrentWindowClosedHCertificate.lean` does not currently cold-build and is
-  intentionally excluded from the umbrella target.
+  intentionally excluded from the umbrella target.  A scalable replacement
+  proves the entry-sum decomposition, representative reductions, and the
+  exact final strict-H arithmetic contract; the remaining entries are finite
+  normalization work.
 - [ ] Generate exact dyadic kernel and second-derivative table artifacts and
   prove `DyadicKernelTable.Sound` for the current closed kernel.
 - [ ] Formalize exact convex-tangent/LDL leaf evidence for the 406,186
   tangent-pruned leaves. A tangent-free production rerun is currently
   impractical; three representative roots exceeded two million nodes each.
   The generic sinc/sinc'/sinc'' checker, one delicate reduced-argument row,
-  the `K,K',K'' -> w''` combiner, and the `K(0)` bound are complete; thirteen
-  production jet rows and their range-reduction proofs remain for the first
-  full semantic tangent cell.
+  the `K,K',K'' -> w''` combiner, and the `K(0)` bound are complete.  Two more
+  actual production rows are now checked, leaving 12 of the 14 arguments for
+  the first full semantic tangent cell.
 - [ ] Convert the compact tree, root boxes, table data, and tangent evidence to
   checked Lean values and prove the concrete `Forest.check = true` and
   `InitialRootEvidence` facts.
@@ -104,12 +114,13 @@ long-term Git artifact.
 - [x] Prove the actual-scale infinite-kernel limit and the uniform endpoint
   rho-tail bound for the interior family.  The coordinate is `P.L T`, not the
   obsolete endpoint `l T` coordinate.
-- [ ] Replace the all-heights positive-cardinality requirement in
-  `RetainedZeroData` with an eventual/one-height interface.  Positivity of the
-  interior simple-zero family cannot be assumed without circularly using the
-  target theorem, and exceptional-height filler atoms would be unsound.
-- [ ] Package the ordered interior rho-tail and matrix equality through that
-  eventual interface to obtain the concrete scaled `EntrywiseGramData`.
+- [x] Replace the all-heights positive-cardinality requirement with a sound
+  eventual/one-height interface, and package the ordered interior rho-tail and
+  matrix equality into concrete actual-scale `EntrywiseGramData` for every
+  locally positive height.
+- [ ] Resolve local interior positivity in the final asymptotic assembly
+  without assuming the target content; use a case split or vacuous finite
+  bound at zero-cardinality heights rather than filler atoms.
 - [ ] Discharge the concrete central `Az` moment/tail premise and rebase its
   count and error terms to `NIprime`.
 - [ ] Package the resulting moment, stability, Gram, span, and endpoint errors

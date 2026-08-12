@@ -1,0 +1,125 @@
+/-
+Copyright (c) 2026 Nicholas Pipitone. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+SPDX-License-Identifier: Apache-2.0
+-/
+import Zeta23Ext.CurrentWindowFiniteCertificate
+
+/-!
+# Scalable seams for the current strict `H` certificate
+
+This module keeps each transcendental normalization local to one matrix
+entry.  It deliberately does not import `CurrentWindowClosedHCertificate`:
+that module's monolithic 49-entry reduction does not cold-build.
+-/
+
+noncomputable section
+
+open Real
+open scoped BigOperators
+
+namespace Zeta23Ext.CurrentWindowClosedHScalable
+
+open CurrentWindow
+open CurrentWindowFiniteCertificate
+
+private lemma sinc_sqrt_two_half :
+    Real.sinc (Real.sqrt 2 / 2) =
+      2 * Real.sin (Real.sqrt 2 / 2) / Real.sqrt 2 := by
+  rw [Real.sinc_of_ne_zero (div_ne_zero (Real.sqrt_pos.2 (by norm_num)).ne'
+    (by norm_num))]
+  ring
+
+private lemma sinc_sqrt_two :
+    Real.sinc (Real.sqrt 2) =
+      2 * Real.sin (Real.sqrt 2 / 2) * Real.cos (Real.sqrt 2 / 2) /
+        Real.sqrt 2 := by
+  rw [Real.sinc_of_ne_zero (Real.sqrt_pos.2 (by norm_num)).ne']
+  rw [show Real.sqrt 2 = Real.sqrt 2 / 2 + Real.sqrt 2 / 2 by ring,
+    Real.sin_add]
+  ring
+
+private lemma sinc_pi_mul_eq_zero (k : ℕ) (hk : k ≠ 0) :
+    Real.sinc (Real.pi * k) = 0 := by
+  rw [show Real.pi * (k : ℝ) = (k : ℝ) * Real.pi by ring,
+    Real.sinc_of_ne_zero (mul_ne_zero (Nat.cast_ne_zero.mpr hk) Real.pi_ne_zero),
+    Real.sin_nat_mul_pi]
+  norm_num
+
+/-- One summand of the square mass plus the corresponding summand of the
+distance mass. -/
+def combinedEntry (i j : Fin 7) : ℝ :=
+  coefficient i * coefficient j * cosCosIntegral (frequency i) (frequency j) +
+    coefficient i * coefficient j * absKernelIntegral (frequency i) (frequency j)
+
+/-- Pure rearrangement: no transcendental reasoning is hidden in the
+entrywise architecture. -/
+theorem closed_masses_eq_entry_sum :
+    closedWindowSquareMass + closedWindowDistanceMass =
+      ∑ i : Fin 7, ∑ j : Fin 7, combinedEntry i j := by
+  unfold closedWindowSquareMass closedWindowDistanceMass combinedEntry cosCosIntegral
+  simp_rw [Finset.sum_add_distrib]
+  ring
+
+/-- The algebraic-frequency diagonal entry, reduced independently of the
+other 48 entries. -/
+theorem combinedEntry_zero_zero :
+    combinedEntry 0 0 = Real.sin (Real.sqrt 2 / 2) ^ 2 +
+      Real.sqrt 2 * Real.sin (Real.sqrt 2 / 2) *
+        Real.cos (Real.sqrt 2 / 2) := by
+  unfold combinedEntry absKernelIntegral cosCosIntegral
+  norm_num [coefficient, frequency, sinc_sqrt_two_half, sinc_sqrt_two]
+  field_simp [Real.sqrt_ne_zero'.mpr (by norm_num : (0 : ℝ) < 2)]
+  have hs : (Real.sqrt 2) ^ 2 = 2 := Real.sq_sqrt (by norm_num)
+  rw [hs]
+
+/-- A representative diagonal entry of the periodic block.  Every other
+periodic diagonal has the same proof with its concrete index. -/
+theorem combinedEntry_one_one :
+    combinedEntry 1 1 =
+      (3322500 / 1000000000 : ℝ) ^ 2 *
+        (1 / 2 - 1 / (4 * Real.pi ^ 2)) := by
+  have z1 := sinc_pi_mul_eq_zero 1 (by norm_num)
+  have z2 := sinc_pi_mul_eq_zero 2 (by norm_num)
+  norm_num at z1 z2
+  unfold combinedEntry absKernelIntegral cosCosIntegral
+  norm_num [coefficient, frequency]
+  ring_nf at z1 z2 ⊢
+  rw [z1, z2]
+  field_simp [Real.pi_ne_zero]
+  ring
+
+/-- A representative off-diagonal entry of the periodic block. -/
+theorem combinedEntry_one_two : combinedEntry 1 2 = 0 := by
+  have z1 := sinc_pi_mul_eq_zero 1 (by norm_num)
+  have z2 := sinc_pi_mul_eq_zero 2 (by norm_num)
+  have z3 := sinc_pi_mul_eq_zero 3 (by norm_num)
+  norm_num at z1 z2 z3
+  unfold combinedEntry absKernelIntegral cosCosIntegral
+  norm_num [coefficient, frequency]
+  ring_nf at z1 z2 z3 ⊢
+  simp only [Real.sinc_neg, z1, z3]
+  ring
+
+/-- The final strict arithmetic is independent of how the finite compact
+identity and its numerical upper bound are established.  This theorem is the
+contract consumed by a completed entry table plus a numerical certificate. -/
+theorem strong_closedH_lower_of_compact
+    (s q : ℝ) (hs : 0 < s)
+    (hmass : closedWindowSquareMass + closedWindowDistanceMass = s ^ 2 + q)
+    (hkernel : CurrentKernelFormula.closedKernel 0 ^ 2 = 2 * s ^ 2)
+    (hq : q ≤ (165508598 / 100000000 : ℝ) * s ^ 2) :
+    (67245701 / 100000000 : ℝ) ≤ closedH := by
+  rw [closedH, hmass, hkernel]
+  have hs2 : 0 < s ^ 2 := sq_pos_of_pos hs
+  have hden : 0 < 2 * s ^ 2 := by positivity
+  rw [le_sub_iff_add_le]
+  have hratio : (s ^ 2 + q) / (2 * s ^ 2) ≤
+      (132754299 / 100000000 : ℝ) := by
+    apply (div_le_iff₀ hden).2
+    nlinarith
+  linarith
+
+end Zeta23Ext.CurrentWindowClosedHScalable
+
+end
