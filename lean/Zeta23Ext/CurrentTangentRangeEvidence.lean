@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 SPDX-License-Identifier: Apache-2.0
 -/
 import Zeta23Ext.CurrentTangentEvidence
+import Zeta23Ext.CurrentKernelTotalDerivatives
 
 /-!
 # Wide-range evidence for production tangent leaves
@@ -45,8 +46,11 @@ def CellWitness.lower : CellWitness → ℚ
 
 theorem CellWitness.sound (w : CellWitness) {x : ℝ}
     (hx : x ∈ Icc ((w.cell : ℝ) / 4000) ((w.cell + 1 : ℕ) / 4000)) :
-    (w.lower : ℝ) ≤ CurrentKernelDerivatives.closedWeightD2 x := by
+    (w.lower : ℝ) ≤ CurrentKernelTotalDerivatives.closedWeightD2Total x := by
   cases w
+  rw [CurrentKernelTotalDerivatives.closedWeightD2Total_eq_closedWeightD2 x
+    (CurrentKernelDerivatives.cell4376_arguments_nonzero hx).1
+    (CurrentKernelDerivatives.cell4376_arguments_nonzero hx).2]
   exact ProductionCell4376Jets.cell4376_semantic hx
 
 /-- Exact geometry of one consecutive-gap span over a leaf box.  `left` and
@@ -117,7 +121,7 @@ private lemma kernelRange_check_facts {r : KernelRangeWitness}
 theorem KernelRangeWitness.sound (r : KernelRangeWitness)
     (hcheck : r.check = true) {x : ℝ}
     (hx : x ∈ Icc ((r.left : ℝ) / 4000) ((r.right + 1 : ℕ) / 4000)) :
-    (r.lower : ℝ) ≤ CurrentKernelDerivatives.closedWeightD2 x := by
+    (r.lower : ℝ) ≤ CurrentKernelTotalDerivatives.closedWeightD2Total x := by
   have hf := kernelRange_check_facts hcheck
   have hxUpper : x ≤ ((r.right : ℝ) + 1) / 4000 := by
     norm_num at hx ⊢
@@ -161,7 +165,7 @@ private lemma evidence_check_facts {e : Evidence} {box : Box 6}
 theorem Evidence.secondDerivative_sound (e : Evidence) (box : Box 6)
     (hcheck : e.check box = true) (gaps : CurrentGapVector)
     (hbox : box.Contains (locateGaps 4000 gaps)) :
-    (e.range.lower : ℝ) ≤ CurrentKernelDerivatives.closedWeightD2
+    (e.range.lower : ℝ) ≤ CurrentKernelTotalDerivatives.closedWeightD2Total
       (realSpan gaps.1 e.geometry.start e.geometry.span) := by
   have hf := evidence_check_facts hcheck
   have hmem := e.geometry.realSpan_mem box hf.1 gaps hbox

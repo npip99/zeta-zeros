@@ -295,7 +295,8 @@ theorem Certificate.range_sound {c : Certificate} {box : Box 6}
     (hcheck : c.check box = true) {e : CurrentTangent.Range.Evidence}
     (he : e ∈ c.ranges) (gaps : CurrentGapVector)
     (hbox : box.Contains (CurrentReplay.locateGaps 4000 gaps)) :
-    (e.range.lower : ℝ) ≤ CurrentKernelDerivatives.closedWeightD2
+    (e.range.lower : ℝ) ≤
+      Zeta23Ext.CurrentKernelTotalDerivatives.closedWeightD2Total
       (CurrentReplay.realSpan gaps.1 e.geometry.start e.geometry.span) := by
   exact e.secondDerivative_sound box
     ((certificate_check_facts hcheck).2.1 e he) gaps hbox
@@ -314,7 +315,7 @@ theorem Certificate.sound (c : Certificate) (sem : Semantics c.payload)
 requires the total derivative theorems for `CurrentWindow.weight` and exact
 assembly of all 20 checked nonzero pair rows; no arbitrary objective can be
 substituted once this interface is used. -/
-structure CurrentSemantics (c : Certificate) where
+structure CurrentSemantics (c : Certificate) (box : Box 6) where
   toLocal : Semantics c.payload
   objective_eq : ∀ gaps : Fin 6 → ℝ,
     toLocal.objective gaps = Weighted.F6 CurrentWindow.weight gaps
@@ -322,8 +323,8 @@ structure CurrentSemantics (c : Certificate) where
 /-- A checked current-specific tangent certificate proves the exact local
 inequality used downstream.  Its target equality and complete 20-pair
 support are Boolean obligations of `Certificate.check`. -/
-theorem Certificate.current_sound (c : Certificate) (sem : CurrentSemantics c)
-    (box : Box 6) (hcheck : c.check box = true)
+theorem Certificate.current_sound (c : Certificate) (box : Box 6)
+    (sem : CurrentSemantics c box) (hcheck : c.check box = true)
     (point : CurrentGapVector)
     (hbox : box.Contains (CurrentReplay.locateGaps 4000 point)) :
     Weighted.beta ≤ Weighted.F6 CurrentWindow.weight point.1 := by
@@ -340,14 +341,15 @@ theorem Certificate.current_sound (c : Certificate) (sem : CurrentSemantics c)
 def certificateTangentOK (c : Certificate) (box : Box 6) : Bool := c.check box
 
 theorem certificateTangentOK_sound
-    (semantics : ∀ c : Certificate, CurrentSemantics c)
+    (semantics : ∀ (c : Certificate) (box : Box 6),
+      c.check box = true → CurrentSemantics c box)
     (c : Certificate) (box : Box 6)
     (hcheck : certificateTangentOK c box = true) :
     ∀ point : CurrentGapVector,
       box.Contains (CurrentReplay.locateGaps 4000 point) →
         Weighted.beta ≤ Weighted.F6 CurrentWindow.weight point.1 := by
   intro point hbox
-  exact c.current_sound (semantics c) box hcheck point hbox
+  exact c.current_sound box (semantics c box hcheck) hcheck point hbox
 
 end Zeta23Ext.VerifiedCertificate.CurrentTangent.Local
 
