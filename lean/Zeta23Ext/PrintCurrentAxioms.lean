@@ -53,6 +53,7 @@ import Zeta23Ext.CurrentFiniteCapstone
 import Zeta23Ext.SincDerivativeCertificate
 import Zeta23Ext.SincJetCertificate
 import Zeta23Ext.CurrentKernelDerivatives
+import Zeta23Ext.CurrentKernelTotalDerivatives
 import Zeta23Ext.ProductionCell4376Jets
 
 /-
@@ -231,6 +232,11 @@ in theorem arguments, not declared axioms.
 #print axioms Zeta23Ext.CurrentKernelDerivatives.cell4376_scalar_check
 #print axioms Zeta23Ext.CurrentKernelDerivatives.cell4376_arguments_nonzero
 #print axioms Zeta23Ext.CurrentKernelDerivatives.sinc_sqrt_two_half_bounds
+#print axioms Zeta23Ext.CurrentKernelTotalDerivatives.hasDerivAt_sinc_total
+#print axioms Zeta23Ext.CurrentKernelTotalDerivatives.hasDerivAt_sincD1Total
+#print axioms Zeta23Ext.CurrentKernelTotalDerivatives.hasDerivAt_currentWeight
+#print axioms Zeta23Ext.CurrentKernelTotalDerivatives.hasDerivAt_currentWeightD1
+#print axioms Zeta23Ext.CurrentKernelTotalDerivatives.deriv2_currentWeight
 #print axioms Zeta23Ext.ProductionCell4376Jets.plusOne_checked
 #print axioms Zeta23Ext.ProductionCell4376Jets.plusOne_sound
 #print axioms Zeta23Ext.ProductionCell4376Jets.plusTwo_checked

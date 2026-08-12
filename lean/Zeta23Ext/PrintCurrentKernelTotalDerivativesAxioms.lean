@@ -1,0 +1,8 @@
+import Zeta23Ext.CurrentKernelTotalDerivatives
+
+#print axioms Zeta23Ext.CurrentKernelTotalDerivatives.hasDerivAt_sinc_total
+#print axioms Zeta23Ext.CurrentKernelTotalDerivatives.hasDerivAt_sincD1Total
+#print axioms Zeta23Ext.CurrentKernelTotalDerivatives.hasDerivAt_currentWeight
+#print axioms Zeta23Ext.CurrentKernelTotalDerivatives.hasDerivAt_currentWeightD1
+#print axioms Zeta23Ext.CurrentKernelTotalDerivatives.deriv2_currentWeight
+#print axioms Zeta23Ext.CurrentKernelTotalDerivatives.closedWeightD2Total_eq_closedWeightD2
