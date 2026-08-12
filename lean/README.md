@@ -41,12 +41,12 @@ sinc, and square-root rational enclosures provide the transcendental
 foundation for the remaining tables.
 
 It does **not** yet claim an unconditional formalization of the paper's
-theorem. `CurrentEndToEnd.current_zeta_cumulative_target` has exactly one
-remaining argument, `FiniteWindowInputs`. The strict endpoint `H` inequality,
+theorem. `CurrentFiniteCapstone.current_zeta_cumulative_target` has exactly one
+remaining argument, `CurrentWindow.LocalCertificate`. The strict endpoint `H` inequality,
 actual-scale Gram limit, endpoint deletion, central moment rebasing, and final
-`o(N)` assembly are now kernel checked. What remains is entirely finite:
-generate and replay the compact hybrid monotonicity table, and replay the
-recorded local seven-point search, including semantic kernel tables and the
+`o(N)` assembly and the compact 37-cell hybrid monotonicity table are now
+kernel checked. What remains is entirely finite: replay the recorded local
+seven-point search, including semantic kernel tables and the
 406,186 convex-tangent leaves. The old Montgomery--Taylor Gram theorem is not
 reused as if it applied to the current window. There are no `sorry`, `admit`,
 or new axioms in the current-result modules.

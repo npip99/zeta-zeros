@@ -18,6 +18,8 @@ import Zeta23Ext.CurrentWindowHybridMonotonicity
 import Zeta23Ext.CurrentWindowHybridRows
 import Zeta23Ext.CurrentWindowArgumentReduction
 import Zeta23Ext.CurrentWindowMonotonicityProductionRow
+import Zeta23Ext.CurrentWindowMonotonicityArithmetic
+import Zeta23Ext.CurrentWindowMonotonicityTable
 import Zeta23Ext.CurrentWindowClosedHScalable
 import Zeta23Ext.CurrentWindowClosedHMixed
 import Zeta23Ext.CurrentWindowClosedHAssembly
@@ -292,6 +294,12 @@ in theorem arguments, not declared axioms.
 #print axioms Zeta23Ext.CurrentEndToEnd.current_zeta_cumulative_target
 #print axioms Zeta23Ext.CurrentFiniteCapstone.exists_current_zeta_dyadic_target_of_hybrid
 #print axioms Zeta23Ext.CurrentFiniteCapstone.current_zeta_cumulative_target_of_hybrid
+#print axioms Zeta23Ext.CurrentWindowMonotonicityArithmetic.secondArithmeticCheck_sound
+#print axioms Zeta23Ext.CurrentWindowMonotonicityArithmetic.firstArithmeticCheck_sound
+#print axioms Zeta23Ext.CurrentWindowMonotonicityTable.window_antitone
+#print axioms Zeta23Ext.CurrentWindowMonotonicityTable.windowCertificate
+#print axioms Zeta23Ext.CurrentFiniteCapstone.exists_current_zeta_dyadic_target
+#print axioms Zeta23Ext.CurrentFiniteCapstone.current_zeta_cumulative_target
 #print axioms Zeta23Ext.CurrentCentralSelection.canonicalRetainedZeroData
 #print axioms Zeta23Ext.CurrentCentralSelection.canonical_lossyMomentData
 #print axioms Zeta23Ext.CurrentCentralAssembler.CanonicalHeightPremises.toLossyFinite

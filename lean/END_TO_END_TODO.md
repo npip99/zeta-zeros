@@ -76,9 +76,10 @@ de-risked theorem by theorem before an end-to-end ETA is credible.
 
 ## Finite and numerical certificate
 
-- [ ] Generate and kernel-check the compact hybrid monotonicity table.  Its
-  semantic sine/cosine combination, rational global derivative envelopes,
-  finite coverage, and conversion to global monotonicity are proved.
+- [x] Generate and kernel-check the compact hybrid monotonicity table. Its 32
+  curvature cells cover `[0,1/8]`, its five derivative cells cover
+  `[1/8,1/2]`, and exact rational sine/cosine witnesses imply the full global
+  monotonicity and `WindowCertificate`.
 - [x] Kernel-check the strict `Hcert < H(window)` endpoint inequality.  The
   scalable proof normalizes all 49 closed-mass entries, proves independent
   rational Taylor bounds, and derives the strengthened rational lower bound
@@ -95,8 +96,8 @@ de-risked theorem by theorem before an end-to-end ETA is credible.
 - [ ] Convert the compact tree, root boxes, table data, and tangent evidence to
   checked Lean values and prove the concrete `Forest.check = true` and
   `InitialRootEvidence` facts.
-- [ ] Combine those facts into an inhabitant of
-  `CurrentWindow.FiniteWindowInputs`.
+- [ ] Combine those facts into `CurrentWindow.LocalCertificate`. The window
+  half of `FiniteWindowInputs` is now unconditional.
 
 The production checker must be heterogeneous: ordinary interval leaves use
 the integer lower score, while tangent leaves prove the final real inequality
@@ -135,10 +136,9 @@ long-term Git artifact.
   deletion errors into the exact lossy finite records and final asymptotic
   target.  The analytic theorem now reduces cleanly to the concrete central
   `Az` moment premise with two little-o error rates.
-- [x] Instantiate the zeta dyadic and cumulative capstones and discharge the
-  strict endpoint inequality.  `CurrentEndToEnd` now depends only on the
-  explicit `FiniteWindowInputs` certificate; a final hostile audit is in
-  progress.
+- [x] Instantiate the zeta dyadic and cumulative capstones, discharge the
+  strict endpoint inequality, and complete the window certificate. The
+  strongest theorem now depends only on `CurrentWindow.LocalCertificate`.
 
 ## Validation invariant
 

@@ -85,17 +85,17 @@ The capstone remains conditional, but the zeta-native coefficient family
 and the normalized-span error are discharged. The actual-scale infinite
 kernel, interior endpoint-tail bound, ordered compression, central moment
 rebasing, final error assembly, and strict scalar `H` certificate are also
-checked. `CurrentEndToEnd.current_zeta_cumulative_target` now has exactly one
-premise: `FiniteWindowInputs`. The remaining work is finite certificate
-replay—constructing the compact hybrid monotonicity table and checking the
-recorded local search, especially its semantic kernel tables and 406,186
-convex-tangent leaves. Current-window admissibility,
+checked. `CurrentFiniteCapstone.current_zeta_cumulative_target` now has exactly
+one premise: the local seven-point search certificate. A 37-cell rational
+hybrid table kernel-checks the complete window monotonicity claim. The
+remaining work is replay of the recorded local search, especially its semantic
+kernel tables and 406,186 convex-tangent leaves. Current-window admissibility,
 entrywise-to-squared-energy conversion, retained-count domination, and the
 production topology, decoder, and real-score bridge are recorded or kernel
 checked; see
 [`CurrentAnalyticBridge`](lean/Zeta23Ext/CurrentAnalyticBridge.lean) and
 [`VerifiedCertificate`](lean/Zeta23Ext/VerifiedCertificate.lean). The
-repository does not claim these remaining external inputs have been replayed
+repository does not claim this remaining external input has been replayed
 in the Lean kernel. The Lean project pins the upstream base at an immutable
 commit and retains Apache-2.0 licensing and attribution in
 [`lean/LICENSE`](lean/LICENSE) and [`lean/NOTICE`](lean/NOTICE); the rest of

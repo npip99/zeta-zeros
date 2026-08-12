@@ -25,6 +25,8 @@ import Zeta23Ext.CurrentWindowHybridMonotonicity
 import Zeta23Ext.CurrentWindowHybridRows
 import Zeta23Ext.CurrentWindowArgumentReduction
 import Zeta23Ext.CurrentWindowMonotonicityProductionRow
+import Zeta23Ext.CurrentWindowMonotonicityArithmetic
+import Zeta23Ext.CurrentWindowMonotonicityTable
 import Zeta23Ext.CurrentWindowClosedHScalable
 import Zeta23Ext.CurrentWindowClosedHMixed
 import Zeta23Ext.CurrentWindowClosedHAssembly
