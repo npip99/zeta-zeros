@@ -1,0 +1,6 @@
+import Zeta23Ext.CurrentTangentCurrentHessianAssembly
+
+open Zeta23Ext.VerifiedCertificate.CurrentTangent.CurrentHessianAssembly
+
+#print axioms lineSecond_lower
+#print axioms producerInputs

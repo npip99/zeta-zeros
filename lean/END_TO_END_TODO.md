@@ -108,7 +108,9 @@ de-risked theorem by theorem before an end-to-end ETA is credible.
   identity at the payload center are now proved by finite-sum exchange.
   Each accepted wide curvature row is also proved sound on the payload's
   entire closed real box and yields its exact weighted rank-one quadratic
-  lower bound; only summing the canonical 20 rows remains.
+  lower bound.  The canonical 20 rows now sum to the exact second-line
+  derivative, leaving only one center-value and six gradient enclosures per
+  tangent payload.
 - [x] Connect the heterogeneous annotated forest and existing initialization
   bridge directly to `CurrentWindow.LocalCertificate`, with a convenience
   capstone accepting only the finite tangent producer facts.
