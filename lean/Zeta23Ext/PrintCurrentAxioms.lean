@@ -47,6 +47,7 @@ import Zeta23Ext.CurrentAzMoments
 import Zeta23Ext.CurrentAzMomentErrors
 import Zeta23Ext.CurrentAnalyticClosure
 import Zeta23Ext.CurrentEndToEnd
+import Zeta23Ext.CurrentFiniteCapstone
 import Zeta23Ext.SincDerivativeCertificate
 import Zeta23Ext.SincJetCertificate
 import Zeta23Ext.CurrentKernelDerivatives
@@ -289,6 +290,8 @@ in theorem arguments, not declared axioms.
 #print axioms Zeta23Ext.CurrentAnalyticClosure.current_zeta_cumulative_target_of_Hcert_lt
 #print axioms Zeta23Ext.CurrentEndToEnd.exists_current_zeta_dyadic_target
 #print axioms Zeta23Ext.CurrentEndToEnd.current_zeta_cumulative_target
+#print axioms Zeta23Ext.CurrentFiniteCapstone.exists_current_zeta_dyadic_target_of_hybrid
+#print axioms Zeta23Ext.CurrentFiniteCapstone.current_zeta_cumulative_target_of_hybrid
 #print axioms Zeta23Ext.CurrentCentralSelection.canonicalRetainedZeroData
 #print axioms Zeta23Ext.CurrentCentralSelection.canonical_lossyMomentData
 #print axioms Zeta23Ext.CurrentCentralAssembler.CanonicalHeightPremises.toLossyFinite

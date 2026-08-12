@@ -54,6 +54,7 @@ import Zeta23Ext.CurrentAzMoments
 import Zeta23Ext.CurrentAzMomentErrors
 import Zeta23Ext.CurrentAnalyticClosure
 import Zeta23Ext.CurrentEndToEnd
+import Zeta23Ext.CurrentFiniteCapstone
 import Zeta23Ext.SincDerivativeCertificate
 import Zeta23Ext.SincJetCertificate
 import Zeta23Ext.CurrentKernelDerivatives
