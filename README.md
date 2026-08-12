@@ -80,9 +80,12 @@ The capstone remains conditional, but the normalized-span error and its
 pressure contribution are now discharged from the upstream unconditional
 Riemann--von Mangoldt theorem. The remaining explicit hypotheses are the
 full numeric window certificate and kernel-table/search soundness (including
-the real-domain bridge and production-tree decoding), current-window
-admissibility and squared-energy Gram asymptotics, and retained Gram/moment
-construction with the remaining `o(N)` errors; see
+semantic leaf evidence), actual
+current-kernel entrywise Gram asymptotics, and retained Gram/moment
+construction with the remaining `o(N)` errors. Current-window admissibility,
+entrywise-to-squared-energy conversion, retained-count domination, and the
+production topology, decoder, and real-score bridge are now recorded or
+kernel checked; see
 [`CurrentAnalyticBridge`](lean/Zeta23Ext/CurrentAnalyticBridge.lean) and
 [`VerifiedCertificate`](lean/Zeta23Ext/VerifiedCertificate.lean). The
 repository does not claim these remaining external inputs have been replayed
@@ -90,6 +93,9 @@ in the Lean kernel. The Lean project pins the upstream base at an immutable
 commit and retains Apache-2.0 licensing and attribution in
 [`lean/LICENSE`](lean/LICENSE) and [`lean/NOTICE`](lean/NOTICE); the rest of
 this repository remains MIT-licensed.
+
+The exact running formalization checklist is
+[`lean/END_TO_END_TODO.md`](lean/END_TO_END_TODO.md).
 
 ## Trust base
 

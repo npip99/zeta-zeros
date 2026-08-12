@@ -17,9 +17,12 @@ kernel, weights, pressure, target, and grid.
 from __future__ import annotations
 
 import itertools
+import gzip
+import json
 import math
 import time
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Dict, Iterable, List, Optional, Sequence, Tuple
 
 from flint import arb, fmpq
@@ -151,6 +154,8 @@ def verify_general(
     shard: int = 0,
     shard_count: int = 1,
     tables: Optional[Tuple[List[float], List[float]]] = None,
+    trace_dir: Optional[Path] = None,
+    max_nodes: Optional[int] = None,
 ) -> GeneralReport:
     if not spec.capacity_ok():
         raise ValueError("weights violate the span capacity constraint")
@@ -210,8 +215,8 @@ def verify_general(
                 surviving.append(index)
         coordinate_components.append(_components(surviving))
 
-    stack: List[Tuple[Tuple[CellRange, ...], int]] = [
-        (tuple(parts), 0)
+    stack: List[Tuple[Tuple[CellRange, ...], int, int, str]] = [
+        (tuple(parts), 0, index, "")
         for index, parts in enumerate(itertools.product(*coordinate_components))
         if index % shard_count == shard
     ]
@@ -273,7 +278,9 @@ def verify_general(
         numerator, denominator = value.as_integer_ratio()
         return arb(fmpq(numerator, denominator))
 
-    def arb_ldl_is_positive(terms: Sequence[Tuple[int, int, float]]) -> bool:
+    def arb_ldl_positive_pivots(
+        terms: Sequence[Tuple[int, int, float]]
+    ) -> Tuple[bool, List[arb]]:
         matrix = [[arb(0) for _ in range(q)] for _ in range(q)]
         for start, span, coefficient in terms:
             exact = exact_float(coefficient)
@@ -292,7 +299,7 @@ def verify_general(
                     * diagonal[previous]
                 )
             if not (pivot > 0):
-                return False
+                return False, diagonal
             diagonal[column] = pivot
             for row in range(column + 1, q):
                 value = matrix[row][column]
@@ -303,12 +310,20 @@ def verify_general(
                         * diagonal[previous]
                     )
                 lower[row][column] = value / pivot
-        return True
+        return True, diagonal
 
     target_arb = arb(spec.target)
     pressure_arb = arb(spec.pressure)
 
-    def convex_tangent_lower(box: Sequence[CellRange]) -> Optional[arb]:
+    def rational_pair(value: fmpq) -> List[int]:
+        return [int(value.p), int(value.q)]
+
+    def arb_text(value: arb) -> str:
+        return value.str(50)
+
+    def convex_tangent_lower(
+        box: Sequence[CellRange], with_payload: bool = False
+    ) -> Optional[Tuple[arb, Optional[Dict[str, object]]]]:
         low_prefix = [0]
         high_prefix = [0]
         for low, high in box:
@@ -332,7 +347,8 @@ def verify_general(
 
         if not float_ldl_is_positive(heuristic):
             return None
-        if not arb_ldl_is_positive(terms):
+        positive, pivots = arb_ldl_positive_pivots(terms)
+        if not positive:
             return None
 
         midpoints = [fmpq(low + high + 1, 2 * grid) for low, high in box]
@@ -353,53 +369,140 @@ def verify_general(
         lower = value
         for derivative, radius in zip(gradient, radii):
             lower -= derivative.abs_upper() * arb(radius)
-        return lower
+        payload: Optional[Dict[str, object]] = None
+        if with_payload:
+            payload = {
+                "hessian_terms": [
+                    {
+                        "start": start,
+                        "span": span,
+                        "coefficient_ratio": list(coefficient.as_integer_ratio()),
+                    }
+                    for start, span, coefficient in terms
+                ],
+                "ldl_pivots": [arb_text(pivot) for pivot in pivots],
+                "midpoints": [rational_pair(point) for point in midpoints],
+                "radii": [rational_pair(radius) for radius in radii],
+                "value": arb_text(value),
+                "gradient": [arb_text(entry) for entry in gradient],
+                "lower": arb_text(lower),
+                "target": str(spec.target),
+            }
+        return lower, payload
 
-    while stack:
-        box, depth = stack.pop()
-        nodes += 1
-        maximum_depth = max(maximum_depth, depth)
+    trace_handles: Dict[int, object] = {}
+    tangent_handles: Dict[int, object] = {}
+    if trace_dir is not None:
+        trace_dir.mkdir(parents=True, exist_ok=True)
 
-        if sum(part[0] for part in box) >= cutoff_cells:
-            pruned += 1
-            pressure_pruned += 1
-            continue
-
-        lower = box_lower(box)
-        if lower >= target_upper:
-            pruned += 1
-            interval_pruned += 1
-            continue
-
-        tangent_lower = convex_tangent_lower(box) if spec.use_tangent else None
-        if tangent_lower is not None and tangent_lower >= target_arb:
-            pruned += 1
-            tangent_pruned += 1
-            continue
-
-        widths = [right - left for left, right in box]
-        if max(widths) == 0:
-            raise RuntimeError(
-                f"certificate failed at a terminal cell: box={box}, lower={lower}"
+    def trace_event(root: int, record: Dict[str, object]) -> None:
+        if trace_dir is None:
+            return
+        handle = trace_handles.get(root)
+        if handle is None:
+            handle = gzip.open(
+                trace_dir / f"root-{root:06d}.events.jsonl.gz",
+                "wt", encoding="utf-8"
             )
+            trace_handles[root] = handle
+        handle.write(json.dumps(record, separators=(",", ":")) + "\n")
 
-        splits += 1
-        coordinate = max(range(q), key=widths.__getitem__)
-        left, right = box[coordinate]
-        midpoint = (left + right) // 2
-        lower_half = list(box)
-        upper_half = list(box)
-        lower_half[coordinate] = (left, midpoint)
-        upper_half[coordinate] = (midpoint + 1, right)
-        stack.append((tuple(lower_half), depth + 1))
-        stack.append((tuple(upper_half), depth + 1))
-
-        if progress_every and nodes % progress_every == 0:
-            print(
-                f"general: nodes={nodes} pending={len(stack)} "
-                f"depth={maximum_depth} pruned={pruned}",
-                flush=True,
+    def trace_tangent(root: int, record: Dict[str, object]) -> None:
+        if trace_dir is None:
+            return
+        handle = tangent_handles.get(root)
+        if handle is None:
+            handle = gzip.open(
+                trace_dir / f"root-{root:06d}.tangent.jsonl.gz",
+                "wt", encoding="utf-8"
             )
+            tangent_handles[root] = handle
+        handle.write(json.dumps(record, separators=(",", ":")) + "\n")
+
+    try:
+        while stack:
+            box, depth, root, path = stack.pop()
+            nodes += 1
+            if max_nodes is not None and nodes > max_nodes:
+                raise RuntimeError(
+                    f"node limit {max_nodes} exceeded in shard {shard}/{shard_count}"
+                )
+            maximum_depth = max(maximum_depth, depth)
+
+            if sum(part[0] for part in box) >= cutoff_cells:
+                pruned += 1
+                pressure_pruned += 1
+                trace_event(root, {
+                    "root": root, "path": path, "leaf": True,
+                    "kind": "pressure",
+                    **({"root_box": box} if path == "" else {}),
+                })
+                continue
+
+            lower = box_lower(box)
+            if lower >= target_upper:
+                pruned += 1
+                interval_pruned += 1
+                trace_event(root, {
+                    "root": root, "path": path, "leaf": True,
+                    "kind": "interval",
+                    **({"root_box": box} if path == "" else {}),
+                    "lower_float_ratio": list(lower.as_integer_ratio()),
+                })
+                continue
+
+            tangent_result = (
+                convex_tangent_lower(box, trace_dir is not None)
+                if spec.use_tangent else None
+            )
+            if tangent_result is not None and tangent_result[0] >= target_arb:
+                pruned += 1
+                tangent_pruned += 1
+                _tangent_lower, tangent_payload = tangent_result
+                trace_event(root, {
+                    "root": root, "path": path, "leaf": True,
+                    "kind": "tangent",
+                    **({"root_box": box} if path == "" else {}),
+                })
+                if tangent_payload is not None:
+                    trace_tangent(root, {
+                        "root": root, "path": path, "box": box,
+                        **tangent_payload,
+                    })
+                continue
+
+            widths = [right - left for left, right in box]
+            if max(widths) == 0:
+                raise RuntimeError(
+                    f"certificate failed at a terminal cell: box={box}, lower={lower}"
+                )
+
+            splits += 1
+            coordinate = max(range(q), key=widths.__getitem__)
+            left, right = box[coordinate]
+            midpoint = (left + right) // 2
+            trace_event(root, {
+                "root": root, "path": path, "split": coordinate,
+                **({"root_box": box} if path == "" else {}),
+            })
+            lower_half = list(box)
+            upper_half = list(box)
+            lower_half[coordinate] = (left, midpoint)
+            upper_half[coordinate] = (midpoint + 1, right)
+            stack.append((tuple(lower_half), depth + 1, root, path + "0"))
+            stack.append((tuple(upper_half), depth + 1, root, path + "1"))
+
+            if progress_every and nodes % progress_every == 0:
+                print(
+                    f"general: nodes={nodes} pending={len(stack)} "
+                    f"depth={maximum_depth} pruned={pruned}",
+                    flush=True,
+                )
+    finally:
+        for handle in trace_handles.values():
+            handle.close()
+        for handle in tangent_handles.values():
+            handle.close()
 
     elapsed = time.perf_counter() - started
     return GeneralReport(

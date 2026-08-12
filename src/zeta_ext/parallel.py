@@ -10,6 +10,7 @@ from __future__ import annotations
 import math
 import multiprocessing as mp
 import time
+from pathlib import Path
 from typing import Dict, List, Sequence, Tuple
 
 from flint import fmpq
@@ -59,8 +60,12 @@ def _spec_from_primitives(data: Dict) -> CertificateSpec:
     )
 
 
-def _worker(args: Tuple[Dict, int, int, Sequence[float], Sequence[float]]) -> Dict:
-    data, shard, shard_count, table, second_table = args
+def _worker(
+    args: Tuple[
+        Dict, int, int, Sequence[float], Sequence[float], str | None
+    ]
+) -> Dict:
+    data, shard, shard_count, table, second_table, trace_dir = args
     spec = _spec_from_primitives(data)
     report = verify_general(
         spec,
@@ -68,6 +73,7 @@ def _worker(args: Tuple[Dict, int, int, Sequence[float], Sequence[float]]) -> Di
         shard=shard,
         shard_count=shard_count,
         tables=(list(table), list(second_table)),
+        trace_dir=Path(trace_dir) if trace_dir is not None else None,
     )
     return {
         "verified": report.verified,
@@ -119,13 +125,19 @@ def build_tables_parallel(
     return table, second_table
 
 
-def verify_parallel(spec: CertificateSpec, workers: int = 8) -> GeneralReport:
+def verify_parallel(
+    spec: CertificateSpec, workers: int = 8, trace_dir: Path | None = None
+) -> GeneralReport:
     started = time.perf_counter()
 
     table, second_table = build_tables_parallel(spec, workers)
     data = _spec_to_primitives(spec)
     jobs = [
-        (data, shard, workers, table, second_table) for shard in range(workers)
+        (
+            data, shard, workers, table, second_table,
+            str(trace_dir) if trace_dir is not None else None,
+        )
+        for shard in range(workers)
     ]
     context = mp.get_context("spawn")
     with context.Pool(workers) as pool:

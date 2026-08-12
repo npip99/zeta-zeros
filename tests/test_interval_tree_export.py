@@ -4,6 +4,8 @@ from proof_certificate.export_interval_tree import (
     Leaf,
     Split,
     encode,
+    encode_forest,
+    forest_from_events,
     tree_from_events,
     validate_blob,
     validate_tokens,
@@ -25,6 +27,24 @@ class IntervalTreeExportTests(unittest.TestCase):
         ]
         tree = tree_from_events(events, 2)
         self.assertEqual(validate_blob(encode(tree, 2)), (2, 1, 5, 2, 3))
+
+    def test_root_indexed_events_reconstruct_forest(self):
+        events = [
+            {"root": 1, "path": "", "split": 0},
+            {"root": 0, "path": "", "leaf": True},
+            {"root": 1, "path": "0", "leaf": True},
+            {"root": 1, "path": "1", "leaf": True},
+        ]
+        forest = forest_from_events(events, q=1, roots=2)
+        self.assertEqual(
+            validate_blob(encode_forest(forest, 1)), (1, 2, 4, 1, 3)
+        )
+
+    def test_missing_forest_root_is_rejected(self):
+        with self.assertRaisesRegex(ValueError, "missing events for root 1"):
+            forest_from_events(
+                [{"root": 0, "path": "", "leaf": True}], q=1, roots=2
+            )
 
     def test_incomplete_preorder_is_rejected(self):
         with self.assertRaisesRegex(ValueError, "incomplete tree"):

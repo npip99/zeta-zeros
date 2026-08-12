@@ -3,12 +3,20 @@ import Zeta23Ext.CertificateBridge
 import Zeta23Ext.CurrentZetaAssembly
 import Zeta23Ext.CurrentSpan
 import Zeta23Ext.CurrentAnalyticBridge
+import Zeta23Ext.CurrentAnalyticInstantiation
 import Zeta23Ext.VerifiedCertificate
 import Zeta23Ext.TranscendentalBounds
+import Zeta23Ext.RationalTrigCell
+import Zeta23Ext.CurrentKernelFormula
+import Zeta23Ext.CurrentWindowAdmissibility
+import Zeta23Ext.CurrentWindowFiniteCertificate
+import Zeta23Ext.VerifiedCertificateForest
+import Zeta23Ext.VerifiedCertificateArithmetic
+import Zeta23Ext.CurrentCertificateReplay
 
 /-
 Run with `lake env lean Zeta23Ext/PrintCurrentAxioms.lean` to audit the
-Lean-checked current-result seams.  The two external inputs are propositions
+Lean-checked current-result seams.  Remaining external inputs are propositions
 in theorem arguments, not declared axioms.
 -/
 
@@ -29,6 +37,8 @@ in theorem arguments, not declared axioms.
 #print axioms Zeta23Ext.CurrentZetaAssembly.toCurrentZetaAnalyticInputs
 #print axioms Zeta23Ext.CurrentZetaAssembly.zeta_target
 #print axioms Zeta23Ext.CurrentZetaAssembly.zeta_target_cumulative
+#print axioms Zeta23Ext.CurrentZetaAssembly.retained_ncard_le_N0simple
+#print axioms Zeta23Ext.CurrentZetaAssembly.zeta_target_cumulative_of_retained
 #print axioms Zeta23Ext.CurrentSpan.zeta_spanError_isLittleO_count
 #print axioms Zeta23Ext.CurrentSpan.zeta_spanControl_of_normalized_endpoint_bounds
 #print axioms Zeta23Ext.CurrentSpan.zeta_pressureSpanError_isLittleO_count
@@ -36,8 +46,51 @@ in theorem arguments, not declared axioms.
 #print axioms Zeta23Ext.CurrentAnalyticBridge.PairwiseGramData.guardedBlockApprox
 #print axioms Zeta23Ext.CurrentAnalyticBridge.MomentData.stabilitySeam
 #print axioms Zeta23Ext.CurrentAnalyticBridge.AsymptoticAnalyticInputs.target
+#print axioms Zeta23Ext.CurrentAnalyticInstantiation.current_bv_half
+#print axioms Zeta23Ext.CurrentAnalyticInstantiation.current_c1_inv_le
+#print axioms Zeta23Ext.CurrentAnalyticInstantiation.current_admFamily_atV
+#print axioms Zeta23Ext.CurrentAnalyticInstantiation.current_gzMoments
+#print axioms Zeta23Ext.CurrentAnalyticInstantiation.current_gzMoments_c1
+#print axioms Zeta23Ext.CurrentAnalyticInstantiation.RetainedZeroData.ncard_le_N0simple
+#print axioms Zeta23Ext.CurrentAnalyticInstantiation.RetainedZeroData.colSq_V_le
+#print axioms Zeta23Ext.CurrentAnalyticInstantiation.RetainedZeroData.V_mul_add_Q
+#print axioms Zeta23Ext.CurrentAnalyticInstantiation.RetainedZeroData.toRetainedDecomposition
+#print axioms Zeta23Ext.CurrentAnalyticInstantiation.eventually_retainedMomentData
+#print axioms Zeta23Ext.CurrentAnalyticInstantiation.eventually_entrywiseGramData_of_compactUniform
 #print axioms Zeta23Ext.VerifiedCertificate.Tree.check_sound
 #print axioms Zeta23Ext.VerifiedCertificate.currentLocalCertificate_of_checked_tree
 #print axioms Zeta23Ext.TranscendentalBounds.abs_sin_sub_sinTaylorWithin_le
 #print axioms Zeta23Ext.TranscendentalBounds.sin_mem_taylor7_center_interval
 #print axioms Zeta23Ext.TranscendentalBounds.sin_one_half_bounds
+#print axioms Zeta23Ext.TranscendentalBounds.cos_mem_taylor8_interval
+#print axioms Zeta23Ext.TranscendentalBounds.cos_one_half_bounds
+#print axioms Zeta23Ext.TranscendentalBounds.sqrt_mem_interval
+#print axioms Zeta23Ext.TranscendentalBounds.sqrt_two_bounds
+#print axioms Zeta23Ext.TranscendentalBounds.pi_rational_bounds
+#print axioms Zeta23Ext.TranscendentalBounds.abs_sinc_sub_sincTaylor6_le
+#print axioms Zeta23Ext.RationalTrigCell.check_sound
+#print axioms Zeta23Ext.RationalTrigCell.sin_sound
+#print axioms Zeta23Ext.CurrentKernelFormula.integral_cos_linear
+#print axioms Zeta23Ext.CurrentKernelFormula.integral_cos_mul_cos
+#print axioms Zeta23Ext.CurrentKernelFormula.kernel_eq_closedKernel
+#print axioms Zeta23Ext.CurrentKernelFormula.closedKernel_zero_pos
+#print axioms Zeta23Ext.CurrentKernelFormula.weight_eq_closedKernel
+#print axioms Zeta23Ext.CurrentKernelFormula.dyadicTableSound_weight_iff
+#print axioms Zeta23Ext.CurrentWindowAdmissibility.modFactor_current
+#print axioms Zeta23Ext.CurrentWindowAdmissibility.admWindow_current
+#print axioms Zeta23Ext.CurrentWindowAdmissibility.currentWindowAdmissibility
+#print axioms Zeta23Ext.CurrentWindowFiniteCertificate.abs_deriv3_window_le
+#print axioms Zeta23Ext.CurrentWindowFiniteCertificate.derivative_nonpos_of_table
+#print axioms Zeta23Ext.CurrentWindowFiniteCertificate.windowSquareMass_closed
+#print axioms Zeta23Ext.CurrentWindowFiniteCertificate.cos_sqrt_two_half_lower
+#print axioms Zeta23Ext.CurrentWindowFiniteCertificate.window_half_lower
+#print axioms Zeta23Ext.CurrentWindowFiniteCertificate.NumericCertificate.toWindowCertificate
+#print axioms Zeta23Ext.VerifiedCertificate.Forest.check_sound
+#print axioms Zeta23Ext.VerifiedCertificate.currentLocalCertificate_of_decoded_forest
+#print axioms Zeta23Ext.VerifiedCertificate.TermwiseIntegerBounds.lowerScore_sound
+#print axioms Zeta23Ext.VerifiedCertificate.gridCell_lower
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentReplay.RangeKernelTable.rangeLower_sound
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentReplay.lowerScore_sound
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentReplay.exactScore_div_scale_le
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentReplay.pressure_cutoff_local
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentReplay.currentLocalCertificate_of_replay

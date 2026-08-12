@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import sys
 import time
+from pathlib import Path
 
 from flint import arb, ctx, fmpq
 
@@ -35,9 +36,15 @@ def run_gate(args: argparse.Namespace) -> int:
         grid=4000,
     )
     if args.workers > 1:
-        report = verify_parallel(spec, workers=args.workers)
+        report = verify_parallel(
+            spec, workers=args.workers,
+            trace_dir=Path(args.trace_dir) if args.trace_dir else None,
+        )
     else:
-        report = verify_general(spec, progress_every=200_000)
+        report = verify_general(
+            spec, progress_every=200_000,
+            trace_dir=Path(args.trace_dir) if args.trace_dir else None,
+        )
     print("\n".join(report.lines()))
     print("expected_nodes=707797 (matches ainta's committed run up to table "
           "tightness; their run records 707901)")
@@ -111,9 +118,15 @@ def run_main(args: argparse.Namespace) -> int:
     spec = design.certificate_spec(grid=args.grid)
     started = time.time()
     if args.workers > 1:
-        report = verify_parallel(spec, workers=args.workers)
+        report = verify_parallel(
+            spec, workers=args.workers,
+            trace_dir=Path(args.trace_dir) if args.trace_dir else None,
+        )
     else:
-        report = verify_general(spec, progress_every=200_000)
+        report = verify_general(
+            spec, progress_every=200_000,
+            trace_dir=Path(args.trace_dir) if args.trace_dir else None,
+        )
     print("\n".join(report.lines()))
     print(f"wall_seconds={time.time() - started:.1f}")
     return 0 if report.verified else 1
@@ -124,6 +137,10 @@ def main() -> int:
     parser.add_argument("command", choices=["gate", "fast", "main", "all"])
     parser.add_argument("--grid", type=int, default=4000)
     parser.add_argument("--workers", type=int, default=8)
+    parser.add_argument(
+        "--trace-dir",
+        help="optional directory for per-root topology and tangent evidence",
+    )
     args = parser.parse_args()
     if args.command == "gate":
         return run_gate(args)

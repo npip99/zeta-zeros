@@ -19,10 +19,11 @@ There are three deliberately separate results.
   window-specific analytic premise is an `AdmWindow` witness for the current
   profile.  The lower mass bound, Poisson identity, block input, and tail
   package are then derived rather than assumed.
-* `PairwiseGramData.guardedBlockApprox` turns a compact-uniform, pairwise
-  squared-energy estimate into the aggregate block inequality consumed by
-  `CurrentAssembly`.  Thus the aggregate inequality is not an independent
-  analytic hypothesis.
+* `EntrywiseGramData.toPairwise` converts ordinary compact-uniform closeness
+  to the current normalized kernel into squared-energy control with explicit
+  loss `2 * err`; `PairwiseGramData.guardedBlockApprox` then charges at most
+  `m^2` copies of that error to one block.  Thus the aggregate inequality is
+  not an independent analytic hypothesis.
 * `MomentData.stabilitySeam` derives the current defect-enhanced stability
   seam from the existing rank--trace theorem and primitive count/trace/
   Frobenius bounds.
@@ -31,10 +32,10 @@ What is *not* discharged here is important.  The old extension's
 `gram_entry_close` is specialized to the Montgomery--Taylor kernel
 `kkernelL`, and its `Final.stability_zeta_at` uses that same window and its
 old constants.  Neither theorem implies compact-uniform convergence to
-`CurrentWindow.kernel`.  The current-window `AdmWindow` witness and the
-pairwise squared-energy estimate below therefore remain explicit primitives;
-no old Montgomery--Taylor theorem is silently relabelled as a current-window
-result.
+`CurrentWindow.kernel`.  The current-window `AdmWindow` witness and ordinary
+entrywise compact-uniform estimate below therefore remain explicit
+primitives; no old Montgomery--Taylor theorem is silently relabelled as a
+current-window result.
 -/
 
 noncomputable section
@@ -140,10 +141,36 @@ theorem currentWindowZeroSide {Z : ZeroConfig} {P : Params}
 
 /-! ## Pairwise compact Gram control implies the guarded block input -/
 
+/-- Loss in passing from ordinary complex entrywise closeness to squared
+energy.  Since the normalized current kernel has absolute value at most one,
+an entry error at most `err` costs at most `2 * err` after squaring. -/
+def entryEnergyError (err : ℝ) : ℝ := 2 * err
+
+/-- Ordinary entrywise closeness to the *current* normalized kernel.
+
+This is the analytic compact-uniform statement naturally produced by a Gram
+asymptotic.  It is deliberately stated directly for
+`CurrentWindow.normalizedKernel`; no Montgomery--Taylor kernel theorem is
+used or imported. -/
+structure EntrywiseGramData {d r : ℕ} (y : Fin r → ℝ)
+    (V : Matrix (Fin d) (Fin r) ℂ) (err : ℝ) : Prop where
+  windowFacts : CurrentWindow.WindowCertificate
+  err_nonneg : 0 ≤ err
+  close : ∀ i j : Fin r, (i : ℕ) < (j : ℕ) →
+    y j - y i < CurrentBlock.D →
+    ‖(Vᴴ * V) i j - (CurrentWindow.normalizedKernel (y j - y i) : ℂ)‖ ≤ err
+
 /-- Uniform pairwise error charged to one block.  There are `m(m-1)/2`
 strict upper-triangle pairs and `Aggregation.Em` has an outer factor two, so
 `m² * eps` is a valid (slightly coarse) total error. -/
 def blockDelta (eps : ℝ) : ℝ := (Current.m : ℝ) ^ 2 * eps
+
+/-- Full explicit block loss starting from ordinary entrywise error. -/
+lemma blockDelta_entryEnergyError (err : ℝ) :
+    blockDelta (entryEnergyError err) =
+      2 * (Current.m : ℝ) ^ 2 * err := by
+  simp [blockDelta, entryEnergyError]
+  ring
 
 /-- The primitive compact-uniform Gram statement needed by the current
 deduction.  It is guarded by the actual normalized separation, not by an
@@ -154,6 +181,43 @@ structure PairwiseGramData {d r : ℕ} (y : Fin r → ℝ)
   close : ∀ i j : Fin r, (i : ℕ) < (j : ℕ) →
     y j - y i < CurrentBlock.D →
     CurrentWindow.weight (y j - y i) ≤ ‖(Vᴴ * V) i j‖ ^ 2 + eps
+
+/-- Reverse-triangle and `|k_v| ≤ 1` convert ordinary entrywise closeness
+into the squared-energy form used by block aggregation.  The explicit loss is
+`2 * err`; no upper bound on the Gram entry itself is assumed. -/
+theorem EntrywiseGramData.toPairwise
+    {d r : ℕ} {y : Fin r → ℝ} {V : Matrix (Fin d) (Fin r) ℂ}
+    {err : ℝ} (h : EntrywiseGramData y V err) :
+    PairwiseGramData y V (entryEnergyError err) := by
+  refine ⟨by simp [entryEnergyError, h.err_nonneg], ?_⟩
+  intro i j hij hdist
+  let z : ℂ := (Vᴴ * V) i j
+  let k : ℝ := CurrentWindow.normalizedKernel (y j - y i)
+  have hclose : ‖z - (k : ℂ)‖ ≤ err := h.close i j hij hdist
+  have hk : |k| ≤ 1 :=
+    CurrentWindow.abs_normalizedKernel_le_one h.windowFacts (y j - y i)
+  have hgap : |k| - ‖z‖ ≤ err := by
+    calc
+      |k| - ‖z‖ = ‖(k : ℂ)‖ - ‖z‖ := by simp
+      _ ≤ ‖(k : ℂ) - z‖ := norm_sub_norm_le _ _
+      _ = ‖z - (k : ℂ)‖ := by rw [norm_sub_rev]
+      _ ≤ err := hclose
+  have hk0 : 0 ≤ |k| := abs_nonneg k
+  have hz0 : 0 ≤ ‖z‖ := norm_nonneg z
+  have herr0 : 0 ≤ entryEnergyError err := by
+    simp [entryEnergyError, h.err_nonneg]
+  unfold CurrentWindow.weight
+  change k ^ 2 ≤ ‖z‖ ^ 2 + entryEnergyError err
+  rw [← sq_abs k]
+  by_cases hle : |k| ≤ ‖z‖
+  · nlinarith [sq_nonneg (|k| - ‖z‖)]
+  · have hlt : ‖z‖ < |k| := lt_of_not_ge hle
+    have hsum : |k| + ‖z‖ ≤ 2 := by linarith
+    have hgap0 : 0 ≤ |k| - ‖z‖ := by linarith
+    have hprod : (|k| - ‖z‖) * (|k| + ‖z‖) ≤ err * 2 :=
+      mul_le_mul hgap hsum (by positivity) h.err_nonneg
+    simp only [entryEnergyError]
+    nlinarith
 
 /-- Pairwise compact-uniform control implies the aggregate guarded Gram
 inequality required by `CurrentBlockMatrix.paper_block_matrix`. -/
@@ -246,6 +310,17 @@ theorem PairwiseGramData.guardedBlockApprox
 /-- Exact error produced by the trace and Frobenius moment bounds. -/
 def stabilityError (R₁ R₂ : ℝ) : ℝ := 4 * R₁ + R₂
 
+/-- Retained-set data that are genuinely separate from the analytic moment
+asymptotics.  In particular, the positive-index and counting seams encode the
+paper-specific deletion/decomposition and are not supplied by the pinned
+generic arbitrary-window machinery. -/
+structure RetainedDecomposition {d r : ℕ} (b : ℕ) (N : ℝ)
+    (V : Matrix (Fin d) (Fin r) ℂ) (Q : Matrix (Fin d) (Fin d) ℂ) : Prop where
+  col_le : ∀ j, StabilityRankTrace.colSq V j ≤ 1
+  Q_hermitian : Q.IsHermitian
+  positive_index : RHLinalg.posIndex Q_hermitian ≤ b
+  count_seam : 3 * (r : ℝ) + 4 * (b : ℝ) ≤ (r : ℝ) + 2 * N
+
 /-- Primitive matrix/counting data from which the stability seam follows.
 Unlike `CurrentAssembly.FiniteHeightInputs.stabilitySeam`, this structure does
 not assume any inequality containing the target spectral defect. -/
@@ -258,6 +333,52 @@ structure MomentData {d r : ℕ} (b : ℕ) (N R₁ R₂ : ℝ)
   trace_lower : N - R₁ ≤ RHLinalg.rtrace (V * Vᴴ + Q)
   frobenius_upper : RHLinalg.frobSq (V * Vᴴ + Q) ≤
     (2 - Current.Hcert) * N + R₂
+
+/-- Retained decomposition plus normalized trace/Frobenius estimates gives
+the exact moment record.  This separates the reusable analytic estimates
+from the paper-specific retained-set construction. -/
+theorem RetainedDecomposition.toMomentData
+    {d r b : ℕ} {N R₁ R₂ : ℝ}
+    {V : Matrix (Fin d) (Fin r) ℂ} {Q : Matrix (Fin d) (Fin d) ℂ}
+    (h : RetainedDecomposition b N V Q)
+    (htrace : N - R₁ ≤ RHLinalg.rtrace (V * Vᴴ + Q))
+    (hfrob : RHLinalg.frobSq (V * Vᴴ + Q) ≤
+      (2 - Current.Hcert) * N + R₂) :
+    MomentData b N R₁ R₂ V Q :=
+  ⟨h.col_le, h.Q_hermitian, h.positive_index, h.count_seam, htrace, hfrob⟩
+
+/-- The pinned generic `XiPrime.GzMoments` package supplies the moment part of
+`MomentData` once a caller identifies its retained decomposition matrix with
+the upstream normalized zero-side Gram matrix.
+
+The theorem is generic in the window family `Pf`.  For the present paper the
+remaining analytic primitive is `GzMoments` for the *current* window family;
+no theorem for the Montgomery--Taylor window is reused. -/
+theorem eventually_momentData_of_gzMoments
+    {Z : ZeroConfig} {Pf : ℝ → Params} {kappa : ℝ}
+    (hM : XiPrime.GzMoments Z Pf kappa)
+    (hkappa : kappa ≤ 2 - Current.Hcert)
+    {r b : ℝ → ℕ}
+    (V : ∀ T, Matrix (Fin ((Pf T).d T)) (Fin (r T)) ℂ)
+    (Q : ∀ T, Matrix (Fin ((Pf T).d T)) (Fin ((Pf T).d T)) ℂ)
+    (hret : ∀ᶠ T in atTop,
+      RetainedDecomposition (b T) (Z.N T (2 * T) : ℝ) (V T) (Q T))
+    (hmatrix : ∀ᶠ T in atTop,
+      V T * (V T)ᴴ + Q T = (Pf T).hat T (Z.Gz (Pf T) T))
+    {delta : ℝ} (hdelta : 0 < delta) :
+    ∀ᶠ T in atTop,
+      MomentData (b T) (Z.N T (2 * T) : ℝ)
+        (delta * (Z.N T (2 * T) : ℝ))
+        (delta * (Z.N T (2 * T) : ℝ)) (V T) (Q T) := by
+  have htrace := hM.1 delta hdelta
+  have hfrob := hM.2 delta hdelta
+  filter_upwards [hret, hmatrix, htrace, hfrob] with T hretT hmatrixT htrT hfrT
+  apply hretT.toMomentData
+  · rw [hmatrixT]
+    convert htrT using 1 <;> ring
+  · rw [hmatrixT]
+    have hN : 0 ≤ (Z.N T (2 * T) : ℝ) := by positivity
+    nlinarith [mul_nonneg (sub_nonneg.mpr hkappa) hN]
 
 /-- The imported stability rank--trace theorem turns primitive moment data
 into exactly the current defect seam. -/
@@ -300,6 +421,45 @@ structure FiniteAnalyticInputs
     y ⟨r - 1, by omega⟩ - y ⟨0, r_pos⟩ ≤ N + spanError
   delta_small : Current.eta * blockDelta eps ≤ Current.R
 
+/-- One-height interface with the Gram hypothesis in its ordinary entrywise
+form.  Conversion to squared energy, including the exact `2 * err` and
+`m^2` losses, is proved below rather than required from the caller. -/
+structure FiniteEntrywiseAnalyticInputs
+    (d r b : ℕ) (N spanError err R₁ R₂ : ℝ) where
+  finiteWindow : CurrentWindow.FiniteWindowInputs
+  r_pos : 0 < r
+  N_nonneg : 0 ≤ N
+  spanError_nonneg : 0 ≤ spanError
+  y : Fin r → ℝ
+  y_strictMono : StrictMono y
+  V : Matrix (Fin d) (Fin r) ℂ
+  Q : Matrix (Fin d) (Fin d) ℂ
+  gram : EntrywiseGramData y V err
+  moments : MomentData b N R₁ R₂ V Q
+  spanControl :
+    y ⟨r - 1, by omega⟩ - y ⟨0, r_pos⟩ ≤ N + spanError
+  delta_small :
+    Current.eta * blockDelta (entryEnergyError err) ≤ Current.R
+
+/-- Ordinary entrywise current-kernel control supplies the existing primitive
+finite analytic interface with energy error exactly `2 * err`. -/
+def FiniteEntrywiseAnalyticInputs.toFiniteAnalyticInputs
+    {d r b : ℕ} {N spanError err R₁ R₂ : ℝ}
+    (h : FiniteEntrywiseAnalyticInputs d r b N spanError err R₁ R₂) :
+    FiniteAnalyticInputs d r b N spanError (entryEnergyError err) R₁ R₂ where
+  finiteWindow := h.finiteWindow
+  r_pos := h.r_pos
+  N_nonneg := h.N_nonneg
+  spanError_nonneg := h.spanError_nonneg
+  y := h.y
+  y_strictMono := h.y_strictMono
+  V := h.V
+  Q := h.Q
+  gram := h.gram.toPairwise
+  moments := h.moments
+  spanControl := h.spanControl
+  delta_small := h.delta_small
+
 /-- The smaller primitive interface discharges the complete one-height
 assembly record. -/
 def FiniteAnalyticInputs.toFiniteHeightInputs
@@ -331,6 +491,15 @@ def FiniteAnalyticInputs.toFiniteHeightInputs
   spanControl := h.spanControl
   stabilitySeam := h.moments.stabilitySeam
 
+/-- Direct entrywise-current-kernel conversion all the way to the assembled
+one-height record. -/
+def FiniteEntrywiseAnalyticInputs.toFiniteHeightInputs
+    {d r b : ℕ} {N spanError err R₁ R₂ : ℝ}
+    (h : FiniteEntrywiseAnalyticInputs d r b N spanError err R₁ R₂) :
+    CurrentAssembly.FiniteHeightInputs r N (stabilityError R₁ R₂)
+      spanError (blockDelta (entryEnergyError err)) :=
+  h.toFiniteAnalyticInputs.toFiniteHeightInputs
+
 /-- Filter-level primitive interface.  Dimensions of the ambient atom space
 and the positive-index allowance may vary with height and therefore remain
 existential at each height. -/
@@ -349,6 +518,42 @@ structure AsymptoticAnalyticInputs {X : Type*} (l : Filter X) where
         CurrentAssembly.assembledBlockError (r x) (blockDelta (eps x))
           (spanError x) ≤
       (1 - Current.R / (Current.m : ℝ)) * eta * N x
+
+/-- Filter-level interface retaining ordinary entrywise current-kernel error.
+The only change from `AsymptoticAnalyticInputs` is that the proved loss
+`entryEnergyError err = 2 * err` is inserted automatically. -/
+structure AsymptoticEntrywiseAnalyticInputs {X : Type*} (l : Filter X) where
+  r : X → ℕ
+  N : X → ℝ
+  spanError : X → ℝ
+  err : X → ℝ
+  R₁ : X → ℝ
+  R₂ : X → ℝ
+  eventuallyAnalytic : ∀ᶠ x in l, ∃ d b : ℕ,
+    Nonempty (FiniteEntrywiseAnalyticInputs d (r x) b (N x) (spanError x)
+      (err x) (R₁ x) (R₂ x))
+  errorsAreSmall : ∀ eta > 0, ∀ᶠ x in l,
+    stabilityError (R₁ x) (R₂ x) +
+        CurrentAssembly.assembledBlockError (r x)
+          (blockDelta (entryEnergyError (err x))) (spanError x) ≤
+      (1 - Current.R / (Current.m : ℝ)) * eta * N x
+
+/-- Forget the proved entrywise-to-energy conversion and recover the existing
+filter-level analytic interface. -/
+def AsymptoticEntrywiseAnalyticInputs.toAnalytic
+    {X : Type*} {l : Filter X} (h : AsymptoticEntrywiseAnalyticInputs l) :
+    AsymptoticAnalyticInputs l where
+  r := h.r
+  N := h.N
+  spanError := h.spanError
+  eps := fun x => entryEnergyError (h.err x)
+  R₁ := h.R₁
+  R₂ := h.R₂
+  eventuallyAnalytic := by
+    filter_upwards [h.eventuallyAnalytic] with x hx
+    obtain ⟨d, b, hx⟩ := hx
+    exact ⟨d, b, hx.map FiniteEntrywiseAnalyticInputs.toFiniteAnalyticInputs⟩
+  errorsAreSmall := h.errorsAreSmall
 
 /-- Conversion to the already-audited generic assembly. -/
 def AsymptoticAnalyticInputs.toAssembly
@@ -371,5 +576,12 @@ theorem AsymptoticAnalyticInputs.target
     {X : Type*} {l : Filter X} (h : AsymptoticAnalyticInputs l) :
     ∀ᶠ x in l, Current.target * h.N x ≤ (h.r x : ℝ) :=
   h.toAssembly.target
+
+/-- Current rational target directly from ordinary entrywise current-kernel
+control and the retained moment/count data. -/
+theorem AsymptoticEntrywiseAnalyticInputs.target
+    {X : Type*} {l : Filter X} (h : AsymptoticEntrywiseAnalyticInputs l) :
+    ∀ᶠ x in l, Current.target * h.N x ≤ (h.r x : ℝ) :=
+  h.toAnalytic.target
 
 end Zeta23Ext.CurrentAnalyticBridge

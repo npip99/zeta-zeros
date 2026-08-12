@@ -21,25 +21,30 @@ from the upstream Riemann--von Mangoldt theorem: the explicit span error and
 its pressure-weighted contribution are proved to be `o(N)`. A reduced
 analytic bridge derives the aggregate guarded block inequality from pairwise
 compact Gram control and derives the stability seam from primitive
-count/trace/Frobenius bounds. A kernel-checked interval-tree verifier proves
-subdivision coverage and exact leaf arithmetic for future proof-producing
-numeric certificates.
-The first transcendental component is also kernel-checked: a general sine
-Taylor remainder theorem, explicit rational degree-seven enclosures, and
-cell-centered rational bounds. These are the foundation for formally proving
-the kernel-table entries rather than trusting Arb.
+count/trace/Frobenius bounds. Ordinary entrywise closeness now implies the
+required squared-energy estimate with explicit loss `2*err`. A
+kernel-checked 324-root forest verifier, production-format decoder, integer
+objective, and real-score transfer prove all structural replay steps.
+The current ramped window's full upstream `AdmWindow` witness—including C²,
+support, and all four derivative-integral bounds—is derived from the finite
+shape certificate. The exact integral kernel is proved equal to the
+verifier's seven-term entire sinc expression. Kernel-checked sine, cosine,
+sinc, and square-root rational enclosures provide the transcendental
+foundation for the remaining tables.
 
 It does **not** claim an unconditional formalization of the paper's theorem.
 Still external are: the full `WindowCertificate` (range, monotonicity, and the
-`H` lower bound); semantic bounds for the kernel tables; the `RealBridge`,
-production search tree, and its future Lean decoding/connection theorem;
-admissibility of the current ramped window in the upstream analytic API; a
-current-kernel pairwise squared-energy estimate (and its derivation from
-entrywise compact Gram convergence); and construction of the retained
-Gram/moment data with its remaining `o(N)` errors. The old
+`H` lower bound); semantic bounds for the kernel and tangent tables; the
+root-box decoding, initialization evidence, and tangent-leaf semantics needed
+to replay the recorded production topology;
+actual current-kernel compact-uniform entrywise convergence; and construction
+of the retained Gram/moment data with its remaining `o(N)` errors. The old
 Montgomery--Taylor Gram theorem is not reused as if it applied to the current
 window. There are no `sorry`, `admit`, or new axioms in the current-result
 modules.
+
+See [`END_TO_END_TODO.md`](END_TO_END_TODO.md) for the canonical list of
+completed components and the exact theorem arguments still to eliminate.
 
 ## Build
 

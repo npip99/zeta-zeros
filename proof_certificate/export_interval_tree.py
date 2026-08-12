@@ -19,13 +19,16 @@ boundary in Lean.
 
 The ``from-events`` command accepts newline-delimited JSON records with a
 binary-string ``path`` and either ``{"leaf": true}`` or a zero-based
-``{"split": i}``.  This is the interface a future traced run of the existing
-verifier can feed without changing its pruning decisions.
+``{"split": i}``.  For a forest, every record also has a zero-based
+``{"root": r}``, and ``--roots`` fixes the expected root count.  This is the
+interface a future traced run of the existing verifier can feed without
+changing its pruning decisions.
 """
 
 from __future__ import annotations
 
 import argparse
+import gzip
 import json
 import struct
 from dataclasses import dataclass
@@ -171,8 +174,41 @@ def tree_from_events(records: Iterable[Mapping[str, object]], q: int) -> Tree:
     return tree
 
 
+def forest_from_events(
+    records: Iterable[Mapping[str, object]], q: int, roots: int
+) -> list[Tree]:
+    """Build an ordered forest from root-indexed path events.
+
+    The one-root case remains backward compatible with old event streams that
+    omit ``root``.  Multi-root streams must name every root explicitly; empty,
+    duplicate, out-of-range, and missing roots are rejected by this function
+    or by :func:`tree_from_events`.
+    """
+
+    if roots <= 0:
+        raise ValueError("a certificate forest must have at least one root")
+    grouped: list[list[Mapping[str, object]]] = [[] for _ in range(roots)]
+    for record in records:
+        root = record.get("root", 0 if roots == 1 else None)
+        if not isinstance(root, int) or not 0 <= root < roots:
+            raise ValueError(f"invalid root index: {root!r}")
+        grouped[root].append(record)
+    trees = []
+    for root, events in enumerate(grouped):
+        if not events:
+            raise ValueError(f"missing events for root {root}")
+        trees.append(tree_from_events(events, q))
+    validate_tokens(
+        (token for tree in trees for token in preorder(tree)), q, roots
+    )
+    return trees
+
+
 def read_events(path: Path) -> Iterator[Mapping[str, object]]:
-    with path.open("r", encoding="utf-8") as source:
+    opener = gzip.open if path.suffix == ".gz" else path.open
+    with opener(path, "rt", encoding="utf-8") if path.suffix == ".gz" else opener(
+        "r", encoding="utf-8"
+    ) as source:
         for line_number, line in enumerate(source, 1):
             if not line.strip():
                 continue
@@ -199,11 +235,41 @@ def command_demo(output: Path) -> None:
     print(f"q,nodes,splits,leaves={validate_blob(blob)}")
 
 
-def command_from_events(events: Path, output: Path, q: int) -> None:
-    tree = tree_from_events(read_events(events), q)
-    blob = encode(tree, q)
+def command_from_events(events: Path, output: Path, q: int, roots: int) -> None:
+    trees = forest_from_events(read_events(events), q, roots)
+    blob = encode_forest(trees, q)
     output.write_bytes(blob)
     print(f"wrote={output}")
+    print(f"q,nodes,splits,leaves={validate_blob(blob)}")
+
+
+def command_from_root_dir(
+    events_dir: Path, output: Path, roots_output: Path, q: int, roots: int
+) -> None:
+    """Assemble parallel-safe per-root traces in deterministic root order."""
+
+    trees: list[Tree] = []
+    root_boxes: list[object] = []
+    for root in range(roots):
+        compressed = events_dir / f"root-{root:06d}.events.jsonl.gz"
+        plain = events_dir / f"root-{root:06d}.events.jsonl"
+        path = compressed if compressed.exists() else plain
+        if not path.exists():
+            raise ValueError(f"missing event stream for root {root}: {path}")
+        records = list(read_events(path))
+        root_records = [record for record in records if record.get("path") == ""]
+        if len(root_records) != 1 or "root_box" not in root_records[0]:
+            raise ValueError(f"root {root} lacks one unambiguous root_box record")
+        root_boxes.append(root_records[0]["root_box"])
+        trees.append(tree_from_events(records, q))
+    blob = encode_forest(trees, q)
+    output.write_bytes(blob)
+    roots_output.write_text(
+        json.dumps({"q": q, "roots": root_boxes}, separators=(",", ":")) + "\n",
+        encoding="utf-8",
+    )
+    print(f"wrote={output}")
+    print(f"roots_wrote={roots_output}")
     print(f"q,nodes,splits,leaves={validate_blob(blob)}")
 
 
@@ -236,6 +302,14 @@ def main() -> int:
     events.add_argument("events", type=Path)
     events.add_argument("output", type=Path)
     events.add_argument("--q", type=int, default=6)
+    events.add_argument("--roots", type=int, default=1)
+
+    root_dir = subparsers.add_parser("from-root-dir")
+    root_dir.add_argument("events_dir", type=Path)
+    root_dir.add_argument("output", type=Path)
+    root_dir.add_argument("--roots-output", type=Path)
+    root_dir.add_argument("--q", type=int, default=6)
+    root_dir.add_argument("--roots", type=int, default=324)
 
     audit = subparsers.add_parser("audit-report")
     audit.add_argument("report", type=Path)
@@ -244,7 +318,17 @@ def main() -> int:
     if arguments.command == "demo":
         command_demo(arguments.output)
     elif arguments.command == "from-events":
-        command_from_events(arguments.events, arguments.output, arguments.q)
+        command_from_events(
+            arguments.events, arguments.output, arguments.q, arguments.roots
+        )
+    elif arguments.command == "from-root-dir":
+        roots_output = arguments.roots_output or arguments.output.with_suffix(
+            ".roots.json"
+        )
+        command_from_root_dir(
+            arguments.events_dir, arguments.output, roots_output,
+            arguments.q, arguments.roots,
+        )
     else:
         command_audit_report(arguments.report)
     return 0
