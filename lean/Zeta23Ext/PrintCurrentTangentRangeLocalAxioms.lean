@@ -1,0 +1,16 @@
+import Zeta23Ext.CurrentTangentLocalPayload
+
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentTangent.Range.SpanRange.realSpan_mem
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentTangent.Range.KernelRangeWitness.sound
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentTangent.Range.Evidence.secondDerivative_sound
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentTangent.Local.segment_inBox
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentTangent.Local.sound
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentTangent.Local.Certificate.range_sound
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentTangent.Local.Certificate.check_support
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentTangent.Local.Certificate.check_terms
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentTangent.Local.Certificate.check_target
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentTangent.Local.Certificate.sound
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentTangent.Local.Certificate.current_sound
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentTangent.Local.certificateTangentOK_sound
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentTangent.Range.Demo.wideFirstGap_checked
+#print axioms Zeta23Ext.VerifiedCertificate.CurrentTangent.Range.Demo.undercoveredWide_rejected
