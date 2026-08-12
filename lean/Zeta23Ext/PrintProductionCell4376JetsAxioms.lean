@@ -4,3 +4,7 @@ import Zeta23Ext.ProductionCell4376Jets
 #print axioms Zeta23Ext.ProductionCell4376Jets.plusOne_sound
 #print axioms Zeta23Ext.ProductionCell4376Jets.plusTwo_checked
 #print axioms Zeta23Ext.ProductionCell4376Jets.plusTwo_sound
+#print axioms Zeta23Ext.ProductionCell4376Jets.plusThree_checked
+#print axioms Zeta23Ext.ProductionCell4376Jets.plusThree_sound
+#print axioms Zeta23Ext.ProductionCell4376Jets.plusFour_checked
+#print axioms Zeta23Ext.ProductionCell4376Jets.plusFour_sound

@@ -42,6 +42,8 @@ de-risked theorem by theorem before an end-to-end ETA is credible.
   now starts at `1/16384` through `AwayMonotonicityTable`.
 - [x] Uniform-grid coverage and endpoint handling for monotonicity; generated
   data now supplies only the finitely many derivative centre inequalities.
+- [x] Semantic seven-sine centre rows: checked rational range reductions and
+  Taylor errors now imply each uniform-grid derivative inequality.
 - [x] Tight rational endpoint bounds and the compact numeric inequality
   needed after normalizing the 49-term expression.
 - [x] Exact-rational shadow replay of every non-tangent production leaf and
@@ -65,10 +67,9 @@ de-risked theorem by theorem before an end-to-end ETA is credible.
 
 ## Finite and numerical certificate
 
-- [ ] Extend the rational sine/cosine-cell checker and weighted-sum combiner to
-  the grouped seven-term derivative centres, then instantiate the
-  `CurrentWindowUniformGrid.Certificate`; its conversion to
-  `AwayMonotonicityTable`, including the full geometric cover, is proved.
+- [ ] Generate and kernel-check the concrete seven-sine rows that instantiate
+  `CurrentWindowMonotonicityRows.Table`.  Their semantic combination,
+  uniform-grid coverage, and conversion to global monotonicity are proved.
 - [ ] Kernel-check `ClosedHLower` by normalizing the 49-term closed masses to
   the compact numeric inequality.  The numeric inequalities are proved, but
   `CurrentWindowClosedHCertificate.lean` does not currently cold-build and is
@@ -83,7 +84,7 @@ de-risked theorem by theorem before an end-to-end ETA is credible.
   impractical; three representative roots exceeded two million nodes each.
   The generic sinc/sinc'/sinc'' checker, one delicate reduced-argument row,
   the `K,K',K'' -> w''` combiner, and the `K(0)` bound are complete.  Two more
-  actual production rows are now checked, leaving 12 of the 14 arguments for
+  actual production rows are now checked, leaving 10 of the 14 arguments for
   the first full semantic tangent cell.
 - [ ] Convert the compact tree, root boxes, table data, and tangent evidence to
   checked Lean values and prove the concrete `Forest.check = true` and
