@@ -66,9 +66,9 @@ algebraic core of the `0.673195` deduction: the exact window constants and
 21-weight table, the sharp square-root profile and realizing correlation
 matrices, the large-span/small-span block split, pinching and offset
 averaging, error bookkeeping, the final strict numerical comparison, and the
-conditional dyadic-to-cumulative passage.  For the current cosine window it
-also kernel-checks the exact square-mass and distance-mass formulas, reducing
-the remaining `H(v)` certificate to one integral-free finite proposition.
+conditional dyadic-to-cumulative passage. For the current cosine window it
+also kernel-checks the exact square-mass and distance-mass formulas and the
+strict certificate `0.67245701 <= H(v)`.
 
 ```bash
 cd lean
@@ -78,13 +78,14 @@ lake build Zeta23Ext
 lake env lean Zeta23Ext/PrintCurrentAxioms.lean
 ```
 
-The capstone remains conditional, but the normalized-span error and its
-pressure contribution are now discharged from the upstream unconditional
-Riemann--von Mangoldt theorem. The remaining explicit hypotheses are the
-full numeric window certificate and kernel-table/search soundness (including
-semantic leaf evidence), actual
+The capstone remains conditional, but the zeta-native coefficient family
+`c_N=-Lambda(N), D(s)=s`, its exact prime/zero matrix transfer, and the
+normalized-span error and its pressure contribution are now discharged. The
+remaining explicit hypotheses are away-cell window monotonicity,
+kernel-table/search soundness (especially semantic tangent-leaf evidence),
+the current-window autocorrelation estimate, actual
 current-kernel entrywise Gram asymptotics, and retained Gram/moment
-construction with the remaining `o(N)` errors. Current-window admissibility,
+construction with explicit `o(N)` deletion and remaining errors. Current-window admissibility,
 entrywise-to-squared-energy conversion, retained-count domination, and the
 production topology, decoder, and real-score bridge are now recorded or
 kernel checked; see

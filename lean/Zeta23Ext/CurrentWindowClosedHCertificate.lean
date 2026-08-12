@@ -21,6 +21,8 @@ open Real Set
 
 namespace Zeta23Ext.CurrentWindowClosedHCertificate
 
+set_option maxHeartbeats 4000000
+
 open CurrentWindow
 open CurrentWindowFiniteCertificate
 
@@ -296,6 +298,107 @@ theorem compact_numeric_inequality :
     _ ≤ (1655086 / 1000000 : ℝ) * Real.sin (Real.sqrt 2 / 2) ^ 2 := by
       gcongr
       exact hs.1
+
+/-- A slightly tighter spelling of the same certified inequality.  Its
+margin over `Hcert` is what permits the analytic argument to choose a fixed
+parameter strictly below the endpoint. -/
+theorem compact_numeric_inequality_tight :
+    Real.sqrt 2 * Real.sin (Real.sqrt 2 / 2) *
+          Real.cos (Real.sqrt 2 / 2) + periodicCorrection ≤
+      (165508598 / 100000000 : ℝ) * Real.sin (Real.sqrt 2 / 2) ^ 2 := by
+  have hr := sqrt_two_tight
+  have hs := sin_sqrt_two_half_tight
+  have hc := cos_sqrt_two_half_tight
+  have hP := periodicCorrection_upper
+  have hs0 : 0 ≤ Real.sin (Real.sqrt 2 / 2) := by linarith [hs.1]
+  have hc0 : 0 ≤ Real.cos (Real.sqrt 2 / 2) := by linarith [hc.1]
+  calc
+    Real.sqrt 2 * Real.sin (Real.sqrt 2 / 2) *
+          Real.cos (Real.sqrt 2 / 2) + periodicCorrection ≤
+        ((3535533906 : ℝ) / 2500000000) *
+          ((6496369391 : ℝ) / 10000000000) *
+          ((7602445971 : ℝ) / 10000000000) +
+          (368534100 : ℝ) / 10000000000000 := by
+            gcongr
+            · exact hr.2
+            · exact hs.2
+            · exact hc.2
+    _ ≤ (165508598 / 100000000 : ℝ) *
+          ((649636939 : ℝ) / 1000000000) ^ 2 := by norm_num
+    _ ≤ (165508598 / 100000000 : ℝ) *
+          Real.sin (Real.sqrt 2 / 2) ^ 2 := by
+      gcongr
+      exact hs.1
+
+/-! ## Exact normalization of the two finite masses -/
+
+private lemma closedKernel_zero_eq :
+    CurrentKernelFormula.closedKernel 0 =
+      2 * Real.sin (Real.sqrt 2 / 2) / Real.sqrt 2 := by
+  unfold CurrentKernelFormula.closedKernel
+  rw [frequency_eq_explicit]
+  norm_num [coefficient, Fin.sum_univ_succ, sinc_sqrt_two_half]
+  have h1 := sinc_nat_mul_pi_eq_zero 1 (by norm_num)
+  have h2 := sinc_nat_mul_pi_eq_zero 2 (by norm_num)
+  have h3 := sinc_nat_mul_pi_eq_zero 3 (by norm_num)
+  have h4 := sinc_nat_mul_pi_eq_zero 4 (by norm_num)
+  have h5 := sinc_nat_mul_pi_eq_zero 5 (by norm_num)
+  have h6 := sinc_nat_mul_pi_eq_zero 6 (by norm_num)
+  norm_num at h1 h2 h3 h4 h5 h6 ⊢
+  rw [h1, h2, h3, h4, h5, h6]
+  ring
+
+private lemma closedKernel_zero_sq :
+    CurrentKernelFormula.closedKernel 0 ^ 2 =
+      2 * Real.sin (Real.sqrt 2 / 2) ^ 2 := by
+  rw [closedKernel_zero_eq]
+  have hs : (Real.sqrt 2) ^ 2 = 2 := Real.sq_sqrt (by norm_num)
+  field_simp [Real.sqrt_ne_zero'.mpr (by norm_num : (0 : ℝ) < 2)]
+  nlinarith
+
+/-- Periodic cancellation reduces the two 49-term masses to three endpoint
+quantities and the small six-term rational/`pi` correction. -/
+private theorem closed_masses_eq_compact :
+    closedWindowSquareMass + closedWindowDistanceMass =
+      Real.sin (Real.sqrt 2 / 2) ^ 2 +
+        Real.sqrt 2 * Real.sin (Real.sqrt 2 / 2) *
+          Real.cos (Real.sqrt 2 / 2) + periodicCorrection := by
+  unfold closedWindowSquareMass closedWindowDistanceMass absKernelIntegral
+    cosCosIntegral periodicCorrection
+  rw [frequency_eq_explicit]
+  norm_num [coefficient, Fin.sum_univ_succ, sinc_sqrt_two_half,
+    sinc_sqrt_two, sinc_nat_mul_pi_eq_zero,
+    sinc_sqrt_two_sub_periodic, sinc_sqrt_two_add_periodic,
+    sinc_periodic_sub_sqrt_two, sinc_periodic_add_sqrt_two,
+    Real.sin_nat_mul_pi, Real.cos_nat_mul_pi]
+  field_simp [Real.pi_ne_zero,
+    Real.sqrt_ne_zero'.mpr (by norm_num : (0 : ℝ) < 2)]
+  ring_nf
+  nlinarith [Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 2)]
+
+/-- The fully kernel-checked strengthened scalar certificate. -/
+theorem strong_closedH_lower :
+    (67245701 / 100000000 : ℝ) ≤ closedH := by
+  have hs := sin_sqrt_two_half_tight
+  have hs0 : 0 < Real.sin (Real.sqrt 2 / 2) := by linarith [hs.1]
+  rw [closedH, closed_masses_eq_compact, closedKernel_zero_sq]
+  have hcompact := compact_numeric_inequality_tight
+  have hsq : 0 < Real.sin (Real.sqrt 2 / 2) ^ 2 := sq_pos_of_pos hs0
+  rw [le_sub_iff_add_le, div_le_iff₀ (by positivity :
+    0 < 2 * Real.sin (Real.sqrt 2 / 2) ^ 2)]
+  nlinarith
+
+theorem closedH_lower : ClosedHLower := by
+  unfold ClosedHLower CurrentWindow.Hcert
+  exact (by norm_num : (672457 : ℝ) / 1000000 ≤ 67245701 / 100000000) |>.trans
+    strong_closedH_lower
+
+/-- Strict endpoint slack, needed to move the analytic scale from `lambda=1`
+to one fixed `lambda<1` by continuity. -/
+theorem Hcert_lt_H_window : CurrentWindow.Hcert < CurrentWindow.H window := by
+  rw [CurrentWindowFiniteCertificate.H_eq_closedH]
+  exact (by norm_num : (672457 : ℝ) / 1000000 < 67245701 / 100000000) |>.trans_le
+    strong_closedH_lower
 
 end Zeta23Ext.CurrentWindowClosedHCertificate
 

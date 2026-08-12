@@ -108,6 +108,8 @@ in theorem arguments, not declared axioms.
 #print axioms Zeta23Ext.CurrentWindowFiniteCertificate.NumericCertificate.toWindowCertificate
 #print axioms Zeta23Ext.CurrentWindowClosedHCertificate.sin_sqrt_two_half_tight
 #print axioms Zeta23Ext.CurrentWindowClosedHCertificate.periodicCorrection_upper
+#print axioms Zeta23Ext.CurrentWindowClosedHCertificate.closedH_lower
+#print axioms Zeta23Ext.CurrentWindowClosedHCertificate.Hcert_lt_H_window
 #print axioms Zeta23Ext.CurrentWindowClosedHCertificate.compact_numeric_inequality
 #print axioms Zeta23Ext.VerifiedCertificate.Forest.check_sound
 #print axioms Zeta23Ext.VerifiedCertificate.currentLocalCertificate_of_decoded_forest
@@ -127,3 +129,17 @@ in theorem arguments, not declared axioms.
 #print axioms Zeta23Ext.VerifiedCertificate.CurrentInitialRoots.initialCheck_cell
 #print axioms Zeta23Ext.VerifiedCertificate.CurrentInitialRoots.initial_classify
 #print axioms Zeta23Ext.VerifiedCertificate.CurrentInitialRoots.currentLocalCertificate_of_decoded_replay
+#print axioms Zeta23Ext.VerifiedCertificate.Annotated.Tree.check_sound
+#print axioms Zeta23Ext.VerifiedCertificate.Annotated.Forest.checked_sound
+#print axioms Zeta23Ext.VerifiedCertificate.Annotated.Demo.mixedTree_sound
+#print axioms Zeta23Ext.CurrentZetaNative.GpC_zetaCoeffFamily_eq_Gp
+#print axioms Zeta23Ext.CurrentZetaNative.zetaCoeffFamily_hyps
+#print axioms Zeta23Ext.CurrentZetaNative.current_zeta_traceTransfer
+#print axioms Zeta23Ext.CurrentZetaNative.current_zeta_gzMoments_of_coeffMoments
+#print axioms Zeta23Ext.CurrentZetaNative.current_zeta_gzMoments_of_autocorr
+#print axioms Zeta23Ext.CurrentRetainedWithLoss.PrincipalCompression.remainder_posIndex_le
+#print axioms Zeta23Ext.CurrentRetainedWithLoss.count_seam_of_deleted
+#print axioms Zeta23Ext.CurrentRetainedWithLoss.LossyMomentData.stabilitySeam
+#print axioms Zeta23Ext.CurrentRetainedWithLoss.LossyAsymptoticEntrywiseInputs.ofLittleO
+#print axioms Zeta23Ext.CurrentRetainedWithLoss.LossyAsymptoticEntrywiseInputs.target
+#print axioms Zeta23Ext.CurrentRetainedWithLoss.target_of_littleO

@@ -25,3 +25,6 @@ import Zeta23Ext.VerifiedCertificateArithmetic
 import Zeta23Ext.CurrentCertificateReplay
 import Zeta23Ext.VerifiedCertificateRoots
 import Zeta23Ext.CurrentInitialRoots
+import Zeta23Ext.VerifiedAnnotatedForest
+import Zeta23Ext.CurrentZetaNative
+import Zeta23Ext.CurrentRetainedWithLoss

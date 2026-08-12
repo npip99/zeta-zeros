@@ -1,0 +1,38 @@
+{
+  "cell_count": 46838,
+  "cutoff_cells": 46830,
+  "float_kernel_table_sha256": "1a015aa20ce6457a7dc233344f953a5b4144e5a4915284b7354fc6f5e070de95",
+  "float_second_table_sha256": "201f4fab9b2b83f42f266251c8a21fd641af44c0a35144156f5c36577fca79a5",
+  "format": "zeta23-exact-shadow-v1",
+  "grid": 4000,
+  "scales": [
+    {
+      "initialization_covered": 236766,
+      "initialization_failed": 0,
+      "initialization_score_checked": 44214,
+      "initialization_total": 280980,
+      "interval_checked": 456833,
+      "interval_failed": 0,
+      "minimum_initialization_margin": {
+        "decimal": 3.789373129591605e-09,
+        "denominator": 1294784892869017600000,
+        "numerator": 4906423081639
+      },
+      "minimum_interval_margin": {
+        "decimal": 3.3410903762888e-09,
+        "denominator": 1618481116086272000000,
+        "numerator": 5407491681161
+      },
+      "minimum_pressure_margin": {
+        "decimal": 2.173913043478261e-07,
+        "denominator": 4600000,
+        "numerator": 1
+      },
+      "passed": true,
+      "pressure_checked": 6821,
+      "pressure_failed": 0,
+      "scale_bits": 48,
+      "tangent_skipped": 406186
+    }
+  ]
+}
